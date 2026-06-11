@@ -11,7 +11,7 @@ Status: NOT STARTED / IN PROGRESS / COMPLETE / GATE PASSED. Update at every gate
 | 0.2 | High-severity items applied (LB1, BA1, BA2, SA1, SA2, TI1, EB1, EB2, DP1) | GATE PASSED | Jun 2026 |
 | 0.3 | Medium items applied; image round | COMPLETE (image round deferred — ADR-000) | Jun 2026 |
 | 0.4 | Suite version-bumped and frozen | GATE PASSED | Jun 2026 |
-| 0.5 | GitHub monorepo created; CI skeleton; this tracker + DECISIONS.md committed | NOT STARTED | |
+| 0.5 | GitHub monorepo created; CI skeleton; this tracker + DECISIONS.md committed | GATE PASSED | Jun 2026 |
 
 ## Build stages (Build & Quality Plan v1.0)
 
