@@ -1,0 +1,31 @@
+# Fraud synthetic data generator configuration (B2).
+# Deterministic for a given seed - the DVC-pinned dataset is reproducible from this file.
+seed: 42
+
+population:
+  customers: 2000
+  merchants: 600
+
+window:
+  start_date: "2025-01-01"
+  end_date: "2026-05-31"          # 17 months -> supports 6 walk-forward periods in B4
+
+behaviour:
+  base_txn_rate_per_day: 0.9      # mean legitimate transactions per customer per day
+  december_rate_multiplier: 1.35  # seasonal volume lift
+  december_amount_multiplier: 1.2
+
+fraud:
+  spree_incidents: 250            # stolen-card burst
+  testing_incidents: 120          # card-testing micro-amounts then strike
+  takeover_incidents: 100         # account takeover over days
+  first_party_rate: 0.0004        # fraction of legit txns relabelled (hard cases)
+  # Note: resulting fraud rate ~0.4% by count - deliberately above real-world card
+  # fraud (~0.1%) so Phase-1-scale models have enough positives. Documented in the
+  # data dictionary; class-weighting decisions belong to B4.
+
+label_lag:
+  fraud_mean_days: 18             # confirmation lag (gamma-distributed)
+  nonfraud_settle_days: 45        # chargeback window before a txn is 'confirmed clean'
+
+out_dir: data/fraud

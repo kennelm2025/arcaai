@@ -1,0 +1,47 @@
+schema: '2.0'
+stages:
+  generate:
+    cmd: python -m verticals.fraud.synthetic.generator
+    deps:
+    - path: verticals/fraud/synthetic/config.yaml
+      hash: md5
+      md5: a4687a40b251ff94aa173bfbbe95da99
+      size: 1216
+    - path: verticals/fraud/synthetic/generator.py
+      hash: md5
+      md5: a68457d78fa44d8c6dfb1aa6c4499349
+      size: 17846
+    outs:
+    - path: data/fraud/customers.parquet
+      hash: md5
+      md5: f134845036be994224ec4dc0d7e8b24b
+      size: 115621
+    - path: data/fraud/data_profile.json
+      hash: md5
+      md5: 7dc7d520f727940755462700a717872d
+      size: 349
+    - path: data/fraud/merchants.parquet
+      hash: md5
+      md5: 81efbc3ba03bb3b6fc84d2c2405ebebb
+      size: 9357
+    - path: data/fraud/transactions.parquet
+      hash: md5
+      md5: b4d6d006ef9333152795ef6a4e4594e0
+      size: 26056149
+  data_validate:
+    cmd: python -m verticals.fraud.validation.run_validation --data-dir 
+      data/fraud
+    deps:
+    - path: data/fraud/transactions.parquet
+      hash: md5
+      md5: b4d6d006ef9333152795ef6a4e4594e0
+      size: 26056149
+    - path: verticals/fraud/validation/run_validation.py
+      hash: md5
+      md5: 8a6c88535dbc4b70ce1a46583b431e99
+      size: 6266
+    outs:
+    - path: data/fraud/validation_report.json
+      hash: md5
+      md5: 5b4aefc8a6cc09bb81b14c4899fdf114
+      size: 3024

@@ -1,0 +1,27 @@
+# Fraud vertical DVC pipeline (Blueprint S6.1). Stages accrue as the build
+# progresses: B2 adds generate + data_validate; B3 adds feature_engineer; etc.
+# Run from anywhere: dvc repro verticals/fraud/dvc.yaml
+stages:
+  generate:
+    wdir: ../..
+    cmd: python -m verticals.fraud.synthetic.generator
+    deps:
+      - verticals/fraud/synthetic/generator.py
+      - verticals/fraud/synthetic/config.yaml
+    outs:
+      - data/fraud/transactions.parquet
+      - data/fraud/customers.parquet
+      - data/fraud/merchants.parquet
+    metrics:
+      - data/fraud/data_profile.json:
+          cache: false
+
+  data_validate:
+    wdir: ../..
+    cmd: python -m verticals.fraud.validation.run_validation --data-dir data/fraud
+    deps:
+      - verticals/fraud/validation/run_validation.py
+      - data/fraud/transactions.parquet
+    metrics:
+      - data/fraud/validation_report.json:
+          cache: false
