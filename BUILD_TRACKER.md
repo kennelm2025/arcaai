@@ -17,8 +17,8 @@ Status: NOT STARTED / IN PROGRESS / COMPLETE / GATE PASSED. Update at every gate
 
 | Stage | Wk | Scope | DevOps | MLOps | Gate | Date |
 |-------|----|-------|--------|-------|------|------|
-| B1 | 1 | Foundation — repo, CI, Postgres, MLflow, DVC | NOT STARTED | NOT STARTED | NOT STARTED | |
-| B2 | 1–2 | Synthetic data — fraud (generator, GE suite, data dictionary) | NOT STARTED | NOT STARTED | NOT STARTED | |
+| B1 | 1 | Foundation — repo, CI, Postgres, MLflow, DVC | COMPLETE | IN PROGRESS (DVC done; MLflow awaits Docker) | IN PROGRESS | |
+| B2 | 1–2 | Synthetic data — fraud (generator, GE suite, data dictionary) | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
 | B3 | 2–3 | Fraud features + anti-leakage suite | NOT STARTED | NOT STARTED | NOT STARTED | |
 | B4 | 3 | Baseline + MVM + calibration (fraud) | NOT STARTED | NOT STARTED | NOT STARTED | |
 | B5 | 4 | BentoML serving + FastAPI + contracts | NOT STARTED | NOT STARTED | NOT STARTED | |
