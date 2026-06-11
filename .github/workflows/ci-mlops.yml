@@ -1,0 +1,28 @@
+# MLOps CI (Blueprint S5.1) - vertical tests. Leakage audit + Great Expectations
+# + ML smoke train join this workflow at B2/B3 when data and features exist.
+name: ci-mlops
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "verticals/**"
+      - "monitoring/evidently/**"
+      - ".github/workflows/ci-mlops.yml"
+
+jobs:
+  vertical-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Lint (ruff)
+        run: ruff check verticals
+      - name: Vertical test suites
+        run: pytest verticals -q

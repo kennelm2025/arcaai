@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.coverage
+htmlcov/
+.pytest_cache/
+.ruff_cache/
+
+# Environments / secrets
+.env
+
+# MLOps local state
+mlruns/
+mlartifacts/
+.dvcstore/
+
+# Data - DVC pointers are committed, raw data is not
+data/*
+!data/README.md
+!data/*.dvc
+!data/.gitignore
+
+# OS / editor
+Thumbs.db
+.DS_Store

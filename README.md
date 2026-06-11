@@ -1,86 +1,47 @@
 # ArcaAI
 
-A hybrid ML and AI platform for UK and European banks. Reference models, governed upskilling pipeline, continuous improvement — all running inside the bank's perimeter.
+**The AI control layer for regulated banking decisions.**
 
-This repository is the canonical source of truth for the ArcaAI platform design and specifications. It is the build system from which Implementation Pack releases are produced for bank distribution.
+ArcaAI is a hybrid AI platform — calibrated predictive ML, grounded LLM narrative, and
+agentic orchestration — built UK-first (PRA/FCA) with full data sovereignty: all customer
+data, ML inference, and LLM serving on-premises. This repository is the single monorepo
+for everything: application code, ML code, IaC, prompt templates, and governance
+(Engineering Blueprint §4).
 
----
+## State
 
-> ### 🧭 New here? → **[Start at `START_HERE.md`](START_HERE.md)**
->
-> That document is a navigation map. It tells you, by your role and purpose, exactly which documents to open first, in what order, and what you can skip. Reading it takes 5 minutes and saves you an hour of guessing.
+The document suite was **locked June 2026** (rulings R1–R13, ADR-000–003 — see
+[DECISIONS.md](DECISIONS.md)). The build is the **reference implementation on synthetic
+data**: 12 gated stages B1–B12 ([BUILD_TRACKER.md](BUILD_TRACKER.md)), founder-led,
+gate-not-date discipline. Phase 1 scope: **Fraud, Compliance, Relationship Management** —
+3 of an 11-use-case catalogue, 9 by Phase 2.
 
----
+## Repo map
 
-## Status
+| Path | Contents |
+|---|---|
+| `agent/` | LangGraph agent + tools + versioned prompt templates (B6) |
+| `api/` | FastAPI application — health/version live; query endpoint from B5/B6 |
+| `verticals/` | Per-vertical ML: features, training, serving, evaluation, tests (fraud first) |
+| `ingest/` | Document ingest pipeline (B7) |
+| `contracts/` | Contract-first specs — API schemas, BentoML endpoint specs |
+| `infra/` | docker-compose dev stack now; Terraform/k8s as infra hardens |
+| `monitoring/` | Grafana dashboards + Evidently drift configs (B11) |
+| `data/` | DVC pointers only — raw data never enters git |
+| `docs/` | Locked governance suite, specs, reviews, build gate records |
+| `decisions/` | Per-ADR files; indexed by DECISIONS.md |
+| `diagrams/` | Diagram sources incl. ADR-000 image-round inputs |
 
-**Current phase:** Design — scaffolding complete, specifications in progress.
-**Current Implementation Pack version:** none released.
-**See:** [`CURRENT_STATE.md`](CURRENT_STATE.md) for the up-to-date weekly snapshot.
-
-## How this repository is organised
+## Quickstart (dev)
 
 ```
-arcaai/
-├── README.md                    You are here
-├── START_HERE.md                Navigation map — read this first
-├── CONTRIBUTING.md              How to work in this repo
-├── CHANGELOG.md                 Release notes per Implementation Pack version
-├── PROJECT_CONTEXT.md           Stable context primer for new contributors and AI SMEs
-├── CURRENT_STATE.md             Weekly-updated state file — what's happening now
-├── SESSION_NOTES.md             Append-only reasoning trail across chat sessions
-├── SESSION_PROTOCOLS.md         The opening and closure rituals for every chat session
-├── DESIGN_PHASE_CHARTER.md      The constitution of the design phase
-│
-├── decisions/                   Architectural Decision Records (ADRs)
-├── rfcs/                        Request for Comments — proposals before changes
-├── specs/                       The eight canonical specifications
-├── diagrams/                    Mermaid/PlantUML source for all diagrams
-├── glossary/                    Shared canonical glossary
-├── governance/                  Document register, SME panel, review protocols
-├── archive/                     Legacy ArcaAI documents, retired with provenance
-└── .github/                     GitHub configuration
+pip install -e ".[dev]"
+scripts\dev_up.cmd      # Postgres :5432 + MLflow UI :5000 (Docker required)
+scripts\test.cmd        # pytest + coverage gate
+scripts\dvc_init.cmd    # one-time DVC init, local remote
 ```
 
-## The eight canonical specifications
+## Governance
 
-Every specification follows the same template and goes through the same governance. None has yet been ratified.
-
-| # | Specification | Audience weight | Status |
-|---|---|---|---|
-| 1 | Product Definition | Bank-side high, engineering low | Not started |
-| 2 | Solution Architecture | Bank-side high, engineering medium | Not started |
-| 3 | Technical Architecture | Bank-side medium, engineering high | Not started |
-| 4 | Data and ML | Bank-side medium, engineering high | Not started |
-| 5 | Security and Compliance | Bank-side high, engineering medium | Not started |
-| 6 | Integration | Bank-side high, engineering high | Not started |
-| 7 | Operations and Support | Bank-side high, engineering high | Not started |
-| 8 | Test and Validation | Bank-side high, engineering high | Not started |
-
-See [`specs/README.md`](specs/README.md) for full details.
-
-## Foundational decisions
-
-Three ADRs anchor everything in this repository:
-
-- [**ADR-0001**](decisions/0001-pretrained-model-positioning.md) — Pre-trained model positioning: reference models, not production models
-- [**ADR-0002**](decisions/0002-three-stage-model-lifecycle.md) — Three-stage model lifecycle: Reference → Upskilling → Continuous Improvement
-- [**ADR-0003**](decisions/0003-pipeline-as-platform.md) — Platform positioning: pipeline-as-platform, not models-as-artefacts
-
-If you read nothing else in this repo, read those three. They constrain everything else.
-
-## How to contribute
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md). In short:
-
-- Branch off `main`, never commit to it directly
-- Significant changes go through an RFC first
-- Architectural decisions are recorded as ADRs
-- All specifications follow [`specs/_template.md`](specs/_template.md)
-- All changes are reviewed before merge
-
-## Confidentiality
-
-This repository is private. Its contents are commercial in confidence. Releases to bank prospects are issued as **Implementation Pack** versioned artefacts, not by granting repository access.
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for release mechanics.
+Locked documents live in `docs/governance/` and change **via decision record only**.
+The build tracker is the living status. Doc–code drift = ADR, or it didn't happen.

@@ -1,0 +1,32 @@
+# DevOps CI (Blueprint S5.1) - lint + unit tests + coverage ratchet.
+# Docker build / Trivy / Pact join this workflow as their stages land (B5+).
+name: ci-devops
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "api/**"
+      - "agent/**"
+      - "ingest/**"
+      - "frontend/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - ".github/workflows/ci-devops.yml"
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Lint (ruff)
+        run: ruff check .
+      - name: Tests + coverage gate (60% ratchet, B1)
+        run: pytest --cov --cov-report=term-missing
