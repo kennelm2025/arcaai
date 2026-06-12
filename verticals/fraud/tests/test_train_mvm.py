@@ -16,7 +16,6 @@ No MLflow server required (env-gated logging, never set here).
 from __future__ import annotations
 
 import numpy as np
-import pandas as pd
 import pytest
 
 from verticals.fraud.features.feature_pipeline import (
