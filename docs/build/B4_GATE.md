@@ -81,11 +81,33 @@ drafted; the following were set by judgement. Ratified by Mike 12 Jun 2026.
 
 ## Increment 3 — Platt calibration (G7)
 
-- [ ] Platt scaler fitted on the 15 calibration split only (mask at
-      cal-end), applied to test
-- [ ] Calibration MAE < 0.05 on test (per A1); reliability table in the
-      MLflow run
-- [ ] Independent probabilities verified — no group normalisation (R10)
+- [x] Platt scaler fitted on the 15 calibration split only (mask at
+      cal-end): p = sigmoid(a*margin + b), a 0.8340 / b -3.2864, fitted
+      on 61,745 of 143,503 cal rows (81,758 excluded for unconfirmed
+      labels at as_of 2026-03-14 - labels lag, so the back of the cal
+      window is mostly unsettled; recorded in the run calibration_audit)
+- [x] Calibration MAE < 0.05 on test (per A1): 0.000858 calibrated vs
+      0.025213 uncalibrated - the scale_pos_weight inflation corrected
+      (top bin mean predicted 0.2510 -> 0.0632 against observed 0.0563).
+      Reliability table logged as an artefact in the MLflow run.
+- [x] Independent probabilities verified - no group normalisation (R10):
+      batch-independent, row-independent, monotone in margin. ROC-AUC
+      bit-identical pre/post (0.988349) - inc2 R8/R9 numbers stand.
+
+      Run id: 25ca86376650494691523e60cd8655d9 (xgb_mvm_platt_calibration)
+      Scaler persisted as transparent JSON (models/platt_scaler.json).
+      scripts\test.cmd now runs ruff before pytest (local/CI parity -
+      the inc2 lesson closed).
+
+      Incident note (12 Jun): the inc3 repro initially tried to re-run
+      train_mvm - dvc.lock held the LF hash of train_mvm.py while the
+      working copy was CRLF (git autocrlf rewrite; git compares
+      normalised, DVC 3 hashes raw bytes). Aborted before any MLflow run
+      was minted. Recovery: model restored from DVC cache; mvm_report.json
+      restored byte-identical from the run 36ccb6e2 artefact plus run-id
+      reinjection (md5 verified against the lock); lock re-pinned via
+      dvc commit. No retrain - 36ccb6e2 remains the pinned MVM.
+      Carry-item: .gitattributes eol policy, decide at session close.
 
 ## Increment 4 — Walk-forward (G5/G7 close)
 
