@@ -20,7 +20,7 @@ Status: NOT STARTED / IN PROGRESS / COMPLETE / GATE PASSED. Update at every gate
 | B1 | 1 | Foundation — repo, CI, Postgres, MLflow, DVC | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
 | B2 | 1–2 | Synthetic data — fraud (generator, GE suite, data dictionary) | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
 | B3 | 2–3 | Fraud features + anti-leakage suite | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
-| B4 | 3 | Baseline + MVM + calibration (fraud) | IN PROGRESS | IN PROGRESS | NOT STARTED | |
+| B4 | 3 | Baseline + MVM + calibration (fraud) | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
 | B5 | 4 | BentoML serving + FastAPI + contracts | NOT STARTED | NOT STARTED | NOT STARTED | |
 | B6 | 4–5 | LangGraph agent v0 + LLM (Llama 3.1 8B) | NOT STARTED | NOT STARTED | NOT STARTED | |
 | B7 | 5–6 | Fraud RAG (ChromaDB, 50+ seed docs, RAGAS) | NOT STARTED | NOT STARTED | NOT STARTED | |
