@@ -37,3 +37,13 @@ stages:
     metrics:
       - data/fraud/feature_report.json:
           cache: false
+
+  baseline_eval:
+    wdir: ../..
+    cmd: python -m verticals.fraud.training.rules_baseline
+    deps:
+      - verticals/fraud/training/rules_baseline.py
+      - data/fraud/features.parquet
+    metrics:
+      - data/fraud/baseline_report.json:
+          cache: false
