@@ -27,6 +27,18 @@ drafted; the following were set by judgement. Ratified by Mike 12 Jun 2026.
 - [x] A4 — Evaluation labels. label_available_mask binds TRAINING cuts
       only; test/calibration evaluation is retrospective with full labels.
 
+- [x] A5 — Per-fold calibration slice (walk-forward). Each fold's Platt
+      scaler is fitted on the 90 days immediately before the fold cut,
+      masked at the cut; the model trains on everything earlier. 90 days
+      leaves ~45 days of confirmed mixed-class data after the nonfraud
+      settle. The global inc3 scaler is NOT reused across folds - it was
+      fitted on data post-dating the early fold cuts and would leak.
+      Ratified by Mike 12 Jun 2026.
+- [x] A6 — Stability tolerance. "Materially below" = fold ROC-AUC more
+      than 0.02 under the full-test reference. Flagged folds require
+      narrative at gate review, not automatic failure. Ratified by Mike
+      12 Jun 2026.
+
 ## Increment 1 — Rules-engine baseline (G2)
 
 - [x] verticals/fraud/training/rules_baseline.py committed — static
@@ -99,6 +111,12 @@ drafted; the following were set by judgement. Ratified by Mike 12 Jun 2026.
       scripts\test.cmd now runs ruff before pytest (local/CI parity -
       the inc2 lesson closed).
 
+      Re-logged as b0abaf8d11174a88809003bd74d252c6 at the inc4 repro
+      (branch switch recreated calibrate_mvm.py with CRLF endings,
+      invalidating the stage - same class as the morning incident);
+      metrics and scaler bit-identical; b0abaf8d... is the canonical G7
+      run, per the inc1 baseline re-log precedent.
+
       Incident note (12 Jun): the inc3 repro initially tried to re-run
       train_mvm - dvc.lock held the LF hash of train_mvm.py while the
       working copy was CRLF (git autocrlf rewrite; git compares
@@ -111,12 +129,38 @@ drafted; the following were set by judgement. Ratified by Mike 12 Jun 2026.
 
 ## Increment 4 — Walk-forward (G5/G7 close)
 
-- [ ] 6 folds per A3; per-fold ROC-AUC, precision@1%, calibration MAE
-- [ ] Stability read: no fold materially below the full-test number
-      without explanation (December fold expected to move)
-- [ ] All folds logged to MLflow as nested/tagged runs
-- [ ] Gate review: tracker flip, CURRENT_STATE update, SESSION_NOTES entry
+- [x] 6 folds per A3; per-fold ROC-AUC, precision@1%, calibration MAE
+      Fold ROC-AUC: 0.9581 (Dec, flagged) - 0.9846 - 0.9705 - 0.9900 -
+      0.9852 - 0.9889. Min 0.9581, median 0.9849 vs full-test 0.9883.
+      Calibration MAE per fold: max 0.002643 (Dec) - the G7 gate
+      (< 0.05) holds out-of-sample on every fold with fold-local
+      Platt scalers (A5).
+- [x] Stability read (A6): December is the only flagged fold
+      (ROC -0.0302 vs reference) and it is the anticipated one - the
+      fold-1 model trained Jan-Nov 2025 and met December's seasonality
+      shift (1.35x volume, 1.2x amounts) unseen. The expanding window
+      self-heals: with December in the training data, folds 2-6 are all
+      within tolerance. Precision@1% spread (0.30-0.75) is prevalence
+      arithmetic, not model decay: as a share of each month's
+      achievable ceiling (n_fraud/alerts) the folds sit at
+      77/89/83/91/86/91% - December lowest, same cause (754 alerts in
+      a high-volume month against 292 fraud rows; ceiling 0.387).
+- [x] All folds logged to MLflow as nested/tagged runs
+      Parent: f2da0beae43b4ad1b9e3fe4b73e2593d (walk_forward_g5);
+      six nested fold runs tagged stage=B4 / gate=G5 / fold /
+      test_month.
+- [x] Gate review: tracker flip, CURRENT_STATE update, SESSION_NOTES
+      entry (session close, 12 Jun 2026)
 
 ## Gate verdict
 
-- [ ] DevOps COMPLETE - MLOps COMPLETE - GATE: ______ - Date: ______
+- [x] DevOps COMPLETE - MLOps COMPLETE - GATE: PASSED - Date: 12 June 2026
+
+      Evidence chain: G2 baseline run 008a4df33aa94d43873d8301d8287d2b;
+      G5 MVM run 36ccb6e2a44541f2802944eab3fa3d6a (R9 +5.57pp precision,
+      +9.42pp recall at the 1% budget); G7 calibration run
+      b0abaf8d11174a88809003bd74d252c6 (MAE 0.000858); G5 walk-forward
+      parent run f2da0beae43b4ad1b9e3fe4b73e2593d (6 folds, one
+      explained flag). Synthetic-data context note applies throughout:
+      the narrated result is uplift and calibration, never the raw R8
+      pass.
