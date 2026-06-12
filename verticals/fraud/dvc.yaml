@@ -47,3 +47,16 @@ stages:
     metrics:
       - data/fraud/baseline_report.json:
           cache: false
+
+  train_mvm:
+    wdir: ../..
+    cmd: python -m verticals.fraud.training.train_mvm
+    deps:
+      - verticals/fraud/training/train_mvm.py
+      - data/fraud/features.parquet
+      - data/fraud/baseline_report.json
+    outs:
+      - data/fraud/models/xgb_mvm.ubj
+    metrics:
+      - data/fraud/mvm_report.json:
+          cache: false
