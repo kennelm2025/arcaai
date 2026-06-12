@@ -9,8 +9,8 @@ stages:
       size: 1216
     - path: verticals/fraud/synthetic/generator.py
       hash: md5
-      md5: a68457d78fa44d8c6dfb1aa6c4499349
-      size: 17846
+      md5: 64dccff27b27fe4a64ba921c2952d7e8
+      size: 18125
     outs:
     - path: data/fraud/customers.parquet
       hash: md5
@@ -45,3 +45,23 @@ stages:
       hash: md5
       md5: 5b4aefc8a6cc09bb81b14c4899fdf114
       size: 3024
+  feature_engineer:
+    cmd: python -m verticals.fraud.features.feature_pipeline
+    deps:
+    - path: data/fraud/transactions.parquet
+      hash: md5
+      md5: b4d6d006ef9333152795ef6a4e4594e0
+      size: 26056149
+    - path: verticals/fraud/features/feature_pipeline.py
+      hash: md5
+      md5: cb009731a863d80b05003b74c81577dd
+      size: 10522
+    outs:
+    - path: data/fraud/feature_report.json
+      hash: md5
+      md5: 9f1928d99fd86c9f2fe26c767d558450
+      size: 1792
+    - path: data/fraud/features.parquet
+      hash: md5
+      md5: d2e098870095cc3633a9a77412261a7e
+      size: 39106726

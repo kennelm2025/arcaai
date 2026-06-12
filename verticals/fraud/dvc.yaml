@@ -25,3 +25,15 @@ stages:
     metrics:
       - data/fraud/validation_report.json:
           cache: false
+
+  feature_engineer:
+    wdir: ../..
+    cmd: python -m verticals.fraud.features.feature_pipeline
+    deps:
+      - verticals/fraud/features/feature_pipeline.py
+      - data/fraud/transactions.parquet
+    outs:
+      - data/fraud/features.parquet
+    metrics:
+      - data/fraud/feature_report.json:
+          cache: false

@@ -1,1 +1,1 @@
-"""Populated per Blueprint S4 fraud layout."""
+"""Fraud feature pipeline (B3)."""
