@@ -94,8 +94,8 @@ stages:
       size: 39106726
     - path: verticals/fraud/training/train_mvm.py
       hash: md5
-      md5: ddc370af87aa7f6a5936623757af9b7c
-      size: 9873
+      md5: ee817daf64295022799d86e32129945b
+      size: 10136
     outs:
     - path: data/fraud/models/xgb_mvm.ubj
       hash: md5
@@ -105,3 +105,27 @@ stages:
       hash: md5
       md5: 1592607cb89656cdb6c6ad8f07e3733a
       size: 1962
+  calibrate_mvm:
+    cmd: python -m verticals.fraud.training.calibrate_mvm
+    deps:
+    - path: data/fraud/features.parquet
+      hash: md5
+      md5: d2e098870095cc3633a9a77412261a7e
+      size: 39106726
+    - path: data/fraud/models/xgb_mvm.ubj
+      hash: md5
+      md5: b841ed720842b5a670977f231cdd54c6
+      size: 1418935
+    - path: verticals/fraud/training/calibrate_mvm.py
+      hash: md5
+      md5: eec84b50c569b753fac43d9f7ccf8db2
+      size: 12018
+    outs:
+    - path: data/fraud/calibration_report.json
+      hash: md5
+      md5: f1d439bd53b5d7e531016300f26d9340
+      size: 3996
+    - path: data/fraud/models/platt_scaler.json
+      hash: md5
+      md5: a1b581263216aa182139bf0573c89ccc
+      size: 59

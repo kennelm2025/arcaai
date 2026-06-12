@@ -60,3 +60,17 @@ stages:
     metrics:
       - data/fraud/mvm_report.json:
           cache: false
+
+  calibrate_mvm:
+    wdir: ../..
+    cmd: python -m verticals.fraud.training.calibrate_mvm
+    deps:
+      - verticals/fraud/training/calibrate_mvm.py
+      - data/fraud/features.parquet
+      - data/fraud/models/xgb_mvm.ubj
+    outs:
+      - data/fraud/models/platt_scaler.json:
+          cache: false
+    metrics:
+      - data/fraud/calibration_report.json:
+          cache: false
