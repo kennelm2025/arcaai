@@ -74,10 +74,34 @@ stages:
       size: 39106726
     - path: verticals/fraud/training/rules_baseline.py
       hash: md5
-      md5: 3195a417511d6c33d76991ca2542d1fd
-      size: 8956
+      md5: b2e844324992dd8e3be7c843fc636909
+      size: 9188
     outs:
     - path: data/fraud/baseline_report.json
       hash: md5
-      md5: 8798752317b4e6f649f86265c10faa10
-      size: 946
+      md5: c34d31532de6242094618ee4d881b005
+      size: 1002
+  train_mvm:
+    cmd: python -m verticals.fraud.training.train_mvm
+    deps:
+    - path: data/fraud/baseline_report.json
+      hash: md5
+      md5: c34d31532de6242094618ee4d881b005
+      size: 1002
+    - path: data/fraud/features.parquet
+      hash: md5
+      md5: d2e098870095cc3633a9a77412261a7e
+      size: 39106726
+    - path: verticals/fraud/training/train_mvm.py
+      hash: md5
+      md5: ddc370af87aa7f6a5936623757af9b7c
+      size: 9873
+    outs:
+    - path: data/fraud/models/xgb_mvm.ubj
+      hash: md5
+      md5: b841ed720842b5a670977f231cdd54c6
+      size: 1418935
+    - path: data/fraud/mvm_report.json
+      hash: md5
+      md5: 1592607cb89656cdb6c6ad8f07e3733a
+      size: 1962
