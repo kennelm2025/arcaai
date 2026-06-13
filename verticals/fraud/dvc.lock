@@ -154,8 +154,8 @@ stages:
       size: 10136
     - path: verticals/fraud/training/walk_forward.py
       hash: md5
-      md5: cb66d5fced7654bcad5026863fb77f6a
-      size: 12780
+      md5: 3c08b884807b905dfb3a113b38f510e8
+      size: 13104
     outs:
     - path: data/fraud/walkforward_report.json
       hash: md5

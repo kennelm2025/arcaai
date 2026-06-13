@@ -1,7 +1,52 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-*.png filter=lfs diff=lfs merge=lfs -text
+
+# ── Git LFS (unchanged from original) ───────────────────────────────
+*.png  filter=lfs diff=lfs merge=lfs -text
 *.docx filter=lfs diff=lfs merge=lfs -text
 *.pptx filter=lfs diff=lfs merge=lfs -text
-*.pdf filter=lfs diff=lfs merge=lfs -text
-*.jpg filter=lfs diff=lfs merge=lfs -text
+*.pdf  filter=lfs diff=lfs merge=lfs -text
+*.jpg  filter=lfs diff=lfs merge=lfs -text
+
+# ── eol fix: force LF in the working tree for DVC-hashed text ────────
+# DVC hashes working-tree bytes; a CRLF checkout drifts dvc.lock.
+*.py        text eol=lf
+*.pyi       text eol=lf
+*.yaml      text eol=lf
+*.yml       text eol=lf
+*.toml      text eol=lf
+*.cfg       text eol=lf
+*.ini       text eol=lf
+*.json      text eol=lf
+*.md        text eol=lf
+*.txt       text eol=lf
+*.sh        text eol=lf
+
+# DVC metadata — MUST be LF; this is what drifted
+dvc.lock    text eol=lf
+dvc.yaml    text eol=lf
+*.dvc       text eol=lf
+params.yaml text eol=lf
+.dvcignore  text eol=lf
+
+# Windows scripts — keep CRLF
+*.cmd       text eol=crlf
+*.bat       text eol=crlf
+*.ps1       text eol=crlf
+
+# ── Non-LFS binary data/model formats — never normalise ─────────────
+*.parquet   binary
+*.csv       binary
+*.feather   binary
+*.pkl       binary
+*.joblib    binary
+*.pickle    binary
+*.npy       binary
+*.npz       binary
+*.db        binary
+*.sqlite    binary
+*.sqlite3   binary
+*.zip       binary
+*.gz        binary
+*.xlsx      binary
+*.jpeg      binary
