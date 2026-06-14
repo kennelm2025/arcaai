@@ -1,22 +1,23 @@
 # ArcaAI — BUILD_TRACKER.md
 
-Living build tracker (ruling EB8 — the Blueprint §18 table is frozen; this file is the truth).
+*Living build tracker (ruling EB8 — the Blueprint §18 table is frozen; this file is the truth).*
+
 Status: NOT STARTED / IN PROGRESS / COMPLETE / GATE PASSED. Update at every gate review.
 
 ## Phase 0 — Lockdown
 
 | # | Item | Status | Date |
-|---|------|--------|------|
+| --- | --- | --- | --- |
 | 0.1 | Rulings R1–R13 decided and recorded | GATE PASSED | Jun 2026 |
 | 0.2 | High-severity items applied (LB1, BA1, BA2, SA1, SA2, TI1, EB1, EB2, DP1) | GATE PASSED | Jun 2026 |
-| 0.3 | Medium items applied; image round | COMPLETE (image round deferred — ADR-000) | Jun 2026 |
+| 0.3 | Medium items applied; image round | COMPLETE (image round deferred — DEC-0000) | Jun 2026 |
 | 0.4 | Suite version-bumped and frozen | GATE PASSED | Jun 2026 |
 | 0.5 | GitHub monorepo created; CI skeleton; this tracker + DECISIONS.md committed | GATE PASSED | Jun 2026 |
 
 ## Build stages (Build & Quality Plan v1.0)
 
 | Stage | Wk | Scope | DevOps | MLOps | Gate | Date |
-|-------|----|-------|--------|-------|------|------|
+| --- | --- | --- | --- | --- | --- | --- |
 | B1 | 1 | Foundation — repo, CI, Postgres, MLflow, DVC | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
 | B2 | 1–2 | Synthetic data — fraud (generator, GE suite, data dictionary) | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
 | B3 | 2–3 | Fraud features + anti-leakage suite | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
@@ -32,12 +33,12 @@ Status: NOT STARTED / IN PROGRESS / COMPLETE / GATE PASSED. Update at every gate
 
 ## Open items / longest-lead dependencies
 
-- [ ] G10 external domain reviewers — one per vertical (recruit now; longest lead time); brief extended to document narrative review (ADR-003/D8)
-- [ ] ADR-000 image round — Banking Architecture figs 1.1/3.1/4.1/5.1, Learning Bank figs 1–3; deck diagram regeneration for residual source defects per ADR-001 (NOW GATES CLIENT USE per ADR-003/D5; + Figure 4.2 mortgage flow)
-- [x] ADR-001 — deck rasters enhanced + content-patched → Executive Presentation v2a (Jun 2026)
-- [ ] WS3.1 deck design pass — start after B9 screenshots; include use-case roadmap one-pager (ADR-003/D6)
+- [ ] G10 external domain reviewers — one per vertical (recruit now; longest lead time); brief extended to document narrative review (DEC-0003/D8)
+- [ ] DEC-0000 image round — Banking Architecture figs 1.1/3.1/4.1/5.1, Learning Bank figs 1–3; deck diagram regeneration for residual source defects per DEC-0001 (NOW GATES CLIENT USE per DEC-0003/D5; + Figure 4.2 mortgage flow)
+- [x] DEC-0001 — deck rasters enhanced + content-patched → Executive Presentation v2a (Jun 2026)
+- [ ] WS3.1 deck design pass — start after B9 screenshots; include use-case roadmap one-pager (DEC-0003/D6)
 - [ ] GPU rental plan for B12 70B demo configuration
 
-## ADR index
+## DEC index
 
-See DECISIONS.md. Next ADR number: ADR-001.
+See DECISIONS.md. Next DEC number: DEC-0005.
