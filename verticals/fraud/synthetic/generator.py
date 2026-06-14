@@ -345,7 +345,7 @@ def add_labels_and_ids(rng, df: pd.DataFrame, cfg: dict) -> pd.DataFrame:
 
 def profile(df: pd.DataFrame) -> dict:
     by_pattern = df[df["is_fraud"] == 1]["fraud_pattern"].value_counts().to_dict()
-    # ADR-004: pin timestamps to ns before hashing. pandas 3.x defaults new
+    # DEC-0004: pin timestamps to ns before hashing. pandas 3.x defaults new
     # datetimes to us resolution; without the pin the same data hashes
     # differently across pandas major versions.
     stable = df[["timestamp", "customer_id", "amount", "is_fraud"]].copy()
