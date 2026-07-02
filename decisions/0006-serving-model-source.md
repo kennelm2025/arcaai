@@ -1,6 +1,6 @@
 # ADR-0006 — Serving model source: DVC-pinned artefacts, not an MLflow Registry
 
-**Status:** Proposed
+**Status:** Accepted
 **Date:** 14 June 2026
 **Decider:** Mike Kennelly
 **Supersedes:** none
