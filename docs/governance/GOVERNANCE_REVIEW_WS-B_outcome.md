@@ -121,19 +121,20 @@ was not asked to rule on:
 | F-013 | B | Low | `contracts/fraud_scoring.py` vertical-named on the platform shelf | Generalise to vertical-neutral contract at B5/inc2 or B9.5 (Grok) |
 | F-014 | B/C | Low | External/positioning language risks overclaiming "platform" | Standard wording: "architecturally specified, partially evidenced" until B9.5 exit met (D-06) |
 
-## Decisions owed by Mike (gate WS-B close)
+## Decisions — ruled by Mike, 2 Jul 2026
 
-- **D-05** Insert the B9.5 Platform Extraction milestone (exit criterion as
-  above) — amends the Build & Quality Plan; rises to a formal ADR
-  (candidate ADR-0009: platform/vertical capability boundary + extraction gate,
-  adopting the Q-B3 machinery/semantics table).
-- **D-06** Ratify the language ruling (F-014) for all client-facing and locked
-  documents.
-- **D-07** Commission the minimum Stage-2/3 design as a named workstream (post
-  governance review; feeds the deferred bank-registry ADR from 0006).
-- **D-08** Timing: confirm extraction at B9.5 (not now), with platform-first
-  discipline for new shared components from B5/inc2 (Claude's position; panel
-  silent).
+- **D-05 RATIFIED.** B9.5 Platform Extraction milestone inserted before B10;
+  recorded as **ADR-0009** (platform/vertical capability boundary + extraction
+  gate, adopting the Q-B3 machinery/semantics table). Plan deviation recorded
+  as DEC-0005; BUILD_TRACKER carries the B9.5 row per ruling EB8.
+- **D-06 RATIFIED.** Wording ruling (F-014) recorded as DEC-0006: all
+  client-facing and locked-document language uses "architecturally specified,
+  partially evidenced" until the B9.5 exit criterion is met.
+- **D-07 RATIFIED.** Stage-2/3 minimum design commissioned as a named workstream
+  post-review (CL-18); feeds the deferred bank-registry ADR from 0006.
+- **D-08 RATIFIED.** Extraction at B9.5, not now; platform-first discipline for
+  new shared components from B5/inc2 (CL-12/CL-13 built platform-side with
+  fraud-supplied configuration).
 
 ## Remediation
 
@@ -147,8 +148,9 @@ WS-A. All WS-B items gate **B10** (and D-05's ADR gates the plan amendment):
 
 ## WS-B exit status
 
-**Closes on Mike's ratification of D-05–D-08.** Per plan exit criterion 2, the
-architecture is confirmed ADR-*consistent in intent* with every drift logged and
-owned — the honest formulation the review exists to produce. → Next: WS-C
-(specifications currency); first exhibit already identified (Spec 01 working
-brief re-base).
+**CLOSED — 2 Jul 2026.** D-05–D-08 ratified; ADR-0009 drafted (Status flips to
+Accepted at merge); DEC-0005/DEC-0006 recorded; BUILD_TRACKER amended (B5 row
+restated per CL-10; B9.5 row added per CL-15). Per plan exit criterion 2, the
+architecture is confirmed ADR-consistent in intent with every drift logged and
+owned. → Next: WS-C (specifications currency); first exhibit already identified
+(Spec 01 working brief re-base).

@@ -80,10 +80,26 @@ match what was executed; the stale handover is superseded by
 process-vs-practice finding: the fix (update trail docs in the same commit as the
 work they record) applies to the review itself.
 
-## Workstream B — Architecture & design coherence — **IN PROGRESS**
-Pack at v0.2 (`WS-B_review_pack.md`) with the WS-A head-start evidence folded in
-(contracts/ dir; ADR-0007/0008 pre-answering two P-B3 slices). Blocked on one
-input: the source tree pull (§5 of the pack). Then send to Grok + ChatGPT.
+## Workstream B — Architecture & design coherence — **CLOSED 2 Jul 2026**
+Pack v0.3 sent; Grok + ChatGPT responses consolidated (unanimous) in
+`GOVERNANCE_REVIEW_WS-B_outcome.md`; D-05–D-08 ratified same day. Findings
+F-011–F-014 registered. Key rulings: machinery-vs-semantics capability boundary;
+B9.5 Platform Extraction gate before B10; wording rule; Stage-2/3 design
+workstream commissioned; extraction at B9.5 with platform-first discipline from
+B5/inc2.
+
+### WS-B remediation
+- [x] **CL-14** ADR-0009 written (boundary + B9.5 gate). Accepted at merge.
+- [x] **CL-15** B9.5 stage inserted: BUILD_TRACKER row added; deviation from the
+  locked Build & Quality Plan recorded as DEC-0005 (tracker is truth per EB8).
+- [ ] **CL-16** Generalise `contracts/` to vertical-neutral. Latest B9.5;
+  earlier if touched at B5/inc2.
+- [ ] **CL-17** Apply the DEC-0006 wording rule to external material at next
+  revision of each document.
+- [ ] **CL-18** Stage-2/3 minimum design brief (D-07). Named workstream,
+  post-review.
+- [x] **CL-10** (from 2 Jul list) BUILD_TRACKER B5 row restated with this
+  commit.
 
 ## Workstream C — Specifications currency
 *(not started)* First exhibit identified (2 Jul): `spec-01-working-brief-v0_2.md`

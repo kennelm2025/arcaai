@@ -22,12 +22,13 @@ Status: NOT STARTED / IN PROGRESS / COMPLETE / GATE PASSED. Update at every gate
 | B2 | 1–2 | Synthetic data — fraud (generator, GE suite, data dictionary) | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
 | B3 | 2–3 | Fraud features + anti-leakage suite | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
 | B4 | 3 | Baseline + MVM + calibration (fraud) | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
-| B5 | 4 | BentoML serving + FastAPI + contracts | NOT STARTED | NOT STARTED | NOT STARTED | |
+| B5 | 4 | BentoML serving + FastAPI + contracts | IN PROGRESS — inc1 COMPLETE (PR #5, `5f4e570`) | IN PROGRESS — inc1 COMPLETE | NOT STARTED (inc2 pending resume decision) | |
 | B6 | 4–5 | LangGraph agent v0 + LLM (Llama 3.1 8B) | NOT STARTED | NOT STARTED | NOT STARTED | |
 | B7 | 5–6 | Fraud RAG (ChromaDB, 50+ seed docs, RAGAS) | NOT STARTED | NOT STARTED | NOT STARTED | |
 | B8 | 6–7 | Guardrails (Presidio, OPA, grounding, injection detector selection) | NOT STARTED | NOT STARTED | NOT STARTED | |
 | B9 | 7–8 | Chat UI + audit-trail replay (→ WS1.4 artefact) | NOT STARTED | NOT STARTED | NOT STARTED | |
-| B10 | 8–10 | Replicate — Compliance + RM verticals | NOT STARTED | NOT STARTED | NOT STARTED | |
+| B9.5 | — | Platform Extraction (ADR-0009 / DEC-0005): extract ML lifecycle machinery to platform layer; vertical-neutral contracts; exit = 2nd vertical consumes, not copies | NOT STARTED | NOT STARTED | NOT STARTED | |
+| B10 | 8–10 | Instantiate — Compliance + RM verticals against the platform template (restated per ADR-0009; gated by B9.5 exit) | NOT STARTED | NOT STARTED | NOT STARTED | |
 | B11 | 10–11 | Observability — Grafana 8 panels, Evidently, kill-switch drill | NOT STARTED | NOT STARTED | NOT STARTED | |
 | B12 | 11–12 | Hardening + demo pack (3 scripts, 70B demo config, deploy guide v0) | NOT STARTED | NOT STARTED | NOT STARTED | |
 
@@ -41,4 +42,4 @@ Status: NOT STARTED / IN PROGRESS / COMPLETE / GATE PASSED. Update at every gate
 
 ## DEC index
 
-See DECISIONS.md. Next DEC number: DEC-0005.
+See DECISIONS.md. Next DEC number: DEC-0007.
