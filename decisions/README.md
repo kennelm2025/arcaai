@@ -87,7 +87,7 @@ unambiguous to a reviewer running a traceability check.
 | 0003 | Platform positioning: pipeline-as-platform | Accepted |
 | 0004 | Target market segment (gates Spec 01 §6) | Reserved (stub) |
 | 0005 | Data strategy | Reserved (stub) |
-| 0006 | Serving model source: DVC-pinned artefacts, not an MLflow Registry | Proposed |
+| 0006 | Serving model source: DVC-pinned artefacts, not an MLflow Registry | Accepted |
 | 0007 | Artefact store: DVC as the artefact source-of-truth | Accepted (backfilled) |
 | 0008 | Model-serving framework: BentoML as the platform standard | Accepted (backfilled) |
 
