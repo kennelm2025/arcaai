@@ -1,8 +1,9 @@
 # Governance Review — Workstream B pack: Architecture & design coherence
 
-**v0.2 (2 Jul 2026):** WS-A now CLOSED — head-start evidence folded into §2a;
-BentoML question in Q-B3 updated (ruled platform standard, ADR-0008). Still
-pending before send: the §5 source-tree pull.
+**v0.3 (2 Jul 2026) — SEND VERSION.** WS-A CLOSED; head-start evidence in §2a;
+source tree pulled and folded into §2b. Q-B3 updated for the ADR-0007/0008
+rulings. Remaining §5 evidence (spec contents, Stage-2/3 design doc) will be
+pulled during consolidation if the panel's positions require it.
 
 Second workstream of the ArcaAI governance review. WS-A (decision-system integrity)
 is CLOSED (14 Jun): the two colliding `ADR-` namespaces are separated (`ADR-NNNN` =
@@ -10,9 +11,9 @@ formal architecture decisions in `decisions/`; `DEC-NNNN` = the build/design log
 and the architecture decisions below are the baseline this workstream checks the build
 against. Take **positions** on §4 — do not approve. Challenge Claude's positions (§3).
 
-**Caveat:** unlike WS-A (which had repo greps), WS-B's evidence is partial. §3 are
-**hypotheses to test**, not findings. §5 lists the evidence to pull before final
-consolidation.
+**Caveat:** §3 are **hypotheses to test**, not findings. The source tree (§2b) is
+factual; what it *means* for the platform claim is exactly what you are being
+asked to judge.
 
 ---
 
@@ -55,6 +56,51 @@ consolidation.
 - Two P-B3 slices are **pre-answered by ratified ADRs**: serving framework =
   platform-level (ADR-0008); artefact store = platform-level (ADR-0007).
   Anti-leakage, calibration, and provenance remain open — take positions on those.
+
+### 2b. Source tree (pulled 2 Jul 2026, post-PR #7 main)
+
+Top-level directories (caches/venv noise excluded):
+
+```
+agent/            (prompt_templates, tools)
+api/              (routers, schemas)
+archive/          (superseded docs, snapshots)
+contracts/        (fraud_scoring.py, __init__.py)
+data/fraud/models/
+decisions/        (ADR-0001..0008, README, template)
+diagrams/
+docs/             (build, glossary, governance, reviews, rfcs, specs)
+docs/specs/       (01-product-definition .. 08-test-and-validation — all eight
+                   folders exist)
+frontend/
+infra/            (postgres-init)
+ingest/
+monitoring/       (evidently, grafana)
+scripts/
+tests/
+verticals/
+  compliance/     (bare — no subdirectories)
+  rm_support/     (bare — no subdirectories)
+  fraud/          (evaluation, features, serving, synthetic, tests, training,
+                   validation)
+```
+
+Factual observations for the panel to weigh:
+
+- **There is no `platform/`, `core/`, or `pipeline/` directory.** The ML
+  machinery — features, training, evaluation, validation, synthetic data, and
+  serving — lives entirely inside `verticals/fraud/`.
+- The top level contains the L1/L2 wrappers (`api/`, `agent/`), shared infra
+  (`infra/`, `monitoring/`, `ingest/`, `scripts/`), and `contracts/` — one
+  fraud-named contract.
+- `verticals/compliance/` and `verticals/rm_support/` exist as **empty
+  placeholders** — the monorepo skeleton anticipated multiple verticals, but
+  nothing platform-shaped has been extracted for them to consume.
+- `verticals/fraud/serving/` is vertical-local while ADR-0008 declares BentoML
+  the *platform* serving standard — the pattern exists in one instance; no
+  reusable serving component exists outside the vertical.
+- All eight spec folders exist under `docs/specs/` (relevant to WS-C's
+  inventory question; contents not yet assessed).
 
 ## 3. Claude's positions (hypotheses — challenge them)
 
@@ -101,11 +147,10 @@ Q-B5 (red-team). A bank's *architecture* reviewer (not Model Risk — the archit
 walked through this. Where is the "platform" claim most exposed? What's the question
 they ask that there isn't a good answer to yet?
 
-## 5. Evidence to pull (before final consolidation)
+## 5. Evidence pulled / remaining
 
-- Source tree of `verticals/` and any `platform/`, `core/`, `pipeline/`, `src/` dirs —
-  the single most decisive artefact (does a platform core exist distinct from the
-  vertical?). PowerShell: `Get-ChildItem -Recurse -Directory | Select FullName`.
-- `docs/specs/02-solution-architecture/` and `docs/specs/04-data-and-ml/` — to check
-  spec↔build alignment.
-- Any Stage-2/3 / upskilling design doc (or confirmation none exists yet).
+- **Source tree — PULLED (§2b).** The decisive artefact for P-B1.
+- Remaining, to pull during consolidation if positions require:
+  `docs/specs/02-solution-architecture/` and `docs/specs/04-data-and-ml/`
+  contents (spec↔build alignment); any Stage-2/3 / upskilling design doc (or
+  confirmation none exists yet).
