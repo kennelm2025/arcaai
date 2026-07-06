@@ -90,6 +90,7 @@ unambiguous to a reviewer running a traceability check.
 | 0006 | Serving model source: DVC-pinned artefacts, not an MLflow Registry | Accepted |
 | 0007 | Artefact store: DVC as the artefact source-of-truth | Accepted (backfilled) |
 | 0008 | Model-serving framework: BentoML as the platform standard | Accepted (backfilled) |
+| 0009 | Platform/vertical capability boundary and the Platform Extraction gate (B9.5) | Accepted |
 
 > **Audit note (dangling-reference sweep, June 2026 - resolved by the governance review,
 > Workstream A).** The earlier sweep flagged three issues, now dispositioned:

@@ -1,6 +1,6 @@
 # ADR-0009 — Platform/vertical capability boundary and the Platform Extraction gate (B9.5)
 
-**Status:** Proposed
+**Status:** Accepted
 **Decision Date:** 2 July 2026
 **Recorded Date:** 2 July 2026
 **Decision Type:** Contemporary
