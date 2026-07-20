@@ -31,7 +31,7 @@ dev = [
 ]
 
 [tool.setuptools]
-packages = ["agent", "api", "verticals", "ingest"]
+packages = ["agent", "api", "contracts", "verticals", "ingest"]
 
 [tool.ruff]
 line-length = 100
