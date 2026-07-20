@@ -9,6 +9,7 @@ on:
     paths:
       - "api/**"
       - "agent/**"
+      - "contracts/**"
       - "ingest/**"
       - "frontend/**"
       - "tests/**"

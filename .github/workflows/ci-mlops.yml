@@ -9,6 +9,7 @@ on:
     paths:
       - "verticals/**"
       - "monitoring/evidently/**"
+      - "contracts/**"
       - ".github/workflows/ci-mlops.yml"
 
 jobs:
