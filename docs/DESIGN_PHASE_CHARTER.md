@@ -1,3 +1,9 @@
+> **HISTORICAL — design phase closed June 2026 at lockdown (recorded WS-C, July 2026).**
+> This charter governed the design phase, which completed at the June
+> 2026 lockdown (build entry gate PASSED). It is not superseded; it is
+> finished. The operative regime is /DECISIONS.md. See DEC-0007.
+
+---
 # Design Phase Charter
 
 **Status:** Draft v0.1 — awaiting first SME review round

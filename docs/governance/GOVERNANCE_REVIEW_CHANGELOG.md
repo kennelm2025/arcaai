@@ -102,12 +102,15 @@ B5/inc2.
   commit.
 
 ## Workstream C — Specifications currency
-*(not started)* First exhibit identified (2 Jul): `spec-01-working-brief-v0_2.md`
+**Run 21 Jul 2026. Outcome: GOVERNANCE_REVIEW_WS-C_outcome.md (F-C01..F-C06); retirements recorded in DEC-0007. This changelog is the canonical CL ledger per DEC-0007.** First exhibit identified (2 Jul): `spec-01-working-brief-v0_2.md`
 is dated 13 May, pre-lockdown — harvest map targets Banking Architecture **v0.4**
 and exec deck v12, both superseded by the locked v1.0b suite. Its open questions
 7b (9-vs-11 use cases) and the §3 tagline candidate are already settled by rulings
 R1 and R3 respectively; ADR-0004 stub now exists for its §7a dependency. Re-base
-before any drafting.
+before any drafting. **Done: retired with tombstone and content disposition, this date.**
+- [ ] **CL-19** *(new, 21 Jul)* Sharpen the two-kinds-of-pre-trained-models distinction in Banking Architecture (open-weight LLMs inherited as-is vs reference predictive models the bank upskills); canonical language already exists in the glossary ("Reference model"). Apply at next BA revision, alongside CL-17. *(Source: working brief 6a, dispositioned at retirement; F-C02)*
+- [ ] **CL-20** *(new, 21 Jul)* Add the fourth competitive category (consulting/services firms: platform with consulting-enabled delivery, not a services engagement) to Banking Architecture positioning and the next deck design pass (WS3.1). *(Source: working brief 6d, dispositioned at retirement; F-C02)*
+
 
 ## Workstream D — Build & Quality Plan
 *(not started)* Carries CL-10 evidence (tracker accuracy is a §4 D task).
