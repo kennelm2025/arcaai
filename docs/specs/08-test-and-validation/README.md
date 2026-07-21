@@ -1,3 +1,5 @@
+> **RETIRED — July 2026 (WS-C).** This section was never populated; the spec regime it belongs to is superseded. See `../README.md` and /DECISIONS.md (DEC-0007).
+
 # Test and Validation Specification
 
 **Spec number:** 08 of 08

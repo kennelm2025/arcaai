@@ -45,6 +45,8 @@ requires an entry here. Format: ID · decision · date · status.
 * **DEC-0005 — Build stage B9.5 (Platform Extraction) inserted (closed, July 2026).** Deviation from the locked Build \& Quality Plan v1.0 (twelve stages B1–B12), authorised by ADR-0009 following the WS-B governance review (unanimous panel). B9.5 sits between B9 and B10: extract the platform-side capabilities per the ADR-0009 boundary table from `verticals/fraud/` into a top-level platform layer; generalise `contracts/` to vertical-neutral. Exit criterion gates B10: a second vertical consumes shared ML lifecycle components rather than copying them (target 80–90% platform reuse; bootstrap-from-primitives test). B10 restated from "replicate the fraud vertical" to "instantiate verticals against the platform template". BUILD\_TRACKER.md carries the row per ruling EB8; the locked docx is unchanged.
 * **DEC-0006 — Platform wording rule (closed, July 2026).** Until the B9.5 exit criterion is met, all client-facing and locked-document language describes pipeline-as-platform as "architecturally specified, partially evidenced in the current implementation" — never "the platform exists". Source: WS-B finding F-014 / ruling D-06. Applies at the next revision of each document (CL-17); no retro-edit of locked versions.
 
+* **DEC-0007 — Pre-lockdown spec regime retired; CL ledger declared canonical (closed, July 2026).** WS-C governance review (specifications currency; outcome: docs/governance/GOVERNANCE_REVIEW_WS-C_outcome.md, findings F-C01..F-C06). The pre-lockdown eight-spec regime (docs/specs/ tree and README), the RFC mechanism (docs/rfcs/), and the Spec 01 working brief v0.2 are RETIRED with tombstones in place; DESIGN_PHASE_CHARTER.md marked HISTORICAL (phase complete, not superseded). Working-brief content dispositioned: section 6a re-homed as CL-19 (model-kinds distinction, next BA revision alongside CL-17); section 6d re-homed as CL-20 (fourth competitive category — consulting/services, next BA revision + WS3.1 deck pass); section 7e consciously dropped to WS3.1 scoping. Glossary (docs/glossary/) ruled OPERATIVE with a light currency pass (R3 strapline added; regime references retired). GOVERNANCE_REVIEW_CHANGELOG.md is DECLARED THE CANONICAL CL LEDGER — all CL items are raised, tracked, and closed there and nowhere else; other documents may scope or cite CL items but must point at the ledger. This document's build-status tail now defers to BUILD_TRACKER.md per ruling EB8.
+
 ## Locked suite (June 2026)
 
 |Document|Locked version|
@@ -58,7 +60,7 @@ requires an entry here. Format: ID · decision · date · status.
 |Executive Presentation|v2a (diagram readability + raster content patches)|
 
 Companion governance documents: ArcaAI Document Review \& Lockdown Register v1.0 · ArcaAI Build \& Quality Plan v1.0.
-Build entry gate: PASSED (Phase 0 steps 0.1–0.4 complete; 0.5 = stand up this repo). Next: build stages B1–B2.
+Build entry gate: PASSED (Phase 0 steps 0.1–0.4 complete; 0.5 = stand up this repo). Build status: see BUILD_TRACKER.md (ruling EB8).
 
 
 

@@ -1,3 +1,13 @@
+> **RETIRED — July 2026 (WS-C governance review).**
+> This eight-spec regime was superseded by the June 2026 lockdown before
+> any specification was drafted. The canonical specification set is the
+> locked document suite registered in /DECISIONS.md (seven locked
+> documents, rulings R1-R13, DEC change control). This file and the
+> eight section folders below it are retained as a tombstone so stale
+> links fail loudly rather than silently. Do not draft against this
+> structure. See DEC-0007.
+
+---
 # Specifications
 
 The eight canonical specifications that constitute the ArcaAI platform blueprint.

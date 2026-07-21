@@ -1,3 +1,11 @@
+> **RETIRED — July 2026 (WS-C governance review). See DEC-0007.**
+> The RFC mechanism belonged to the pre-lockdown spec regime and was
+> never used. Change control under the operative regime is DEC entries
+> in /DECISIONS.md, authorised by ADRs in /decisions/ where the change
+> deviates from a locked document (precedent: DEC-0005 via ADR-0009).
+> The template below is retained under this tombstone for reference.
+
+---
 # Request for Comments (RFC)
 
 RFCs are how non-trivial proposals are shared, discussed, and resolved **before** implementation begins.

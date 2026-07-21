@@ -1,3 +1,5 @@
+> **RETIRED — July 2026 (WS-C).** This section was never populated; the spec regime it belongs to is superseded. See `../README.md` and /DECISIONS.md (DEC-0007).
+
 # Technical Architecture Specification
 
 **Spec number:** 03 of 08

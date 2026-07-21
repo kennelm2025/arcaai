@@ -1,3 +1,28 @@
+> **RETIRED — July 2026 (WS-C governance review). See DEC-0007.**
+> This working brief fed the eight-spec drafting regime, superseded by
+> the June 2026 lockdown before Spec 01 was drafted. Its content has
+> been dispositioned as follows:
+>
+> - Superseded by lockdown rulings: use-case count (R1), jurisdiction
+>   (R6), tagline candidate (rejected in favour of R3), pipeline-as-
+>   platform framing (absorbed, now constrained by DEC-0006), and all
+>   spec-structure material (sister graph, section roadmap, template
+>   dependency, effort estimates).
+> - Live, re-homed as CL-19: the two-kinds-of-pre-trained-models
+>   distinction (section 6a) - open-weight LLMs inherited as-is vs
+>   reference predictive models the bank upskills. Target: next
+>   Banking Architecture revision, alongside CL-17.
+> - Live, re-homed as CL-20: the fourth competitive category
+>   (section 6d) - positioning against consulting/services firms.
+>   Target: next Banking Architecture revision + next deck design
+>   pass (WS3.1).
+> - Consciously dropped: the board-deck / three-reader-tiers
+>   observation (section 7e) - deferred to WS3.1 scoping, no CL item.
+>
+> Nothing else in this brief is operative. Retained so stale links
+> fail loudly rather than silently.
+
+---
 # Spec 01 — Product Definition — Working Brief
 
 **Status:** Working brief v0.2, pre-draft. Produced 2026-05-13.

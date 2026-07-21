@@ -1,20 +1,20 @@
 # Glossary
 
-The shared canonical glossary for ArcaAI. Every term defined here is referenced across multiple specifications. **No specification re-defines a term that exists in the glossary.**
+The shared canonical glossary for ArcaAI. Every term defined here is referenced across the locked document suite (see /DECISIONS.md) and the repo documents. **No document re-defines a term that exists in the glossary.**
 
 ## How to use the glossary
 
-- When writing a specification, look here first before defining a term
-- If the term you need is missing, add it here in the same PR as the specification change that needs it
-- Definitions are kept short — one or two sentences. The specification can elaborate; the glossary anchors the term.
+- When writing any repo document, look here first before defining a term
+- If the term you need is missing, add it here in the same PR as the change that needs it
+- Definitions are kept short — one or two sentences. The document can elaborate; the glossary anchors the term.
 
 ## Initial terms
 
-This is a starting set. The glossary grows as specifications are written.
+This is a starting set. The glossary grows as the suite evolves.
 
 ---
 
-**ArcaAI** — The hybrid ML and AI platform that this repository specifies. Combines machine learning, agentic orchestration, and open-weight LLMs into a single platform that runs inside a bank's perimeter.
+**ArcaAI** — The AI control layer for regulated banking decisions (ruling R3); a hybrid ML and AI platform that this repository specifies. Combines machine learning, agentic orchestration, and open-weight LLMs into a single platform that runs inside a bank's perimeter.
 
 **Reference model** — A pre-trained ML model produced by Arca, trained on representative public and synthetic banking data. Shipped with a Model Card. Not for production decisioning. Starting point for the bank's upskilling process.
 
@@ -55,8 +55,8 @@ This is a starting set. The glossary grows as specifications are written.
 - Fairness baselines / protected characteristics
 - Calibration
 - Adversarial robustness
-- The five architectural layers (L1 through L5) once Solution Architecture is drafted
+- The five architectural layers (L1 through L5) per the locked Banking Architecture / Solution Architecture (ruling R2)
 - The eleven use cases by name
 - Specific regulations (PRA SS1/23, DORA, EU AI Act, etc.) as they're referenced
 
-Add terms to the glossary as they're needed in specifications.
+Add terms to the glossary as they're needed, via PR.

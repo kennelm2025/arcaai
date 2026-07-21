@@ -1,3 +1,5 @@
+> **RETIRED — July 2026 (WS-C).** This section was never populated; the spec regime it belongs to is superseded. See `../README.md` and /DECISIONS.md (DEC-0007).
+
 # Solution Architecture Specification
 
 **Spec number:** 02 of 08
