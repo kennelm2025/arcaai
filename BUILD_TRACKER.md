@@ -22,7 +22,7 @@ Status: NOT STARTED / IN PROGRESS / COMPLETE / GATE PASSED. Update at every gate
 | B2 | 1–2 | Synthetic data — fraud (generator, GE suite, data dictionary) | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
 | B3 | 2–3 | Fraud features + anti-leakage suite | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
 | B4 | 3 | Baseline + MVM + calibration (fraud) | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
-| B5 | 4 | BentoML serving + FastAPI + contracts | IN PROGRESS — inc1 COMPLETE (PR #5, `5f4e570`) | IN PROGRESS — inc1 COMPLETE | COMPLETE (PR #11, `5f3d3d5`) | |
+| B5 | 4 | BentoML serving + FastAPI + contracts | COMPLETE — inc1 (PR #5, `5f4e570`), inc2 (PR #11, `5f3d3d5`) | COMPLETE | GATE PASSED | Jul 2026 |
 | B6 | 4–5 | LangGraph agent v0 + LLM (Llama 3.1 8B) | NOT STARTED | NOT STARTED | NOT STARTED | |
 | B7 | 5–6 | Fraud RAG (ChromaDB, 50+ seed docs, RAGAS) | NOT STARTED | NOT STARTED | NOT STARTED | |
 | B8 | 6–7 | Guardrails (Presidio, OPA, grounding, injection detector selection) | NOT STARTED | NOT STARTED | NOT STARTED | |
