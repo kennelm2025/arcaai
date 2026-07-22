@@ -1,4 +1,7 @@
 [core]
-    remote = localstore
+    remote = s3store
 ['remote "localstore"']
     url = ../.dvcstore
+['remote "s3store"']
+    url = s3://arcaai-dvc-kennelm/dvc
+    region = eu-west-2

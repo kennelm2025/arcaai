@@ -27,3 +27,6 @@ data/*
 Thumbs.db
 .DS_Store
 ~$*
+
+# CI build artefacts - generated, never committed (CL-12)
+provenance_manifest.json
