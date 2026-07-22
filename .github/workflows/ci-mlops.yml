@@ -42,10 +42,6 @@ jobs:
           cache: pip
       - name: Install
         run: pip install -e ".[dev]" "dvc[s3]"
-      - name: Diagnostic - are AWS secrets present in env
-        run: |
-          if [ -z "$AWS_ACCESS_KEY_ID" ]; then echo "KEY_ID: EMPTY/UNSET"; else echo "KEY_ID: present (${#AWS_ACCESS_KEY_ID} chars)"; fi
-          if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then echo "SECRET: EMPTY/UNSET"; else echo "SECRET: present (${#AWS_SECRET_ACCESS_KEY} chars)"; fi
       - name: Pull pinned model artefacts (DVC verifies md5 vs lock)
         run: dvc pull verticals/fraud/dvc.yaml:train_mvm verticals/fraud/dvc.yaml:calibrate_mvm
       - name: Generate provenance manifest (CL-12)
