@@ -27,3 +27,39 @@ jobs:
         run: ruff check verticals
       - name: Vertical test suites
         run: pytest verticals -q
+
+  promotion-gate:
+    needs: vertical-tests
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install
+        run: pip install -e ".[dev]" "dvc[s3]"
+      - name: Pull pinned model artefacts (DVC verifies md5 vs lock)
+        run: dvc pull data/fraud/models/xgb_mvm.ubj data/fraud/models/platt_scaler.json
+      - name: Generate provenance manifest (CL-12)
+        run: python scripts/generate_provenance_manifest.py
+      - name: Gate a - manifest sha256 equals hash of DVC-pulled artefact (CL-13a)
+        run: |
+          python - <<'EOF'
+          import hashlib, json, sys
+          m = json.load(open("provenance_manifest.json"))
+          h = hashlib.sha256(open("data/fraud/models/xgb_mvm.ubj","rb").read()).hexdigest()
+          ok = m["artifact_sha256"] == h
+          print(f"manifest={m['artifact_sha256']}\npulled  ={h}\nmatch={ok}")
+          sys.exit(0 if ok else 1)
+          EOF
+      - name: Gate c - score reference payload via serving code path (CL-13c)
+        run: python scripts/gate_score_check.py
+      - name: Upload manifest artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: provenance-manifest
+          path: provenance_manifest.json
