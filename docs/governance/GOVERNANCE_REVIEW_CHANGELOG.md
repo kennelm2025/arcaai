@@ -62,13 +62,21 @@ ADR-0006 flipped **Proposed → Accepted**, executing the merge-time rule (state
 in both the README and 0006's own numbering note) that was never actioned at the
 14 Jun merge. The two commitments 0006 makes that are not yet built (F-009) are
 downgraded to tracked follow-ups per the F-009 disposition options:
-- [ ] **CL-12** Build the B4 sidecar provenance manifest
+- [x] **CL-12** Build the B4 sidecar provenance manifest
   (`data/fraud/models/provenance.json`; ADR-0006 decision 3). **Gates B5 gate
   close** (not resume).
-- [ ] **CL-13** Build the promotion-gate CI check — instantiate scorer from
+- [x] **CL-13** Build the promotion-gate CI check — instantiate scorer from
   proposed pinned artefacts; parity + schema contract + calibration invariants +
   latency budget; fail merge on violation (ADR-0006 decision 5). **Gates B5 gate
   close** (not resume).
+
+### Closure - CL-12/CL-13 (22 Jul 2026)
+CL-12 and CL-13 closed jointly. Evidence: PR #14 (merge a8fe650) + PR #15 (merge 1179abe);
+promotion-gate GREEN on ci-mlops #41 (branch) / #42 (main). Manifest is generated
+platform-side in CI (scripts/generate_provenance_manifest.py, same serving code path)
+and uploaded as a build artefact, not committed at the ADR-0006 literal path.
+Gate = sha256 identity check + known-answer score check (scripts/gate_score_check.py).
+Latency not gated per B5_GATE.md section 5.
 
 ### Trail-integrity note (2 Jul 2026)
 The repo copies of this changelog, the WS-A outcome, and the session handover were
