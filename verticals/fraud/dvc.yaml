@@ -69,8 +69,7 @@ stages:
       - data/fraud/features.parquet
       - data/fraud/models/xgb_mvm.ubj
     outs:
-      - data/fraud/models/platt_scaler.json:
-          cache: false
+      - data/fraud/models/platt_scaler.json
     metrics:
       - data/fraud/calibration_report.json:
           cache: false
