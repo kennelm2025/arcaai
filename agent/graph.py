@@ -10,11 +10,14 @@ from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
+from agent.scoring import score_node
+
 
 class AgentState(TypedDict):
     query: str
     transaction: dict
     score: float
+    provenance: dict
     narrative: str
 
 
@@ -37,10 +40,10 @@ def package_stub(state: AgentState) -> dict:
 # Reserved node name for B8: "injection_check" (sits between START and
 # intake when selected). Documented here so the slot survives review.
 
-def build_graph():
+def build_graph(live_scoring: bool = False):
     g = StateGraph(AgentState)
     g.add_node("intake", intake)
-    g.add_node("score", score_stub)
+    g.add_node("score", score_node if live_scoring else score_stub)
     g.add_node("package", package_stub)
     g.add_edge(START, "intake")
     g.add_edge("intake", "score")
