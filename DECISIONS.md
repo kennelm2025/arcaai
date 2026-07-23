@@ -61,5 +61,6 @@ requires an entry here. Format: ID · decision · date · status.
 |Production Engineering Blueprint — ML Pipeline Sister Document|v1.1|
 |Executive Presentation|v2a (diagram readability + raster content patches)|
 
-Companion governance documents: ArcaAI Document Review \& Lockdown Register v1.0 · ArcaAI Build \& Quality Plan v1.0.
+Authoritative copies of the locked suite: docs/governance/
+Companion governance documents: ArcaAI Document Review & Lockdown Register v1.0 · ArcaAI Build & Quality Plan v1.0.
 Build entry gate: PASSED (Phase 0 steps 0.1–0.4 complete; 0.5 = stand up this repo). Build status: see BUILD_TRACKER.md (ruling EB8).
