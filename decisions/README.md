@@ -6,6 +6,8 @@ decided, why, what alternatives were rejected, and what consequences flow from t
 ADRs exist to answer the question "why is the system like this?" six months or six years
 after the decision was made, when the people who made it may have forgotten or moved on.
 
+> **Register scope (guard, July 2026).** This folder is the ADR register ONLY. Operational decision-log entries (`DEC-NNNN`) live in `/DECISIONS.md` at the repo root and NOWHERE else — do not add DEC files here. The two series are deliberately separate (WS-A namespace ruling; see audit note below). A misfiled DEC caught here on 23 Jul 2026 is WS-E incident 28.
+
 ## How to write an ADR
 
 1. Copy `_template.md` to `NNNN-short-name.md` where `NNNN` is the next sequential number.

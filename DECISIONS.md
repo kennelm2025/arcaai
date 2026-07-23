@@ -47,6 +47,8 @@ requires an entry here. Format: ID · decision · date · status.
 
 * **DEC-0007 — Pre-lockdown spec regime retired; CL ledger declared canonical (closed, July 2026).** WS-C governance review (specifications currency; outcome: docs/governance/GOVERNANCE_REVIEW_WS-C_outcome.md, findings F-C01..F-C06). The pre-lockdown eight-spec regime (docs/specs/ tree and README), the RFC mechanism (docs/rfcs/), and the Spec 01 working brief v0.2 are RETIRED with tombstones in place; DESIGN_PHASE_CHARTER.md marked HISTORICAL (phase complete, not superseded). Working-brief content dispositioned: section 6a re-homed as CL-19 (model-kinds distinction, next BA revision alongside CL-17); section 6d re-homed as CL-20 (fourth competitive category — consulting/services, next BA revision + WS3.1 deck pass); section 7e consciously dropped to WS3.1 scoping. Glossary (docs/glossary/) ruled OPERATIVE with a light currency pass (R3 strapline added; regime references retired). GOVERNANCE_REVIEW_CHANGELOG.md is DECLARED THE CANONICAL CL LEDGER — all CL items are raised, tracked, and closed there and nowhere else; other documents may scope or cite CL items but must point at the ledger. This document's build-status tail now defers to BUILD_TRACKER.md per ruling EB8.
 
+* **DEC-0008 — DVC default remote switched to s3store (AWS S3) (closed, July 2026).** Default DVC remote is now `s3store` (`s3://arcaai-dvc-kennelm/dvc`, eu-west-2), replacing the prior default; local creds in `.dvc/config.local`, CI creds via repo secrets. Rationale: AWS over R2 — target customers (regulated banks) demo and deploy into their own AWS estates; the endgame is a self-contained deployable in which banks never touch our bucket, so aligning the artefact store with that estate now removes a later migration. Cross-ref ADR-0007 (artefact store). Scope note: the separate platform-endgame decision (AWS as deployment target) remains PARKED as candidate — this entry records the remote switch only. Recording note: decided/executed 2026-07-22 (AM session), recorded 2026-07-23 — captured one session late; live instance of the CL-08 decision-capture gap (cite as evidence when CL-08 executes).
+
 ## Locked suite (June 2026)
 
 |Document|Locked version|
@@ -61,6 +63,3 @@ requires an entry here. Format: ID · decision · date · status.
 
 Companion governance documents: ArcaAI Document Review \& Lockdown Register v1.0 · ArcaAI Build \& Quality Plan v1.0.
 Build entry gate: PASSED (Phase 0 steps 0.1–0.4 complete; 0.5 = stand up this repo). Build status: see BUILD_TRACKER.md (ruling EB8).
-
-
-
