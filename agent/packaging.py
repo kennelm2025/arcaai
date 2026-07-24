@@ -17,7 +17,7 @@ prose only.
 
 Facts:
 - Fraud probability (Platt-calibrated): {score}
-- Model artifact sha256 (prefix): {sha_prefix}
+- Model artifact prefix: {sha_prefix}
 - Calibration parameters present: {platt_present}
 
 The note must quote the probability value {score} exactly as written, and \
@@ -29,15 +29,15 @@ def build_prompt(state: dict) -> str:
     prov = state["provenance"]
     return PROMPT_TEMPLATE.format(
         score=f"{state['score']:.4f}",
-        sha_prefix=prov["sha256"][:12],
-        platt_present="yes" if prov.get("platt_params") else "no",
+        sha_prefix=prov["artifact_sha256"][:12],
+        platt_present="yes" if ("platt_a" in prov and "platt_b" in prov) else "no",
     )
 
 
 def validate_prose(prose: str, state: dict) -> None:
     """Hallucination tripwire. Raises ValueError - no fallback prose."""
     score_str = f"{state['score']:.4f}"
-    sha_prefix = state["provenance"]["sha256"][:12]
+    sha_prefix = state["provenance"]["artifact_sha256"][:12]
     if score_str not in prose:
         raise ValueError(
             f"packaging validation failed: score {score_str} "
@@ -45,7 +45,7 @@ def validate_prose(prose: str, state: dict) -> None:
         )
     if sha_prefix not in prose:
         raise ValueError(
-            f"packaging validation failed: sha256 prefix {sha_prefix} "
+            f"packaging validation failed: artifact prefix {sha_prefix} "
             "absent from generated prose"
         )
     if len(prose.strip()) < 80:
