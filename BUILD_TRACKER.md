@@ -23,7 +23,7 @@ Status: NOT STARTED / IN PROGRESS / COMPLETE / GATE PASSED. Update at every gate
 | B3 | 2–3 | Fraud features + anti-leakage suite | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
 | B4 | 3 | Baseline + MVM + calibration (fraud) | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
 | B5 | 4 | BentoML serving + FastAPI + contracts | COMPLETE — inc1 (PR #5, `5f4e570`), inc2 (PR #11, `5f3d3d5`) | COMPLETE | GATE PASSED | Jul 2026 |
-| B6 | 4–5 | LangGraph agent v0 + LLM (Llama 3.1 8B) | IN PROGRESS — 4 of ~5 incs (PRs #18, #19, #20); NEXT inc5: e2e latency vs R7 → gate | IN PROGRESS | NOT STARTED | |
+| B6 | 4–5 | LangGraph agent v0 + LLM (Llama 3.1 8B) | COMPLETE — 5 incs (PRs #18–#20, this PR); gate evidence docs/build/B6_GATE.md | COMPLETE | GATE PASSED | Jul 2026 |
 | B7 | 5–6 | Fraud RAG (ChromaDB, 50+ seed docs, RAGAS) | NOT STARTED | NOT STARTED | NOT STARTED | |
 | B8 | 6–7 | Guardrails (Presidio, OPA, grounding, injection detector selection) | NOT STARTED | NOT STARTED | NOT STARTED | |
 | B9 | 7–8 | Chat UI + audit-trail replay (→ WS1.4 artefact) | NOT STARTED | NOT STARTED | NOT STARTED | |

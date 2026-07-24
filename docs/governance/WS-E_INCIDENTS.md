@@ -35,12 +35,37 @@ repo is itself CL-08 evidence.
     commit (joins the git-diff eyeball). Amend-and-force-with-lease
     is the fix pattern pre-merge on own PR branch; never post-merge.
 
+30. **Notepad clobber of DEC-0008 during pointer edit.** Caught at
+    pre-add diff eyeball, restored from HEAD, edit redone. Exhibit B
+    (2026-07-24): BUILD_TRACKER.md wholesale-overwritten with a script
+    during the B6 row edit; caught pre-add, `git restore`, redone —
+    second save by the same tripwire in two sessions.
+31. **Chained multi-command pastes bit twice.** (a) ruff/pytest chain
+    swallowed pytest output; (b) commit+push chained past a skipped
+    `git add` — commit no-op'd, push shipped an empty branch. RULE
+    (trialled): ship-critical git sequences run one command per
+    prompt; read each output before the next.
+32. **Boarding-item attrition.** Tracker bump missed across five
+    prompts (PR #20). Exhibits (2026-07-24): harness fixture-import
+    edit specified in plan, not landed, hit twice at runtime. RULE
+    (trialled): written boarding checklist ticked against `git status`
+    before `git add`, not a mental list.
+33. **Stale scrollback misled twice more.** Extension of 14/25:
+    `git log` / `Select-String` are the truth-tellers, not terminal
+    history or decoration.
+34. **Provenance key mismatch caught by first live e2e run.**
+    packaging.py read `sha256`/`platt_params`; the score node emits
+    `artifact_sha256`/`platt_a`+`platt_b`. Invisible to unit tests on
+    an invented canned fixture; the `platt_params` variant produced a
+    factually wrong governed note with no exception. Fixed in the inc5
+    PR; fixtures consolidated to `agent/fixtures.py` mirroring live
+    shape. Cross-ref docs/build/B6_GATE.md.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a
-  just-deleted remote branch leaves ghost decoration. Stale pasted
-  scrollback bit twice more this session. `git log` / `Select-String`
-  are the truth-tellers, not terminal history or decoration.
+  just-deleted remote branch leaves ghost decoration. See item 33.
 - pytest `-v` is overridden by pyproject config (dots print
   regardless); use `-vv` or `--durations=0` when per-test visibility
   matters.
+

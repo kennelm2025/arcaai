@@ -2,21 +2,14 @@
 stub-default graph) + self-skipping Ollama integration."""
 import pytest
 
+from agent.fixtures import SCORED_FIXTURE
 from agent.packaging import build_prompt, package_node, validate_prose
 
-FIXTURE_STATE = {
-    "query": "assess this transaction",
-    "score": 0.9865,
-    "provenance": {
-        "sha256": "a" * 64,
-        "platt_params": {"a": -1.0, "b": 0.5},
-    },
-}
-SHA_PREFIX = "a" * 12
+SHA_PREFIX = SCORED_FIXTURE["provenance"]["artifact_sha256"][:12]
 
 
 def test_build_prompt_embeds_facts():
-    prompt = build_prompt(FIXTURE_STATE)
+    prompt = build_prompt(SCORED_FIXTURE)
     assert "0.9865" in prompt
     assert SHA_PREFIX in prompt
     assert "yes" in prompt
@@ -28,7 +21,7 @@ def test_validate_rejects_missing_score():
         "additional words to comfortably pass the minimum length check."
     )
     with pytest.raises(ValueError, match="score"):
-        validate_prose(prose, FIXTURE_STATE)
+        validate_prose(prose, SCORED_FIXTURE)
 
 
 def test_validate_rejects_missing_sha():
@@ -36,8 +29,8 @@ def test_validate_rejects_missing_sha():
         "The calibrated probability is 0.9865, padded out with enough "
         "additional words to comfortably pass the minimum length check."
     )
-    with pytest.raises(ValueError, match="sha256"):
-        validate_prose(prose, FIXTURE_STATE)
+    with pytest.raises(ValueError, match="artifact prefix"):
+        validate_prose(prose, SCORED_FIXTURE)
 
 
 def test_stub_default_keeps_ci_offline():
@@ -57,7 +50,7 @@ def _ollama_has_model() -> bool:
 
 @pytest.mark.skipif(not _ollama_has_model(), reason="Ollama/llama3.1:8b absent")
 def test_package_node_live():
-    out = package_node(FIXTURE_STATE)
+    out = package_node(SCORED_FIXTURE)
     note = out["narrative"]
     assert "0.9865" in note
     assert SHA_PREFIX in note
