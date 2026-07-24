@@ -60,6 +60,73 @@ repo is itself CL-08 evidence.
     factually wrong governed note with no exception. Fixed in the inc5
     PR; fixtures consolidated to `agent/fixtures.py` mirroring live
     shape. Cross-ref docs/build/B6_GATE.md.
+35. **Script-delivery encoding + working-directory class (2026-07-24).**
+    A BOM-less UTF-8 `.ps1` was parsed by Windows PowerShell 5.1 as ANSI:
+    each em-dash (E2 80 94) decoded via Windows-1252, whose trailing byte
+    0x94 is a curly closing double-quote, silently terminating string
+    literals and producing parser errors pointing nowhere near the fault.
+    Second clause, same script: `[IO.File]` static methods resolve
+    relative paths against the .NET process working directory, which
+    `Set-Location` does not change - the first run looked for DECISIONS.md
+    in `C:\Users\mikek` (recurrence of item 24, now with the fix stated as
+    a pin rather than a habit). Third clause: downloaded scripts carry
+    Mark-of-the-Web and are refused under RemoteSigned until
+    `Unblock-File`. All three caught before any write; guards held,
+    nothing corrupted. RULES: (a) any `.ps1` delivered for PS 5.1
+    execution is UTF-8 WITH BOM - repo `.md` stays no-BOM, the two rules
+    coexist because the consumers differ; (b) any script calling
+    `[IO.File]` pins `[Environment]::CurrentDirectory =
+    (Get-Location).Path` or uses absolute paths only; (c) `Unblock-File`
+    is a named step in the delivery sequence, not an ad-hoc recovery.
+36. **Panel-capture labelling (2026-07-24).** Governance Checkpoint 01
+    Round 1 outputs were returned unlabelled; a duplicate of Grok's review
+    was presented as ChatGPT's, and byte-identical text came within one
+    step of entering the record as two independent concurring reviews.
+    Caught by coordinator text comparison before analysis began. Had it
+    landed, a unanimity claim would have rested on a single reviewer.
+    RULE: panel outputs are labelled reviewer + round at the moment of
+    capture; the coordinator runs a distinctness check before any
+    cross-round analysis.
+37. **Ratified rule shipped without execution (2026-07-24).** The
+    backtick-free newline idiom ratified in item 27, `[char]13 +
+    [char]10`, is defective when passed to `String.Replace`: the
+    concatenation evaluates to a two-character string, PowerShell
+    resolves the overload from the second argument to
+    `Replace(Char,Char)`, and the cast throws at runtime. The rule sat
+    in the ledger from 22 Jul and was never executed once before being
+    delivered in a script. Caught on first run of the WS-E 35-36
+    append; guards held, no write occurred. RULES: (a) cast explicitly
+    to `[string]` when a `[char]` value feeds `.Replace`; (b) a house
+    rule that expresses a code idiom is not ratified until the idiom
+    has been run at least once.
+38. **Download-suffix ambiguity reached a commit (2026-07-24).** Three
+    copies of the same handover sat in Downloads - clean, `(1)` at 8 KB
+    superseded, `(2)` at 10 KB authoritative - and all three were copied
+    into `docs/governance/` and staged, producing a 4-file 522-insertion
+    commit where 2 files and 45 insertions were intended. Caught on the
+    GitHub compare page before any PR existed; repaired by
+    `git reset --soft HEAD~1`, removal, restage, force-with-lease.
+    Third occurrence of the class (07-22b hash forensics, the 17:32 /
+    17:34 / 17:53 trio, this). Prior judgement that the class was not
+    worth logging because it had not yet bitten was wrong; it bit
+    within the hour. RULES: (a) stale suffixed downloads are deleted at
+    capture time, before any copy step is written; (b) the copy step
+    names its source with `-LiteralPath` and is verified by byte size
+    against the expected file before `git add`; (c) `git status` is read
+    against a written boarding list, not scanned - the extra two files
+    were on screen and not seen (item 32 recurrence).
+39. **Command delivered ahead of its step (2026-07-24).** A repair
+    sequence was issued with the concluding `git push --force-with-lease`
+    in a runnable block alongside prose instructing that the commit be
+    held for a further edit. The push ran directly after the restage,
+    while HEAD was still at the reset target, forcing the remote branch
+    back to `ee0c916`. No loss - the staged set survived and the branch
+    had no PR or reviewer - but the remote briefly misrepresented the
+    work. Coordinator-side fault, not operator: runnable blocks read as
+    a queue regardless of surrounding prose. RULE: no command appears in
+    a runnable block before the step it belongs to; forward steps are
+    described in prose only, and the next block is issued after its
+    predecessor's output has been read.
 
 ## Footnotes
 
@@ -68,4 +135,8 @@ repo is itself CL-08 evidence.
 - pytest `-v` is overridden by pyproject config (dots print
   regardless); use `-vv` or `--durations=0` when per-test visibility
   matters.
-
+- To 35: for repo `.md` writes prefer an explicit LF variable over
+  `[Environment]::NewLine`, which is CRLF on Windows. `.gitattributes`
+  normalises `.md` to LF on staging, so CRLF in the working copy is
+  harmless to the committed blob but warns on every `git diff` and
+  leaves the working copy unlike what git checks out.
