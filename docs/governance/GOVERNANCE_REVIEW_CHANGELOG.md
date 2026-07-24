@@ -44,11 +44,11 @@ ci-mlops #25 green).
 - [ ] **CL-07** Triage `DECISIONS.md` entries for promotion to formal ADRs; the
   mortgage process-orchestration decision (DEC-0003) looks architecturally
   significant — candidate. *(Q-A1 triage)*
-- [ ] **CL-08** Add the decision-capture question to the gate checklist +
+- [x] **CL-08** *(closed 24 Jul 2026 — Checkpoint 01 chair action CF-2a; executed as the standing Gate review checklist section in BUILD_TRACKER.md, which also carries the CF-1 architecture-conformance question)* Add the decision-capture question to the gate checklist +
   BUILD_TRACKER: "What architecturally significant decisions since the last gate?
   → None | Existing ADR | DEC log only | New ADR required." *(Q-A5)*
 - [ ] **CL-09** Fold XGBoost + Platt rationale into the fraud Model Card. *(Q-A2)*
-- [ ] **CL-10** *(new, 2 Jul)* BUILD_TRACKER B5 row is wrong, not merely
+- [x] **CL-10** *(new, 2 Jul; duplicate-state corrected 24 Jul 2026 — Checkpoint 01 CF-2b; closure was already recorded in the later ticked entry)* BUILD_TRACKER B5 row is wrong, not merely
   conservative — inc1 is **merged to main** (PR #5, commit `5f4e570`, per
   ADR-0008 Evidence) but the row reads NOT STARTED across all columns. Restate
   as "inc1 COMPLETE (PR #5, `5f4e570`); inc2 + gate blocked on governance
