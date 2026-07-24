@@ -4,6 +4,15 @@
 
 Status: NOT STARTED / IN PROGRESS / COMPLETE / GATE PASSED. Update at every gate review.
 
+> **Schedule variance note (24 Jul 2026, Checkpoint 01 RAT-01).** The
+> week column from Build & Quality Plan v1.0 has been removed. The
+> build began early June 2026; B6 gated 24 Jul at roughly plan-week 7
+> against a planned week 4–5, and the week model was never
+> re-baselined. Per Checkpoint 01 (unanimous), gates are the official
+> schedule: current gate, next gate, entry/exit criteria, and the
+> actual-date column below. This note is the one-time variance record;
+> the week model is closed, not restated.
+
 ## Phase 0 — Lockdown
 
 | # | Item | Status | Date |
@@ -14,23 +23,40 @@ Status: NOT STARTED / IN PROGRESS / COMPLETE / GATE PASSED. Update at every gate
 | 0.4 | Suite version-bumped and frozen | GATE PASSED | Jun 2026 |
 | 0.5 | GitHub monorepo created; CI skeleton; this tracker + DECISIONS.md committed | GATE PASSED | Jun 2026 |
 
-## Build stages (Build & Quality Plan v1.0)
+## Build stages (Build & Quality Plan v1.0; week column retired — see variance note)
 
-| Stage | Wk | Scope | DevOps | MLOps | Gate | Date |
-| --- | --- | --- | --- | --- | --- | --- |
-| B1 | 1 | Foundation — repo, CI, Postgres, MLflow, DVC | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
-| B2 | 1–2 | Synthetic data — fraud (generator, GE suite, data dictionary) | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
-| B3 | 2–3 | Fraud features + anti-leakage suite | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
-| B4 | 3 | Baseline + MVM + calibration (fraud) | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
-| B5 | 4 | BentoML serving + FastAPI + contracts | COMPLETE — inc1 (PR #5, `5f4e570`), inc2 (PR #11, `5f3d3d5`) | COMPLETE | GATE PASSED | Jul 2026 |
-| B6 | 4–5 | LangGraph agent v0 + LLM (Llama 3.1 8B) | COMPLETE — 5 incs (PRs #18–#20, this PR); gate evidence docs/build/B6_GATE.md | COMPLETE | GATE PASSED | Jul 2026 |
-| B7 | 5–6 | Fraud RAG (ChromaDB, 50+ seed docs, RAGAS) | NOT STARTED | NOT STARTED | NOT STARTED | |
-| B8 | 6–7 | Guardrails (Presidio, OPA, grounding, injection detector selection) | NOT STARTED | NOT STARTED | NOT STARTED | |
-| B9 | 7–8 | Chat UI + audit-trail replay (→ WS1.4 artefact) | NOT STARTED | NOT STARTED | NOT STARTED | |
-| B9.5 | — | Platform Extraction (ADR-0009 / DEC-0005): extract ML lifecycle machinery to platform layer; vertical-neutral contracts; exit = 2nd vertical consumes, not copies | NOT STARTED | NOT STARTED | NOT STARTED | |
-| B10 | 8–10 | Instantiate — Compliance + RM verticals against the platform template (restated per ADR-0009; gated by B9.5 exit) | NOT STARTED | NOT STARTED | NOT STARTED | |
-| B11 | 10–11 | Observability — Grafana 8 panels, Evidently, kill-switch drill | NOT STARTED | NOT STARTED | NOT STARTED | |
-| B12 | 11–12 | Hardening + demo pack (3 scripts, 70B demo config, deploy guide v0) | NOT STARTED | NOT STARTED | NOT STARTED | |
+| Stage | Scope | DevOps | MLOps | Gate | Date |
+| --- | --- | --- | --- | --- | --- |
+| B1 | Foundation — repo, CI, Postgres, MLflow, DVC | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
+| B2 | Synthetic data — fraud (generator, GE suite, data dictionary) | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
+| B3 | Fraud features + anti-leakage suite | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
+| B4 | Baseline + MVM + calibration (fraud) | COMPLETE | COMPLETE | GATE PASSED | Jun 2026 |
+| B5 | BentoML serving + FastAPI + contracts | COMPLETE — inc1 (PR #5, `5f4e570`), inc2 (PR #11, `5f3d3d5`) | COMPLETE | GATE PASSED | Jul 2026 |
+| B6 | LangGraph agent v0 + LLM (Llama 3.1 8B) | COMPLETE — 5 incs (PRs #18–#20, #22); gate evidence docs/build/B6_GATE.md | COMPLETE | GATE PASSED | Jul 2026 |
+| B7 | Fraud RAG (ChromaDB, 50+ seed docs, RAGAS) | NOT STARTED | NOT STARTED | NOT STARTED | |
+| B8 | Guardrails (Presidio, OPA, grounding, injection detector selection) | NOT STARTED | NOT STARTED | NOT STARTED | |
+| B9 | Chat UI + audit-trail replay (→ WS1.4 artefact) | NOT STARTED | NOT STARTED | NOT STARTED | |
+| B9.5 | Platform Extraction (ADR-0009 / DEC-0005): extract ML lifecycle machinery to platform layer; vertical-neutral contracts; exit = 2nd vertical consumes, not copies | NOT STARTED | NOT STARTED | NOT STARTED | |
+| B10 | Instantiate — Compliance + RM verticals against the platform template (restated per ADR-0009; gated by B9.5 exit) | NOT STARTED | NOT STARTED | NOT STARTED | |
+| B11 | Observability — Grafana 8 panels, Evidently, kill-switch drill | NOT STARTED | NOT STARTED | NOT STARTED | |
+| B12 | Hardening + demo pack (3 scripts, 70B demo config, deploy guide v0) | NOT STARTED | NOT STARTED | NOT STARTED | |
+
+## Gate review checklist (standing — Checkpoint 01)
+
+Every `B*_GATE.md` from B7 onward answers both standing questions:
+
+1. **Decision capture (CL-08 / Q-A5):** What architecturally
+   significant decisions were taken since the last gate?
+   → None | Existing ADR covers | DEC log only | New ADR required.
+2. **Architecture conformance (Checkpoint 01 CF-1):** Does this
+   increment conform to the Banking Architecture and applicable ADRs?
+   → Yes | Deviation recorded as DEC | New ADR required.
+
+Every `B*_GATE.md` from B7 onward also carries a **Gate Acceptance
+Record** section (Checkpoint 01 RAT-04): evidence list (links/hashes);
+producer statement; approver statement (same person permitted, both
+statements mandatory); residual risks accepted into next stage;
+decision Pass / Conditional Pass / Fail; approval date.
 
 ## Open items / longest-lead dependencies
 
