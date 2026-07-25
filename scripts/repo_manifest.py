@@ -3,11 +3,17 @@
 
 Run from the repo root:
 
-    python scripts/repo_manifest.py
+    python scripts/repo_manifest.py --out D:/Downloads
 
-Writes REPO_MANIFEST.md and prints a one-line summary. Attach or paste
-the file at the start of a session so structure, register numbering and
-gate state come from the repository rather than from recollection.
+Writes REPO_MANIFEST.md to --out (default: the repo root) and prints a
+one-line summary. Attach it at the start of a session, alongside the
+session handover, so structure, register numbering and gate state come
+from the repository rather than from recollection.
+
+The output is a disposable snapshot for chat startup, not a repo
+artefact — the handover is the durable record. Writing it outside the
+tree keeps it out of the working directory entirely, where an untracked
+markdown file makes local tooling see a different file set from CI.
 
 Everything here is derived. Nothing is hand-maintained, because a
 hand-maintained structure file is the parallel document that RAT-01 §2
@@ -19,6 +25,7 @@ Stdlib only. Safe to run at any time; read-only apart from its output.
 
 from __future__ import annotations
 
+import argparse
 import re
 import subprocess
 import sys
@@ -140,7 +147,18 @@ def tree(repo: Path) -> list[str]:
 
 
 def main() -> int:
-    repo = Path(sys.argv[1] if len(sys.argv) > 1 else ".").resolve()
+    ap = argparse.ArgumentParser(
+        description="Generate session boot context from the repository.")
+    ap.add_argument("repo", nargs="?", default=".",
+                    help="repository root (default: current directory)")
+    ap.add_argument("--out", default=None, metavar="DIR",
+                    help="directory to write REPO_MANIFEST.md into "
+                         "(default: the repo root). Point this outside "
+                         "the tree, e.g. --out D:\\Downloads")
+    args = ap.parse_args()
+
+    repo = Path(args.repo).resolve()
+    out_dir = Path(args.out).resolve() if args.out else repo
     if not (repo / ".git").exists():
         print(f"Not a git repository: {repo}")
         return 1
@@ -182,9 +200,14 @@ def main() -> int:
     body += tree(repo)
     body += ["```", ""]
 
+    if not out_dir.is_dir():
+        print(f"Output directory does not exist: {out_dir}")
+        return 1
+
     out = "\n".join(body)
-    (repo / "REPO_MANIFEST.md").write_text(out, encoding="utf-8", newline="\n")
-    print(f"Wrote REPO_MANIFEST.md ({len(out)} bytes) — "
+    target = out_dir / "REPO_MANIFEST.md"
+    target.write_text(out, encoding="utf-8", newline="\n")
+    print(f"Wrote {target} ({len(out)} bytes) — "
           f"{len(g)} stages, {len(ocl)} open CLs")
     return 0
 
