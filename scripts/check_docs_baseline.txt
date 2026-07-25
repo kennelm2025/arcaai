@@ -1,32 +1,16 @@
-# check_docs baseline — findings accepted when the check was introduced
-# (WS-E 45, 2026-07-25). Each line is a to-do, not a pardon. The check
-# passes on the tree as it stood so that it catches regressions; the
-# baseline shrinks as the underlying documents are corrected.
+# check_docs baseline — findings accepted at a point in time.
 #
-# A new line is never added here without a CL or DEC recording why.
+# Empty. It was not: ten entries sat here on 2026-07-25, all of them
+# artefacts of a resolution bug in check_docs.py, which resolved cited
+# paths only from the repository root and so reported live documents as
+# dead. Fixed the same day by trying repo-root, citing-file-relative and
+# docs-relative in turn. The retirement those entries appeared to
+# indict (DEC-0007) had in fact been carried out correctly.
 #
-# --- CLASS 1: retired pre-lockdown regime, raised as CL-23 -----------
-# DEC-0007 retired docs/specs/, docs/rfcs/ and the review-protocol
-# scaffold with tombstones, but the operative documents that point at
-# them were never updated. Clears when CL-23 executes.
-CONTRIBUTING.md: cited path does not exist — governance/document-register.yaml
-CONTRIBUTING.md: cited path does not exist — governance/review-protocols.md
-CONTRIBUTING.md: cited path does not exist — governance/sme-panel.md
-SESSION_NOTES.md: cited path does not exist — governance/review-protocols.md
-SESSION_NOTES.md: cited path does not exist — specs/README.md
-SESSION_PROTOCOLS.md: cited path does not exist — governance/review-protocols.md
-SESSION_PROTOCOLS.md: cited path does not exist — governance/sme-panel.md
+# Kept because the mechanism is wanted: a finding may be accepted here
+# rather than fixed, but never without a CL or DEC recording why, and
+# each line is a to-do rather than a pardon.
 #
-# --- CLASS 2: historical documents, correct as written ---------------
-# DESIGN_PHASE_CHARTER.md is marked HISTORICAL per DEC-0007; its
-# references describe the regime as it was and are not defects.
-docs/DESIGN_PHASE_CHARTER.md: cited path does not exist — governance/document-register.yaml
-docs/DESIGN_PHASE_CHARTER.md: cited path does not exist — governance/review-protocols.md
-docs/DESIGN_PHASE_CHARTER.md: cited path does not exist — governance/sme-panel.md
-#
-# --- CLASS 3: specified but deliberately not built -------------------
-# data/fraud/models/provenance.json is ADR-0006's literal path. CL-12's
-# closure records that the manifest is generated platform-side in CI and
-# uploaded as a build artefact rather than committed there. The
-# citations are accurate about what was specified; the divergence is
-# recorded in GOVERNANCE_REVIEW_CHANGELOG.md.
+# References under data/ are not checked at all — DVC manages those
+# outputs, they are not in the git tree, and their presence depends on
+# whether `dvc pull` has run.

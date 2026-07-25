@@ -53,6 +53,28 @@ def targets(repo: Path) -> list[Path]:
     return found
 
 
+def resolves(repo: Path, citing: Path, ref: str) -> bool:
+    """Does a cited path resolve under any convention in use here?
+
+    Three are in play and all are legitimate:
+      - repo-root relative, e.g. `docs/build/B7_GATE.md`
+      - relative to the citing file's own directory, e.g.
+        docs/DESIGN_PHASE_CHARTER.md citing `governance/sme-panel.md`
+      - relative to docs/, e.g. root-level CONTRIBUTING.md citing
+        `specs/_template.md`
+
+    Resolving only from the root reported ten live documents as dead and
+    very nearly produced a CL against a retirement that had in fact been
+    carried out correctly.
+    """
+    candidates = (
+        repo / ref,
+        citing.parent / ref,
+        repo / "docs" / ref,
+    )
+    return any(c.exists() for c in candidates)
+
+
 def check_file(repo: Path, path: Path) -> list[str]:
     findings: list[str] = []
     raw = path.read_bytes()
@@ -88,7 +110,7 @@ def check_file(repo: Path, path: Path) -> list[str]:
             continue  # template form, e.g. docs/build/BN_GATE.md
         if ref.startswith(NO_PATH_PREFIX):
             continue  # DVC-managed, not in git
-        if not (repo / ref).exists():
+        if not resolves(repo, path, ref):
             findings.append(f"{rel}: cited path does not exist — {ref}")
 
     return findings
