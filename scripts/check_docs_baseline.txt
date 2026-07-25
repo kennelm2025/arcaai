@@ -30,6 +30,3 @@ docs/DESIGN_PHASE_CHARTER.md: cited path does not exist — governance/sme-panel
 # uploaded as a build artefact rather than committed there. The
 # citations are accurate about what was specified; the divergence is
 # recorded in GOVERNANCE_REVIEW_CHANGELOG.md.
-decisions/0006-serving-model-source.md: cited path does not exist — data/fraud/models/provenance.json
-docs/governance/GOVERNANCE_REVIEW_CHANGELOG.md: cited path does not exist — data/fraud/models/provenance.json
-docs/governance/SESSION_HANDOVER_2026-07-22b.md: cited path does not exist — data/fraud/models/provenance.json

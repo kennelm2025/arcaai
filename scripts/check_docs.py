@@ -36,6 +36,12 @@ PLACEHOLDER = re.compile(
 # incidents are about (see WS-E 41, which quotes the wrong path it was
 # logged for). Structural checks still apply; path existence does not.
 NO_PATH_CHECK = {"docs/governance/WS-E_INCIDENTS.md"}
+# DVC-managed outputs are never in the git tree; whether they exist on
+# disk depends on whether `dvc pull` has run. Checking them makes the
+# result environment-dependent - it passed locally and failed in CI on
+# first run (WS-E 45). Path existence is only meaningful for paths git
+# actually carries.
+NO_PATH_PREFIX = ("data/",)
 
 
 def targets(repo: Path) -> list[Path]:
@@ -80,6 +86,8 @@ def check_file(repo: Path, path: Path) -> list[str]:
             continue
         if PLACEHOLDER.search(ref):
             continue  # template form, e.g. docs/build/BN_GATE.md
+        if ref.startswith(NO_PATH_PREFIX):
+            continue  # DVC-managed, not in git
         if not (repo / ref).exists():
             findings.append(f"{rel}: cited path does not exist — {ref}")
 
