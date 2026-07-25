@@ -334,3 +334,25 @@ B9 exit item under DEC-0010.
   (§4); negative test for prohibited fields, adapted to the §6.1
   mechanism and split into two tests (§7); both open-decision
   recommendations accepted (§10).
+
+Addendum — 2026-07-25 (build; ratified text above unchanged)
+Two implementation records, entered at build per RAT-01 section 3.1
+(addendum, not DEC/re-ratification — the ratified decisions would not
+have differed):
+Package path. Section 2's location `platform/governance/` reads
+as `arcaai/platform/governance/` (import path
+`arcaai.platform.governance`) per DEC-0013: top-level `platform`
+collides with the Python standard library module of that name, in
+both directions, verified before build. The ADR-0009 boundary is
+unchanged; only its filesystem address moves. All path references in
+sections 2, 6.1 and 7, and in ADR-0010, read accordingly.
+Terminal record is a fourth append-only table. Section 5's
+"three tables" is implemented as four: `audit_run` (run record,
+written once at entry) plus `audit_run_terminal` (terminal record,
+written once in the wrapper's `finally`), because a single-row
+open-then-close design requires UPDATE, which the append-only grant
+deliberately excludes, and a column-scoped UPDATE grant would weaken
+section 4's immutability of execution metadata. The spec's own two
+nouns ("run record", "terminal record") are two rows. Every other
+section 5 invariant is unchanged and enforced by test, including the
+database-level denial of UPDATE and DELETE to the runtime role.

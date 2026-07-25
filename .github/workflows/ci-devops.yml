@@ -1,7 +1,11 @@
 # DevOps CI (Blueprint S5.1) - lint + unit tests + coverage ratchet.
 # Docker build / Trivy / Pact join this workflow as their stages land (B5+).
+# 2026-07-25 (trio PR): paths gain arcaai/**, sql/**, scripts/** (WS-E 45,
+# second exhibit - ci-devops #58 failed post-merge because scripts/** was
+# not a PR trigger); postgres:16 service + role bootstrap added so the
+# governance suite's grant-denial and NULL-discipline tests run pre-merge -
+# the append-only property is CI-checked, not claimed (CF-1/B7-c evidence).
 name: ci-devops
-
 on:
   push:
     branches: [main]
@@ -9,16 +13,32 @@ on:
     paths:
       - "api/**"
       - "agent/**"
+      - "arcaai/**"
       - "contracts/**"
       - "ingest/**"
       - "frontend/**"
+      - "scripts/**"
+      - "sql/**"
       - "tests/**"
       - "pyproject.toml"
       - ".github/workflows/ci-devops.yml"
-
 jobs:
   lint-test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: arcaai
+          POSTGRES_PASSWORD: arcaai-dev-only
+          POSTGRES_DB: arcaai
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U arcaai"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -29,5 +49,12 @@ jobs:
         run: pip install -e ".[dev]"
       - name: Lint (ruff)
         run: ruff check .
+      - name: Bootstrap audit roles and database (governance suite; mirrors local dev setup)
+        env:
+          PGPASSWORD: arcaai-dev-only
+        run: |
+          psql -h localhost -U arcaai -c "CREATE ROLE arcaai_owner LOGIN PASSWORD 'owner_dev';"
+          psql -h localhost -U arcaai -c "CREATE ROLE arcaai_app LOGIN PASSWORD 'app_dev';"
+          psql -h localhost -U arcaai -c "CREATE DATABASE arcaai_audit OWNER arcaai_owner;"
       - name: Tests + coverage gate (60% ratchet, B1)
         run: pytest --cov --cov-report=term-missing
