@@ -1,0 +1,28 @@
+# Docs CI (WS-E 45) - structural checks on governance markdown.
+# Exists so that "merge only on green with closures aboard" is true of
+# every PR. Before this, pull_request paths filters in ci-devops and
+# ci-mlops excluded docs/**, so documentation PRs reported nothing and
+# both pipelines ran only after merge against main.
+name: ci-docs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "docs/**"
+      - "decisions/**"
+      - "*.md"
+      - "scripts/check_docs.py"
+      - ".github/workflows/ci-docs.yml"
+
+jobs:
+  structural-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Structural checks (bold/backtick parity, path refs, LF)
+        run: python scripts/check_docs.py .

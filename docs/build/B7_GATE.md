@@ -25,8 +25,8 @@ person's availability, and therefore needing lead time.
       logging, execution metadata, request wrapper. All three, not two.
       **Specified and ratified**:
       `docs/governance/RAT-02_GOVERNANCE_TRIO_SPEC.md` and ADR-0010
-      (`decisions/0010-governance-instrumentation.md`). **Not yet
-      built** — the criterion requires the trio landed, not designed.
+      (`decisions/0010-platform-governance-instrumentation.md`). **Not
+      yet built** — the criterion requires the trio landed, not designed.
       Largest open entry item.
 - [ ] **ChromaDB in the `arcaai` env, version pinned** *(self)* — added
       to `pyproject.toml`, pinned, installed, import verified from
