@@ -25,14 +25,15 @@ assumes is confirmed from output already available - not from
 recollection. Paths, branch, staging contents, active environment. The
 check is always cheaper than the recovery, and in every instance so far
 the information needed was already on screen and was not read.
-*Derived from items 24, 35, 41, 43, 46.*
+*Derived from items 24, 35, 41, 43, 46; extended by 51 (verification
+values) and 52 (control-precondition existence).*
 
 **A caveat is not a gate.** An instruction not to proceed, expressed in
 prose alongside runnable content, will be overrun - the runnable
 content is what the message is read for. Where a step must not proceed
 past a point, the message ends at that point and the commands for the
 blocked step are withheld entirely. Applies beyond git: any delivered
-sequence with a hold in it. *Derived from items 39, 42.*
+sequence with a hold in it. *Derived from items 39, 42, 50.*
 
 ## Items
 
@@ -300,6 +301,59 @@ sequence with a hold in it. *Derived from items 39, 42.*
     convention, which is read before drafting. Repairs of this class are
     markup correction rather than a change to the record, and are
     therefore addenda rather than DECs under RAT-01 section 3.1.
+
+49. **ORM default silently diverged from SQL semantics; caught by the
+    suite's raw-SQL assertion (2026-07-25).** SQLAlchemy serialises
+    Python `None` into a JSON `null` *value* on JSON/JSONB columns by
+    default. A JSON null passes `IS NOT NULL` while meaning "not
+    populated" — a sentinel masquerading as NULL, the precise failure
+    RAT-02 spec section 4 prohibits, and invisible to any test that
+    round-trips through the ORM that caused it. Caught on the
+    governance suite's first run because the NULL-discipline test
+    asserts `IS NULL` in raw SQL. Fixed with `JSONB(none_as_null=True)`
+    on all JSONB columns. RULE: invariants about stored state are
+    asserted in SQL against the database, not through the abstraction
+    layer whose defaults are under test.
+50. **Multi-line console paste truncated mid-line inside a here-string;
+    write commands queued in the same message ran against the empty
+    variables (2026-07-25).** A ~60-line here-string paste dropped its
+    tail silently (PSReadLine), leaving the console inside the
+    here-string. Separately, a later message supplied the variable
+    definitions AND the join-and-write commands together; the runnable
+    content was executed in order and the file was written from one
+    populated variable plus two empty ones — a structurally valid but
+    gutted workflow file reached the working tree, caught by a length
+    check before staging. Third exhibit of **A caveat is not a gate**
+    in one day, coordinator-side. RULES: (a) delivered multi-line
+    content is split into blocks, each assigned to a single variable,
+    with an expected `.Length` stated per block; (b) the consuming
+    write ships only after every block's length is confirmed from
+    output; (c) a length mismatch stops the sequence at that block.
+    The length check caught both faults the same evening.
+51. **Verification numbers stated without being executed
+    (2026-07-25).** Expected here-string lengths were asserted to the
+    operator from estimation, twice wrong: once fabricated outright,
+    once computed under the wrong newline model (console here-strings
+    join lines with LF, not CRLF — an 838 that "should" have been
+    861). The operator's correct paste failed a wrong check.
+    Generalisation of item 37's rule beyond code idioms: **an expected
+    value stated as a check is not ratified until it has been computed
+    by execution.** All subsequent checks this session (byte counts,
+    character lengths, diff shapes) were machine-computed before being
+    stated, and every one then matched first time. Instance of
+    **Verify state before mutating it**, extended to delivered
+    verification values.
+52. **`_staging` bypassed by browser default; three-location hunt for
+    a file never downloaded (2026-07-25).** Item 44's postscript
+    executed itself: `D:\Downloads\_staging` did not exist at session
+    start, the browser default still pointed at `D:\Downloads`, and
+    one artefact was hunted across both Downloads folders before
+    establishing it had never been downloaded at all. Recovery was by
+    console-delivered content (see item 50). No new rule — item 44's
+    rules stand; logged as recurrence evidence that creating the
+    folder without changing the browser default is a nul control, and
+    that the check "does the staging folder exist" belongs in the boot
+    ritual rather than the capture step.
 
 ## Footnotes
 
