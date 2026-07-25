@@ -51,6 +51,25 @@ requires an entry here. Format: ID · decision · date · status.
 
 * **DEC-0009 — Programme governance cadence established (closed, July 2026).** Source: Governance Checkpoint 01, RAT-12 (panel unanimous; outcome: docs/governance/GOVERNANCE_CHECKPOINT_01_outcome.md). Standing programme-level checkpoint every two closed gates OR every six calendar weeks, whichever comes first; scope per the Checkpoint 01 pattern (state summary, panel questions, findings triaged Must-Fix/Should-Fix/Observation, three-round protocol). Exceptional triggers (any one fires an unscheduled checkpoint): gate failure; new ADR changing the platform/vertical boundary or model-risk surface; any change to deployment target or artefact store; external engagement requiring FCA/PRA-facing artefacts; WS-E incident rated ship-critical or higher; any scheduled external exposure, demonstration, or external audit request. Next checkpoint due: B8 gate or 2026-09-04, whichever first.
 
+
+* **DEC-0010 (2026-07-25) — Gate-based build plan replaces the week
+column. RAT-01 ratified. The Build & Quality Plan schedule column
+("Wk") is replaced by an explicit dependency column; per-stage gate
+criteria move out of BUILD_TRACKER.md into `docs/build/BN_GATE.md`.
+Each gate document is created at stage entry with exit evidence
+blank, not written retrospectively at close. Ten sub-decisions are
+ratified, including: the five-section gate schema; the not-allowed
+deferral list serving as the required-evidence list; evidence
+immutability with path-@-SHA citation and transcribed CI results;
+an external-dependency flag on entry criteria; B9.5 Platform
+Extraction recorded as a tracker row; the `outcome_event` contract
+and append-only table as a non-deferrable B9 exit item on SS1/23
+monitoring grounds; and a corpus-licensing DEC required before any
+B7 ingest. Binding from B7. Reviewed by Grok (R1 on draft 1, R2 on
+draft 2) and ChatGPT (R1 on draft 2); two independent concurrences on
+the shape. Full text: `docs/governance/WS-D_RAT-01_GATE_PLAN.md'.
+
+
 ## Locked suite (June 2026)
 
 |Document|Locked version|

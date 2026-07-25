@@ -127,6 +127,18 @@ repo is itself CL-08 evidence.
     a runnable block before the step it belongs to; forward steps are
     described in prose only, and the next block is issued after its
     predecessor's output has been read.
+40. **Merge before green
+    PR #25 was merged without waiting for the PR checks to report. Both
+    pipelines ran green against main minutes later, and the substance was
+    nil (two markdown files, no Python), so no harm followed. The house
+    rule is "merge only on green with closures aboard", and the signal is
+    meant to arrive before the merge, not after it. Logged as a near miss:
+    a near-miss ledger earns its keep on the harmless cases, because the
+    harmful ones are indistinguishable from them at the moment of the
+    decision.
+    Rule (restatement, not new): the PR checks must report green before the
+    merge button is used. A merge whose checks are still queued is held,
+    regardless of how small the diff looks.
 
 ## Footnotes
 
