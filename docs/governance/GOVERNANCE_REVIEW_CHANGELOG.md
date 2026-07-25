@@ -1,11 +1,13 @@
 # Governance Review — Change Log
 
 Running log of changes the review requires. Tick as done. Spans all workstreams;
-seeded with Workstream A. **Must-Fix items block resumption of build (B5/inc2);
-Backlog items do not.** House rules apply when executing: plain Notepad only,
-PowerShell `.Replace()` for tracker edits (but NOT for ID renames near 4-digit
-refs — prefix collision; use `-replace` with `\b`), `git add -A` →
-`git status -s` eyeball before every commit.
+seeded with Workstream A. **Must-Fix items blocked resumption of build (B5/inc2);
+that gate was discharged at the WS-A close and B5/B6 have since gated. The
+Must-Fix / Backlog distinction is retained below as the historical record of
+that ruling.** House rules apply when executing: plain Notepad only, PowerShell
+`.Replace()` for tracker edits (but NOT for ID renames near 4-digit refs —
+prefix collision; use `-replace` with `\b`), `git add <explicit paths>` — never
+`git add -A` (WS-E 38) — → `git status -s` eyeball before every commit.
 
 ## Workstream A — Decision-system integrity — **CLOSED 14 Jun 2026 (PM)**
 
@@ -88,6 +90,16 @@ match what was executed; the stale handover is superseded by
 process-vs-practice finding: the fix (update trail docs in the same commit as the
 work they record) applies to the review itself.
 
+### Header currency note (25 Jul 2026)
+Two defects corrected in this file's own header this date, both instances of the
+Q-A6 finding above. First, the house-rule line instructed `git add -A`, which is
+the practice that caused WS-E 38 (three handover copies staged; 4 files / 522
+insertions where 2 / 45 intended). The canonical CL ledger was instructing the
+behaviour its own incident ledger had ruled against; corrected to explicit paths.
+Second, the Must-Fix framing referred to a resume-build gate discharged at the
+WS-A close, with B5 and B6 gated since; reworded as historical record rather
+than live instruction.
+
 ## Workstream B — Architecture & design coherence — **CLOSED 2 Jul 2026**
 Pack v0.3 sent; Grok + ChatGPT responses consolidated (unanimous) in
 `GOVERNANCE_REVIEW_WS-B_outcome.md`; D-05–D-08 ratified same day. Findings
@@ -121,7 +133,43 @@ before any drafting. **Done: retired with tombstone and content disposition, thi
 
 
 ## Workstream D — Build & Quality Plan
-*(not started)* Carries CL-10 evidence (tracker accuracy is a §4 D task).
+**Opened 25 Jul 2026. RAT-01 gate-based plan refresh CLOSED — ratified as
+DEC-0010, merged PR #26 (`fc125e8`); ci-mlops #54 and ci-devops #50 success,
+25 Jul 2026. Outcome: `docs/governance/WS-D_RAT-01_GATE_PLAN.md`, binding from
+B7.** The week column is replaced by an explicit dependency column; per-stage
+gate criteria move out of BUILD_TRACKER.md into `docs/build/BN_GATE.md`, written
+at stage **entry** with exit evidence blank rather than retrospectively at close.
+Ten sub-decisions ratified, including evidence immutability (path @ SHA, CI
+results transcribed), the not-allowed deferral list serving as the
+required-evidence list, and an external-dependency flag on entry criteria.
+Reviewed by Grok (R1, R2) and ChatGPT (R1); two independent concurrences on the
+shape. Carries CL-10 evidence (tracker accuracy is a §4 D task).
+
+WS-D items 2–4 open: CF-1 conformance spot-check design, RAT-02 governance trio
+specification (audit logging, execution metadata, request wrapper), SS1/23
+principle mapping for the B8/B9 artefact set.
+
+- [ ] **CL-21** *(new, 25 Jul)* Data protection and record retention position for
+  decision records, prompts and outcomes. The suite states none, while describing
+  an append-only audit trail and `outcome_event` table that will hold personal
+  data in any real deployment. Six gaps: immutability vs erasure across competing
+  obligations (UK GDPR, AML/fraud retention, audit and model-risk evidence);
+  subject retrieval as an indexing requirement — the only build consequence, and
+  it lands in B9; prompt minimisation, proposed as an addition to the Architecture
+  Principles set; purpose limitation; controller/processor default and the DPIA
+  position; UK GDPR Art 22A–22D safeguards mapping, which the architecture should
+  claim in its favour rather than leave implicit. Resolution is paragraph-level
+  additions at the next BA revision plus one principles-set addition. Apply
+  alongside CL-17/19/20; hard trigger post-B8 (RAT-11), pulled forward if a client
+  pilot is scheduled sooner. **Not a B7 blocker** — the reference build is
+  synthetic throughout. Full text: `docs/governance/CL-21_data-protection.md`.
+  *(Source: WS-D session, arising from B7 corpus licensing / DEC-0011; reviewed
+  ChatGPT + Grok, both concur)*
+- [ ] **CL-22** *(new, 25 Jul)* Board-level KPIs in the Executive Presentation are
+  not anchored to any build artefact. Document-currency defect, deliberately kept
+  out of the B11 gate so the standing gate checklist does not carry a deck's
+  obligations. Apply at next BA revision alongside CL-17/19/20. *(Source: WS-D
+  RAT-01 §7, dispositioned from a reviewer amendment)*
 
 ## Workstream E — Engineering process & protocols
 - [ ] **CL-E1** (carried in) Record the force-push-to-main incident + add a guard
