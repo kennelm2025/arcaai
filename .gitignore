@@ -30,3 +30,4 @@ Thumbs.db
 
 # CI build artefacts - generated, never committed (CL-12)
 provenance_manifest.json
+REPO_MANIFEST.md
