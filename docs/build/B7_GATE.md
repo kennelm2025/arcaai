@@ -1,9 +1,11 @@
 # B7 GATE — Fraud RAG (ChromaDB, 50+ seed docs, RAGAS)
 
-**Status: NOT STARTED — entry criteria open (2 of 5 outstanding).**
+**Status: ENTRY CRITERIA MET (5 of 5) — entry unsigned.**
 Created at stage entry 25 Jul 2026 per DEC-0010 / RAT-01. Exit evidence
 is blank by design and is filled as it lands. Entry criteria are signed
-before the first commit of the stage.
+before the first commit of the stage. All five criteria closed
+2026-07-25 (evening session); sign-off is the opening act of the next
+session.
 
 *Entry sign-off: [unsigned]*
 *Source of criteria: `docs/governance/WS-D_RAT-01_GATE_PLAN.md` §5, B7.
@@ -21,17 +23,34 @@ person's availability, and therefore needing lead time.
 - [x] **B6 gate passed.** *(self)* — GATE PASSED Jul 2026,
       `docs/build/B6_GATE.md`. Agent graph exposes the retrieval slot;
       R7 retrieval rung explicitly carried forward to this gate.
-- [ ] **RAT-02 governance trio landed as pre-B7 work** *(self)* — audit
-      logging, execution metadata, request wrapper. All three, not two.
-      **Specified and ratified**:
-      `docs/governance/RAT-02_GOVERNANCE_TRIO_SPEC.md` and ADR-0010
-      (`decisions/0010-platform-governance-instrumentation.md`). **Not
-      yet built** — the criterion requires the trio landed, not designed.
-      Largest open entry item.
-- [ ] **ChromaDB in the `arcaai` env, version pinned** *(self)* — added
-      to `pyproject.toml`, pinned, installed, import verified from
-      outside the repo root per the B5 packaging precedent. Local
-      install; no cloud provisioning — see CF-1/B7-a at §1.1.
+- [x] **RAT-02 governance trio landed as pre-B7 work** *(self)* —
+      **Met, 25 Jul 2026 (evening).** Built, merged and CI-verified.
+      Evidence: `arcaai/platform/governance/` @ `b07eba0` (PR #36) —
+      wrapper.py, metadata.py, audit.py, events.py, models.py;
+      `sql/governance_grants.sql` @ `b07eba0`; `tests/governance/`
+      @ `b07eba0` (24 tests: spec section 7 list in full, including
+      UPDATE/DELETE denial under the runtime role and the ADR-0009
+      boundary test). Suite green locally against the docker dev
+      Postgres 16 under `arcaai_app`, and in CI against the workflow
+      service Postgres with in-pipeline role bootstrap — the
+      append-only property is CI-checked on every PR touching the
+      arcaai, sql or tests trees, not merely claimed.
+      Path is `arcaai/platform/governance/` per DEC-0013 (stdlib
+      collision, verified empirically both directions); the spec
+      addendum of 25 Jul records this and the four-table
+      terminal-record implementation. CI transcriptions at the
+      section 3 supplement. Spec: ratified 25 Jul per ADR-0010.
+- [x] **ChromaDB in the `arcaai` env, version pinned** *(self)* —
+      **Met, 25 Jul 2026 (evening).** `chromadb==1.5.9` hard-pinned in
+      `pyproject.toml` @ `8a5696a` (PR #38). Hard pin rather than the
+      house-style floor, deliberately: retrieval latency is CF-1/B7-d
+      evidence, and a silent version bump mid-stage that moves the
+      number is the nondeterminism the execution-metadata table exists
+      to catch. Installed in `arcaai` (py3.11.15); import verified from
+      outside the repo root (`python -c "import chromadb"` from `D:\`
+      prints 1.5.9) per the B5 packaging precedent. Local install
+      only; no cloud provisioning — see CF-1/B7-a at §1.1 and the
+      embedding-function note at §2.1.
 - [x] **Corpus sourcing decision recorded as a DEC. No ingest before it
       exists.** *(was external — licence terms are not ours)* **Met.**
       DEC-0011 on main, merged in PR #28. Synthetic corpus plus a named
@@ -105,12 +124,39 @@ From Build & Quality Plan v1.0, verbatim:
 
 Scope changes require a DEC, referenced here. None at entry.
 
+### 2.1 Design constraint recorded at entry — embedding function
+
+chromadb's default embedding function silently downloads an ONNX
+MiniLM model from the internet at first `add()`: an unpinned model
+entering the pipeline as "actual not intended", and a network
+dependency inside the R7 latency path. The reference build sets an
+explicit, pinned embedding function from the first line of B7 code;
+the default is never used. (Surfaced 25 Jul 2026 when a sandbox smoke
+test failed on exactly this download.)
+
 ## 3. Exit evidence
 
 *Blank at entry. Each item is filled with a **path @ commit SHA**, or a
 CI result transcribed as text — workflow name, run number, conclusion,
 date, and the commit SHA it ran against. Never a bare path, never
 `main`, never a link alone (RAT-01 §3.1).*
+
+**Entry-criteria CI transcription (2026-07-25).** Actions logs
+expire; transcribed as text per RAT-01 §3.1:
+
+- ci-devops / lint-test · pull_request · success · 2026-07-25 · ~2m ·
+  `f325c1f` (PR #36) — first CI execution of the governance suite:
+  24 tests including UPDATE/DELETE denial under `arcaai_app` against
+  the workflow Postgres 16 service.
+- ci-devops #61 · push (main) · success · 2026-07-25 · 2m 18s · `b07eba0`
+- ci-mlops #64 · push (main) · success · 2026-07-25 · 3m 28s · `b07eba0`
+- ci-docs #8 · push (main) · success · 2026-07-25 · 11s · `b07eba0`
+- ci-docs / structural-checks · pull_request · success · 2026-07-25 ·
+  4s · `d47eba8` (PR #37, spec addendum repair)
+- ci-devops #63 · pull_request · success · 2026-07-25 · 2m 54s · PR #38
+- ci-devops #64 · push (main) · success · 2026-07-25 · 2m 37s · `8a5696a`
+- ci-mlops #66 · push (main) · success · 2026-07-25 · 3m 51s · `8a5696a`
+- ci-docs #11 · push (main) · success · 2026-07-25 · 8s · `8a5696a`
 
 **Required** — these are the not-allowed deferrals at §5; absence
 blocks the gate.
