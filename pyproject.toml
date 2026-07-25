@@ -24,6 +24,7 @@ dependencies = [
     "langchain-core>=1.5.0",
     "langchain-ollama>=1.1.0",
     "ollama>=0.6.2",
+    "uuid6>=2024.7.10",
 ]
 
 [project.optional-dependencies]
@@ -35,7 +36,7 @@ dev = [
 ]
 
 [tool.setuptools]
-packages = ["agent", "api", "contracts", "verticals", "ingest"]
+packages = ["agent", "api", "contracts", "verticals", "ingest", "arcaai", "arcaai.platform", "arcaai.platform.governance"]
 
 [tool.ruff]
 line-length = 100
