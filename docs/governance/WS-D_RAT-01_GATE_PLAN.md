@@ -300,8 +300,15 @@ reasons.
 traceable conflict case; block/redaction reason emission; the
 injection-detector DEC.
 
-**Hard trigger on exit:** CL-17/19/20 bundle → next Banking
-Architecture revision (RAT-11).
+**Hard trigger on exit:** CL-17/19/20/21/22 bundle → next Banking
+Architecture revision (RAT-11). CL-23 joins on panel review; its
+principle addition rides with CL-21's.
+
+*Currency note (2026-07-27): CL-21 and CL-22 were filed on 25 Jul, the
+day this plan was ratified, and both name this bundle in their own
+text; neither reached this line. Added here. CL-23 recorded as
+provisional pending panel review. No change to B8 entry criteria or
+exit evidence.*
 
 ---
 
