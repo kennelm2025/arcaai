@@ -117,7 +117,9 @@ B5/inc2.
 - [ ] **CL-17** Apply the DEC-0006 wording rule to external material at next
   revision of each document.
 - [ ] **CL-18** Stage-2/3 minimum design brief (D-07). Named workstream,
-  post-review.
+  post-review. *(2026-07-27: CL-23 gap 1's policy-plane scope statement is
+  due in this brief at B8 entry; cross-referenced here because the
+  dependency ran one way only.)*
 - [x] **CL-10** (from 2 Jul list) BUILD_TRACKER B5 row restated with this
   commit.
 
