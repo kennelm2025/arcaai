@@ -43,7 +43,7 @@ Status: NOT STARTED / IN PROGRESS / COMPLETE / GATE PASSED. Update at every gate
 | B4 | B3 | Baseline + MVM + calibration (fraud) | COMPLETE | COMPLETE | GATE PASSED | `docs/build/B4_GATE.md` | Jun 2026 |
 | B5 | B4 | BentoML serving + FastAPI + contracts | COMPLETE — inc1 (PR #5, `5f4e570`), inc2 (PR #11, `5f3d3d5`) | COMPLETE | GATE PASSED | `docs/build/B5_GATE.md` | Jul 2026 |
 | B6 | B5 | LangGraph agent v0 + LLM (Llama 3.1 8B) | COMPLETE — 5 incs (PRs #18–#20, #22) | COMPLETE | GATE PASSED | `docs/build/B6_GATE.md` | Jul 2026 |
-| B7 | B6 | Fraud RAG (ChromaDB, 50+ seed docs, RAGAS) | NOT STARTED | NOT STARTED | NOT STARTED | *to be created at entry* | |
+| B7 | B6 | Fraud RAG (ChromaDB, 50+ seed docs, RAGAS) | IN PROGRESS | IN PROGRESS | IN PROGRESS | `docs/build/B7_GATE.md` | |
 | B8 | B7 | Guardrails (Presidio, OPA, grounding, injection detector selection) | NOT STARTED | NOT STARTED | NOT STARTED | *to be created at entry* | |
 | B9 | B8 | Chat UI + audit-trail replay (→ WS1.4 artefact) | NOT STARTED | NOT STARTED | NOT STARTED | *to be created at entry* | |
 | B9.5 | B9 | Platform Extraction (ADR-0009 / DEC-0005): extract ML lifecycle machinery to platform layer; vertical-neutral contracts; exit = 2nd vertical consumes, not copies. **Tested by B10** | NOT STARTED | NOT STARTED | NOT STARTED | *to be created at entry* | |
