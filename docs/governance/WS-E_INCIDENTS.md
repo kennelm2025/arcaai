@@ -26,14 +26,16 @@ recollection. Paths, branch, staging contents, active environment. The
 check is always cheaper than the recovery, and in every instance so far
 the information needed was already on screen and was not read.
 *Derived from items 24, 35, 41, 43, 46; extended by 51 (verification
-values) and 52 (control-precondition existence).*
+values), 52 (control-precondition existence), 53 (derived state asserted
+from one source) and 55 (recurrence of 51).*
 
 **A caveat is not a gate.** An instruction not to proceed, expressed in
 prose alongside runnable content, will be overrun - the runnable
 content is what the message is read for. Where a step must not proceed
 past a point, the message ends at that point and the commands for the
 blocked step are withheld entirely. Applies beyond git: any delivered
-sequence with a hold in it. *Derived from items 39, 42, 50.*
+sequence with a hold in it. *Derived from items 39, 42, 50; extended by 54 (runnable form
+regardless of surrounding prose).*
 
 ## Items
 
@@ -355,6 +357,58 @@ sequence with a hold in it. *Derived from items 39, 42, 50.*
     that the check "does the staging folder exist" belongs in the boot
     ritual rather than the capture step.
 
+53. **Register number reported as fact from one file while a differing
+    file of the same base name sat beside it (2026-07-27).**
+    `REPO_MANIFEST.md` reported "CL: highest 22 -> next 23", read from
+    `GOVERNANCE_REVIEW_CHANGELOG.md`, while an untracked
+    `GOVERNANCE_REVIEW_CHANGELOG (1).md` in the same directory carried
+    the CL-23 entry and differed from the canonical by exactly that
+    20-line block. `CL-23_policy-as-code.md` sat untracked alongside.
+    The 25b handover recorded the changelog entry as written, which was
+    true of a file DEC-0007 does not recognise as the register. The
+    manifest listed tracked and untracked files identically, so nothing
+    distinguished landed from pending; it separately reported B7 NOT
+    STARTED from BUILD_TRACKER.md while `docs/build/B7_GATE.md` existed
+    reading ENTRY CRITERIA MET (5 of 5). Neither the manifest nor
+    `check_docs.py` looked for a second file of the same base name.
+    Fixing the class in `repo_manifest.py` the same day surfaced three
+    further instances of it: `COUNT_DIRS` still named `platform/` after
+    DEC-0013 moved it, hiding the entire RAT-02 trio from the boot
+    artefact built to show it; `sql/` was in no listing; and the
+    open-CL regex `CL-\d+` had never matched `CL-E1`. RULES: (a) a
+    derived register is reported with its source, and where a narrative
+    document and the filesystem disagree both are shown and the
+    divergence raised - neither is silently preferred; (b) a file whose
+    name differs from another only by a download suffix is a divergence
+    until proven byte-identical, and its remediation differs by commit
+    status; (c) a hardcoded list of paths inside a tool that walks the
+    tree is itself a parallel document.
+54. **Existing text quoted in a fenced block, read as content to paste
+    (2026-07-27).** Two lines of a ratified document were reproduced in
+    a fenced block to show what the file currently said, in a message
+    that also carried genuine paste blocks. The operator asked what to
+    do with it rather than acting, so nothing was run. Same family as
+    **A caveat is not a gate**: the runnable-looking form is what a
+    message is read for, and surrounding prose does not re-label it.
+    RULE: a fenced block contains only content to run or to paste;
+    existing text being quoted for reference is delivered inline or
+    carries an explicit label, in the same message.
+55. **Verification values stated without being executed - four
+    instances in one session (2026-07-27).** Recurrence of item 51,
+    whose rule already covered every one. Expected check values were
+    given to the operator uncomputed: `CL-17/19/20 bundle` predicted at
+    0 occurrences (actual 1 - a second occurrence in a review-
+    disposition section, correctly left as written); a file's first
+    three bytes predicted 35,32,42 (actual 35,32,87); "the closeout
+    never landed" asserted from a dirty working tree without
+    ahead/behind counts (actual 0 ahead, 2 behind - it had landed as
+    PR #39); and a screenshot's relative timestamp ("Today at 6:02 PM")
+    read as an absolute date, briefly indicting five correct CI
+    transcriptions in `B7_GATE.md`. No new rule - item 51 stands.
+    Logged as evidence that the rule needs a mechanical prompt rather
+    than assent: the value is computed in the same message that states
+    it, or it is not stated.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a
@@ -362,6 +416,11 @@ sequence with a hold in it. *Derived from items 39, 42, 50.*
 - pytest `-v` is overridden by pyproject config (dots print
   regardless); use `-vv` or `--durations=0` when per-test visibility
   matters.
+- To 55 (and RAT-01 section 3.1): a relative timestamp is not
+  transcribable evidence. "Today at 6:02 PM" in a screenshot carries no
+  information without the capture date, and GitHub's Actions list shows
+  relative times while a run's own page shows the absolute one. Read
+  dates from the run page, not the list.
 - To 35: for repo `.md` writes prefer an explicit LF variable over
   `[Environment]::NewLine`, which is CRLF on Windows. `.gitattributes`
   normalises `.md` to LF on staging, so CRLF in the working copy is
