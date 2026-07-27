@@ -170,6 +170,26 @@ principle mapping for the B8/B9 artefact set.
   out of the B11 gate so the standing gate checklist does not carry a deck's
   obligations. Apply at next BA revision alongside CL-17/19/20. *(Source: WS-D
   RAT-01 §7, dispositioned from a reviewer amendment)*
+- [ ] **CL-23** *(new, 25 Jul, DRAFT pending panel review)* Policy-as-code extended
+  to the governance layer: the bank's data, security and AI policy expressed as
+  versioned, tested, declarative bundles the platform deploys and enforces, with
+  every decision recording which policy governed it. Three-tier framing extends
+  the CL-21 mechanism/policy table: structural audit invariants (Tier 1) are
+  explicitly **not policy-addressable**, including by the bank; bank policy as
+  code (Tier 2) lands on existing enforcement points — the disabled retention
+  mechanism, the emit denylist as a one-way ratchet, promotion-gate appetite,
+  replay/subject authorisation and Art 22C human-routing; human judgement
+  (Tier 3) stays outside the engine. Seven gaps; the sole pre-B8 build
+  consequence is `policy_version` in execution metadata (nullable-until-
+  available, the `subject_ref` pattern repeated — cheap now, a migration on a
+  populated append-only table later). One principles-set addition proposed
+  ("Bank policy is code"), bundled with CL-21's at the same review. Scope
+  statement due in the B8 design brief (with CL-18); no policy evaluation in the
+  retrieval hot path; **not a B7 blocker**. Full text:
+  `docs/governance/CL-23_policy-as-code.md`. *(Source: evening session 25 Jul,
+  arising from Executive Presentation v12 and the CL-21 framing; numbering note
+  in full text — the morning's withdrawn checker-bug draft never entered this
+  register)*
 
 ## Workstream E — Engineering process & protocols
 - [ ] **CL-E1** (carried in) Record the force-push-to-main incident + add a guard
