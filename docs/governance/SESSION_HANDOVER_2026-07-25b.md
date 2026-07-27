@@ -21,6 +21,9 @@ entry sign-off — the first stage entered under the full RAT-01 regime.*
 > REPO_MANIFEST.md → check `D:\Downloads\_staging` exists before any
 > capture (WS-E 52). Docker Desktop must be started by hand before
 > `dev_up.cmd` — the script cannot start the daemon itself.
+> **PENDING COMMIT from the late-evening session:** CL-23 draft
+> (`docs/governance/CL-23_policy-as-code.md`, new) and the updated
+> `GOVERNANCE_REVIEW_CHANGELOG.md` — land them with the sign-off PR.
 
 ## What was done (25 Jul, evening)
 
@@ -65,6 +68,19 @@ entry sign-off — the first stage entered under the full RAT-01 regime.*
   SQLAlchemy JSONB serialises Python `None` as JSON `null` — a
   sentinel passing `IS NOT NULL`. Fixed with `none_as_null=True`;
   WS-E 49.
+- **Late evening — Executive Presentation v12** built: v11 design
+  preserved; two new slides (Auditability Delivered; Built for the
+  Regulatory Ground) translating the trio and regulatory posture into
+  executive language; status slide rewritten to July 2026 reality
+  (six gates, 33ms scoring, audit machinery live); dates and appendix
+  corrected (SQLite→PostgreSQL 16, ChromaDB pinned→OpenSearch path).
+  Marketing asset, not a repo artefact — register per CL-22's
+  document-currency lens when circulated.
+- **CL-23 drafted** (policy-as-code extended to the governance layer;
+  three-tier framing; sole pre-B8 build consequence is
+  `policy_version` in execution metadata). DRAFT pending panel
+  review; changelog entry written; **both files uncommitted** — see
+  boot line.
 - **WS-E 49–52 entered** (ORM/SQL divergence; truncated-paste class
   with the per-block length-check rule; unexecuted verification
   numbers, generalising item 37; `_staging` browser-default
@@ -106,7 +122,12 @@ entry sign-off — the first stage entered under the full RAT-01 regime.*
    RAGAS baseline. **Explicit pinned embedding function from the first
    line — never chromadb's default** (silent ONNX download at first
    `add()`; recorded at B7_GATE section 2.1).
-4. **Open riders, unchanged:** WS-E 1–23 backfill; `decisions/` →
+4. **CL-23 follow-through:** commit the two files (boot line); panel
+   review before B8 entry; `policy_version` metadata note any time
+   before B8 (nullable-until-available, no schema change); scope
+   statement into the B8 design brief with CL-18; principle addition
+   joins the CL-21 principle in the BA revision bundle.
+5. **Open riders, unchanged:** WS-E 1–23 backfill; `decisions/` →
    `adrs/` rename (named backlog); locked-suite disk sprawl purge;
    CL-17/19/20/21/22 bundle → next Banking Architecture revision
    (hard trigger post-B8, RAT-11; CL-21 pulled forward if a pilot is
@@ -114,7 +135,7 @@ entry sign-off — the first stage entered under the full RAT-01 regime.*
    reviewers (priority raised, still no date); prompts/ scaffold
    decision → B8; coverage sources exclude `arcaai/` — parked as a
    deliberate open question, revisit at B7 close.
-5. **Minor:** `docs/governance/~$caAI_Banking_Architecture_v1_0b.docx`
+6. **Minor:** `docs/governance/~$caAI_Banking_Architecture_v1_0b.docx`
    Word lock file still committed — the `~$*` gitignore line and
    `git rm --cached` never landed this session; the
    `reviews/2026-06-arch-review/1739140963936 (1).gif` download-suffix
@@ -139,7 +160,7 @@ GitHub web/Desktop remains the PR route. Governance suite:
 
 **WS-A/B/C/D CLOSED** · B1–B6 gated · **B7 entry criteria 5/5 MET —
 sign-off next session** · DEC through **0013** · ADR through 0010 ·
-CL open backlog: 06, 07, 09, 11, 16, 17, 18, 19, 20, 21, 22 ·
+CL open backlog: 06, 07, 09, 11, 16, 17, 18, 19, 20, 21, 22, 23 (draft) ·
 **WS-E in-repo at 52** (items 1–23 backfill rider open) · Two standing
 principles, derivations extended by items 50–52 · Next checkpoint:
 B8 gate or 2026-09-04, whichever first (DEC-0009).
