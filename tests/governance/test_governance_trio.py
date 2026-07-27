@@ -164,7 +164,8 @@ def test_unpopulated_metadata_fields_are_null(store, app_engine):
             text(
                 "SELECT prompt_version IS NULL, corpus_version IS NULL, "
                 "retrieval_config IS NULL, llm_pin IS NULL, "
-                "model_artifacts IS NULL, metadata_extra IS NULL "
+                "model_artifacts IS NULL, metadata_extra IS NULL, "
+                "policy_version IS NULL "
                 "FROM audit_run WHERE correlation_id = :cid"
             ),
             {"cid": str(cid)},
@@ -172,8 +173,17 @@ def test_unpopulated_metadata_fields_are_null(store, app_engine):
     assert all(row), "unpopulated metadata columns must be SQL NULL"
 
 
-def test_empty_string_metadata_rejected_by_store(app_engine):
-    """The CHECK constraints back the discipline at the database."""
+@pytest.mark.parametrize(
+    "field",
+    ["llm_pin", "prompt_version", "corpus_version", "policy_version"],
+)
+def test_empty_string_metadata_rejected_by_store(app_engine, field):
+    """The CHECK constraints back the discipline at the database.
+
+    Parametrised over every constrained metadata column: three of the
+    four constraints existed untested until 2026-07-27, and a constraint
+    nobody exercises is a rule that cannot fail.
+    """
     with pytest.raises(sqlalchemy.exc.IntegrityError), Session(app_engine) as s:
         s.add(
             AuditRun(
@@ -186,7 +196,7 @@ def test_empty_string_metadata_rejected_by_store(app_engine):
                 code_sha_source="fallback",
                 env_id="t/py",
                 schema_version="1.0.0",
-                llm_pin="",  # the defect under test
+                **{field: ""},  # the defect under test
             )
         )
         s.commit()

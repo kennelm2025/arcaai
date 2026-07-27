@@ -85,6 +85,16 @@ class AuditRun(AuditBase):
     retrieval_config: Mapped[dict | None] = mapped_column(
         JSONB(none_as_null=True), nullable=True
     )
+    # Policy provenance — CL-23 gap 2 lands here. Declared now, NULL
+    # until B8, per spec section 4's nullable-until-available rule: the
+    # field is declared so the schema does not change under B7/B8.
+    # `prompt_version` above is the same case (a B8 field declared at
+    # build) and is the precedent. String(128) matches `corpus_version`,
+    # its nearest analogue: a bundle identifier plus content-address does
+    # not fit the 64 used for bare sha256 hexes.
+    policy_version: Mapped[str | None] = mapped_column(
+        String(128), nullable=True
+    )
 
     # JSONB overflow for metadata that has no typed column yet.
     metadata_extra: Mapped[dict | None] = mapped_column(
@@ -106,6 +116,9 @@ class AuditRun(AuditBase):
         ),
         CheckConstraint(
             "corpus_version <> ''", name="ck_audit_run_corpus_version_not_empty"
+        ),
+        CheckConstraint(
+            "policy_version <> ''", name="ck_audit_run_policy_version_not_empty"
         ),
     )
 
