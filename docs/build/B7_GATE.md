@@ -1,13 +1,21 @@
 # B7 GATE — Fraud RAG (ChromaDB, 50+ seed docs, RAGAS)
 
-**Status: ENTRY CRITERIA MET (5 of 5) — entry unsigned.**
+**Status: ENTERED — entry signed 2026-07-27. Exit evidence open.**
 Created at stage entry 25 Jul 2026 per DEC-0010 / RAT-01. Exit evidence
 is blank by design and is filled as it lands. Entry criteria are signed
 before the first commit of the stage. All five criteria closed
-2026-07-25 (evening session); sign-off is the opening act of the next
-session.
+2026-07-25 (evening session); signed 2026-07-27, before the first B7
+commit.
 
-*Entry sign-off: [unsigned]*
+*Entry sign-off: Mike Kennelly, 2026-07-27. All five entry criteria at
+§1 are met and evidenced by path @ SHA; the four CF-1 nominations at
+§1.1 were fixed on 25 Jul 2026 before any B7 code existed, per CF-1
+method §3; no scope change at entry (§2); the embedding-function
+constraint at §2.1 binds from the first line of B7 code. Entry evidence
+in §1 stands as at the date each criterion was met and is not restated
+as the build moves — the governance suite cited there as 24 tests
+@ `b07eba0` has since grown to 27 @ `f32c830` (PR #42, `policy_version`),
+which is stage work, not entry evidence.*
 *Source of criteria: `docs/governance/WS-D_RAT-01_GATE_PLAN.md` §5, B7.
 Where this document and the plan diverge, the plan is corrected — the
 criteria are not restated from memory.*
