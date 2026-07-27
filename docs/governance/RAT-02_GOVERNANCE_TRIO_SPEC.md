@@ -361,3 +361,38 @@ have differed):
    nouns ("run record", "terminal record") are two rows. Every other
    section 5 invariant is unchanged and enforced by test, including the
    database-level denial of UPDATE and DELETE to the runtime role.
+
+## Addendum — 2026-07-27 (build; ratified text above unchanged)
+
+Two further implementation records, entered per RAT-01 section 3.1 on
+the same test as the 2026-07-25 items — the ratified decisions would
+not have differed had these been known at ratification:
+
+3. **`policy_version` declared in execution metadata.** Section 4's
+   field table gains `policy_version` (source: policy bundle
+   content-address; null until B8), declared now and populated when B8
+   lands. This is section 4's own nullable-until-available rule applied
+   to a field that did not exist when the section was written:
+   `prompt_version` is the identical case — a B8 field declared at
+   build — and is the precedent. CL-23 gap 2 proposed an interim route
+   through `metadata_extra` with a typed column at B8; that is
+   superseded here, because it would change the schema under B8 which
+   section 4 exists to prevent. Implemented as `String(128)` matching
+   `corpus_version`, with a `<> ''` CHECK constraint per the
+   NULL-not-sentinel discipline. **No `schema_version` bump.** Section
+   6.2's versioning rule addresses the event-type enum; this is an
+   additive nullable metadata column declared before any row exists, so
+   there is no before-and-after for a consumer to distinguish. Entered
+   while the tables are empty deliberately: after B7 writes its first
+   run this stops being free, which is section 4's stated reasoning.
+   Independent of CL-23's panel review — if the three-tier framing is
+   rejected, an unused nullable column costs nothing.
+
+4. **`metadata_extra` JSONB overflow column.** `audit_run` carries a
+   `metadata_extra` JSONB column, present in the build since 25 Jul but
+   named in neither section 4's field table nor the first addendum.
+   Recorded here for completeness: it is overflow for metadata with no
+   typed column yet, subject to the same `none_as_null=True` treatment
+   as every other JSONB column. It is **not** the route for fields that
+   are known in advance — those are declared per section 4, as item 3
+   above does.

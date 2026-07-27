@@ -7,7 +7,7 @@
 **Decider:** Mike Kennelly
 **Supersedes:** none
 **Related:** ADR-0003 (pipeline-as-platform), ADR-0009 (platform/vertical boundary), DEC-0010 (gate-based plan; `outcome_event` as a B9 exit item), CL-21 (data protection position), CL-08 (decision-capture gate question)
-**Evidence:** `docs/governance/RAT-02_GOVERNANCE_TRIO_SPEC.md` (full specification, ratified 25 Jul 2026); WS-D session, one external reviewer concurring with three amendments; `docs/governance/WS-D_RAT-01_GATE_PLAN.md` §5 B7 (entry criterion this discharges on build)
+**Evidence:** `docs/governance/RAT-02_GOVERNANCE_TRIO_SPEC.md` (full specification, ratified 25 Jul 2026, with build addenda of 25 Jul and 27 Jul recording the package path, the terminal record as a fourth append-only table, and `policy_version` in execution metadata — recorded there by addendum rather than by edits to this ADR, per DEC-0013); WS-D session, one external reviewer concurring with three amendments; `docs/governance/WS-D_RAT-01_GATE_PLAN.md` §5 B7 (entry criterion this discharges on build)
 
 > Status flips `Proposed → Accepted` at merge.
 

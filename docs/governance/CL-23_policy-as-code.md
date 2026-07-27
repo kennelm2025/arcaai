@@ -78,6 +78,17 @@ Policy *deployments* run through the governed-request wrapper: who
 deployed which bundle, when — append-only, replayable. Interim: rides
 `metadata_extra` from B7 if needed; typed column at B8.
 
+*Note added 2026-07-27, ahead of panel review: the interim
+`metadata_extra` route above is superseded and the column has been
+declared. RAT-02 section 4 already rules that fields known in advance
+are declared at build and populated as stages land, expressly so that
+the schema does not change under B7 and B8 — `prompt_version` is the
+same case and was declared at build. Riding the overflow column and
+adding a typed column at B8 is the migration that rule exists to avoid.
+`policy_version` is therefore in `audit_run` from 2026-07-27, NULL
+until B8, recorded as spec addendum item 3. The gap stands as written
+in every other respect; only its interim mechanism changes.*
+
 The payoff is the differentiating sentence: **every decision
 permanently records which policy governed it**, and "what rule applied
 to this 2027 record" is answered by replay, not argument.
