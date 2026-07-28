@@ -31,8 +31,16 @@
 # synthetic seed documents transition to included, panel review having
 # accepted the set on 2026-07-28. Appended transitions only; nothing
 # above is modified (DEC-0014 item 5).
+#
+# Version note (2026-07-28.4): the OGL-v3.0 subset per DEC-0011(b) —
+# four extracts fetched from legislation.gov.uk data.xht endpoints
+# (content-only, no site chrome), hashes computed on the operator's
+# machine at fetch. Crown copyright, reused under the Open Government
+# Licence v3.0; text unmodified per DEC-0011 (no paraphrasing of OGL
+# material). Listed at pending_review; inclusion is a separate
+# governed act. Appended entries only; nothing above is modified.
 
-manifest_version: 2026-07-28.3
+manifest_version: 2026-07-28.4
 
 documents:
 
@@ -246,6 +254,66 @@ documents:
       - state: included
         date: 2026-07-28
         reason: "operator inclusion decision, panel review accepted (all twelve)"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: OGL-0001
+    source: "Fraud Act 2006 s.2 (fraud by false representation) — https://www.legislation.gov.uk/ukpga/2006/35/section/2/data.xht — Crown copyright, reused under the Open Government Licence v3.0"
+    licence: OGL-v3.0
+    sa5_classification: public
+    content_sha256: "bbe1089e3e2f05c89b8e1bf5569f779309e3ec91096b1809966806c47f17d47f"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "fetched from legislation.gov.uk; awaiting operator content check and inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: OGL-0002
+    source: "Fraud Act 2006 s.4 (fraud by abuse of position) — https://www.legislation.gov.uk/ukpga/2006/35/section/4/data.xht — Crown copyright, reused under the Open Government Licence v3.0"
+    licence: OGL-v3.0
+    sa5_classification: public
+    content_sha256: "1d4e80a3ed897b76f4494abe9db455ac3e8308b25efcb92f9d8cb7da707ee81a"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "fetched from legislation.gov.uk; awaiting operator content check and inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: OGL-0003
+    source: "Proceeds of Crime Act 2002 s.327 (concealing etc. criminal property) — https://www.legislation.gov.uk/ukpga/2002/29/section/327/data.xht — Crown copyright, reused under the Open Government Licence v3.0"
+    licence: OGL-v3.0
+    sa5_classification: public
+    content_sha256: "eee0aca446b5f353fd991e1599d0316599aa80a47286a32899d7470b9e67ec52"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "fetched from legislation.gov.uk; awaiting operator content check and inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: OGL-0004
+    source: "Proceeds of Crime Act 2002 s.330 (failure to disclose: regulated sector) — https://www.legislation.gov.uk/ukpga/2002/29/section/330/data.xht — Crown copyright, reused under the Open Government Licence v3.0"
+    licence: OGL-v3.0
+    sa5_classification: public
+    content_sha256: "bc4c73272e4ae55ce1ccfad3a405d7b7dfc08176b461a4d873c37939d514e89a"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "fetched from legislation.gov.uk; awaiting operator content check and inclusion decision"
     processing:
       chunker_version: null
       embedding_model: null
