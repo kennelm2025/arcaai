@@ -215,3 +215,55 @@ class AuditPayload(AuditBase):
     first_seen_at: Mapped[object] = mapped_column(
         DateTime(timezone=True), nullable=False
     )
+
+
+class CorpusVersion(AuditBase):
+    """Corpus load snapshot (DEC-0014) — append-only, same grant pattern
+    as the audit tables.
+
+    Evidence that a manifest version was loaded; NOT a reconstruction of
+    the manifest and never used to regenerate it. The manifest at
+    ``verticals/fraud/corpus/MANIFEST.yaml`` is the sole governing
+    artefact for corpus identity, licence, classification and
+    eligibility. ``eligible_doc_count`` is derived metadata cached for
+    convenience — the manifest is authoritative. ``audit_run.corpus_version``
+    stores ``version_id``.
+    """
+
+    __tablename__ = "corpus_version"
+
+    version_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True
+    )
+    # Human label only (DEC-0014); identity is manifest_sha256.
+    manifest_version: Mapped[str] = mapped_column(String(64), nullable=False)
+    manifest_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    eligible_set_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    retrieval_snapshot_sha256: Mapped[str] = mapped_column(
+        String(64), nullable=False
+    )
+    eligible_doc_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    loaded_at: Mapped[object] = mapped_column(
+        DateTime(timezone=True), nullable=False
+    )
+
+    __table_args__ = (
+        Index("ix_corpus_version_manifest_sha256", "manifest_sha256"),
+        CheckConstraint(
+            "manifest_version <> ''", name="ck_corpus_version_label_not_empty"
+        ),
+        CheckConstraint(
+            "manifest_sha256 <> ''", name="ck_corpus_version_msha_not_empty"
+        ),
+        CheckConstraint(
+            "eligible_set_sha256 <> ''", name="ck_corpus_version_esha_not_empty"
+        ),
+        CheckConstraint(
+            "retrieval_snapshot_sha256 <> ''",
+            name="ck_corpus_version_rsha_not_empty",
+        ),
+        CheckConstraint(
+            "eligible_doc_count >= 0", name="ck_corpus_version_count_nonneg"
+        ),
+    )
+
