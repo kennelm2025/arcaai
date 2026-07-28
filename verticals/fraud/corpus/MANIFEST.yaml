@@ -18,38 +18,234 @@
 #   - manifest_version is a human label only; identity is the
 #     canonical content hash.
 #
-# The two entries below are SEED PLACEHOLDERS establishing the schema.
-# content_sha256 values are of the placeholder texts; both documents
-# are replaced by the real 50+ document corpus as B7 ingest proceeds.
+# Version note (2026-07-28.2): the two schema-establishing
+# placeholders of 2026-07-28.1 are REPLACED by the twelve reviewed
+# synthetic seed documents. Replacement is legal only because no
+# manifest version has ever been loaded (no corpus_version snapshot
+# exists); after first load, document removal is an AppendOnlyViolation
+# by design. Documents authored per DEC-0011(a); panel-reviewed
+# (accepted 2026-07-28); files at verticals/fraud/corpus/documents/.
+# The OGL-v3.0 subset per DEC-0011(b) joins in a subsequent version.
+#
+# Version note (2026-07-28.3): operator inclusion decision — all twelve
+# synthetic seed documents transition to included, panel review having
+# accepted the set on 2026-07-28. Appended transitions only; nothing
+# above is modified (DEC-0014 item 5).
 
-manifest_version: 2026-07-28.1
+manifest_version: 2026-07-28.3
 
 documents:
 
-  - id: SYN-0001
-    source: "ArcaAI synthetic: transaction-monitoring guidance (placeholder)"
+  - id: SYN-CV-01
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Customer Vulnerability series · CV-01"
     licence: synthetic-arcaai
     sa5_classification: internal-sensitive
-    content_sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+    content_sha256: "5dd9b19f48d5452facad664a302995a598126d8e4ae03fe9423005d0f04e6dee"
     eligibility:
       - state: pending_review
         date: 2026-07-28
-        reason: "seed placeholder; not yet authored"
+        reason: "authored; panel review accepted 2026-07-28; awaiting operator inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision, panel review accepted (all twelve)"
     processing:
       chunker_version: null
       embedding_model: null
       chunk_count: null
       ingest_timestamp: null
 
-  - id: OGL-0001
-    source: "legislation.gov.uk extract (placeholder; OGL v3.0 expressly applies)"
-    licence: OGL-v3.0
+  - id: SYN-CV-02
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Customer Vulnerability series · CV-02"
+    licence: synthetic-arcaai
     sa5_classification: internal-sensitive
-    content_sha256: "1111111111111111111111111111111111111111111111111111111111111111"
+    content_sha256: "3f2a9b2f6e39fc5308917a5296a0707b4b782953bb99440dfba6a3b5e0769830"
     eligibility:
       - state: pending_review
         date: 2026-07-28
-        reason: "seed placeholder; source extract not yet selected"
+        reason: "authored; panel review accepted 2026-07-28; awaiting operator inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision, panel review accepted (all twelve)"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-DL-01
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Chief Executive letter series · DL-01"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "7352d5a9d4e5a256bdaed464e21fa94ccfe06974f968542daefe0b2ebcf77872"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "authored; panel review accepted 2026-07-28; awaiting operator inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision, panel review accepted (all twelve)"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-DL-02
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Chief Executive letter series · DL-02"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "6446e13201e440997d0510b959e16f865e1ce212893099131b58a3f7a898d187"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "authored; panel review accepted 2026-07-28; awaiting operator inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision, panel review accepted (all twelve)"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-DP-01
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Decision Procedures series · DP-01"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "6f2771f010afc0eab626918dd29bf75beb3c2824edc2cca769f665de9b706657"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "authored; panel review accepted 2026-07-28; awaiting operator inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision, panel review accepted (all twelve)"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-DP-02
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Decision Procedures series · DP-02"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "045ef02cbed79eb7f39b771deeed63fdb00cd166cec8d9c5b8af1e48b78603e2"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "authored; panel review accepted 2026-07-28; awaiting operator inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision, panel review accepted (all twelve)"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-SG-01
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Sector Guidance series · SG-01"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "b724eae328f8a8db31ce4ed8d02629150558bca76f165e839f9a53d0877cc9da"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "authored; panel review accepted 2026-07-28; awaiting operator inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision, panel review accepted (all twelve)"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-SG-02
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Sector Guidance series · SG-02"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "67a8be5e384774885826506a599119990c63ce447343c01953c766768aeb8cfa"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "authored; panel review accepted 2026-07-28; awaiting operator inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision, panel review accepted (all twelve)"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-TR-01
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Thematic Review series · TR-01"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "a2bc9616f3296e696d2e0f8eecac5cf0d986cdaf705182f13a0a56b14c4790db"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "authored; panel review accepted 2026-07-28; awaiting operator inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision, panel review accepted (all twelve)"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-TR-02
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Thematic Review series · TR-02"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "465f3f114c9de0492b86061f745d128dfca41a137dd2a3a422f4e0fc387eaec7"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "authored; panel review accepted 2026-07-28; awaiting operator inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision, panel review accepted (all twelve)"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-TY-01
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Typology series · TY-01"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "099233d787d772e597f996fa731cb30f3468a128b8ee250468977431b4dfbad8"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "authored; panel review accepted 2026-07-28; awaiting operator inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision, panel review accepted (all twelve)"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-TY-02
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Typology series · TY-02"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "77b79f2bb7e8233214b904351c86f6b8ac2d9df23601c77935bd33f8a7bec6de"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "authored; panel review accepted 2026-07-28; awaiting operator inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision, panel review accepted (all twelve)"
     processing:
       chunker_version: null
       embedding_model: null

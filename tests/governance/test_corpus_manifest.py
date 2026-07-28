@@ -1,13 +1,21 @@
 """DEC-0014 corpus manifest suite.
 
-Pure-function coverage runs without a database; the snapshot and
-denial tests run under the same two-role pattern as the trio suite.
+Machinery tests run against FIXTURE manifests constructed in this file,
+never against the live governed manifest at
+verticals/fraud/corpus/MANIFEST.yaml. The first cut of this suite
+asserted content facts of the live manifest (document count,
+eligibility state as at a date) and broke the moment the manifest
+advanced by governed process — which is what a governed artefact is
+for. A test coupled to governed content is the parallel-document class
+(WS-E 53) in test form. The live manifest gets exactly one test here:
+shape invariants that hold for every valid version.
 """
 
 from __future__ import annotations
 
 import copy
 import datetime
+import hashlib
 import pathlib
 import uuid
 
@@ -20,36 +28,86 @@ from sqlalchemy.orm import Session
 from arcaai.platform.governance import corpus
 from arcaai.platform.governance.models import CorpusVersion
 
-MANIFEST_PATH = (
+LIVE_MANIFEST = (
     pathlib.Path(__file__).resolve().parents[2]
     / "verticals" / "fraud" / "corpus" / "MANIFEST.yaml"
 )
 
 
+def _sha(tag: str) -> str:
+    return hashlib.sha256(tag.encode()).hexdigest()
+
+
+def make_manifest() -> dict:
+    """Two-document fixture; unique version label per call so snapshot
+    tests never collide across the session."""
+    return {
+        "manifest_version": f"fixture-{uuid.uuid4()}",
+        "documents": [
+            {
+                "id": "FIX-A",
+                "source": "fixture document A",
+                "licence": "synthetic-arcaai",
+                "sa5_classification": "internal-sensitive",
+                "content_sha256": _sha("fixture-a"),
+                "eligibility": [
+                    {"state": "pending_review", "date": "2026-07-01",
+                     "reason": "fixture birth"},
+                ],
+                "processing": {"chunker_version": None,
+                               "embedding_model": None,
+                               "chunk_count": None,
+                               "ingest_timestamp": None},
+            },
+            {
+                "id": "FIX-B",
+                "source": "fixture document B",
+                "licence": "OGL-v3.0",
+                "sa5_classification": "internal-sensitive",
+                "content_sha256": _sha("fixture-b"),
+                "eligibility": [
+                    {"state": "pending_review", "date": "2026-07-01",
+                     "reason": "fixture birth"},
+                ],
+                "processing": {"chunker_version": "chunker-v1",
+                               "embedding_model": "embed-v1",
+                               "chunk_count": 3,
+                               "ingest_timestamp": "2026-07-01T00:00:00Z"},
+            },
+        ],
+    }
+
+
 @pytest.fixture()
 def manifest() -> dict:
-    return corpus.parse_manifest(MANIFEST_PATH.read_text(encoding="utf-8"))
+    return make_manifest()
 
 
 @pytest.fixture()
 def evolved(manifest) -> dict:
-    """The seed manifest with one document transitioned to included."""
+    """The fixture with FIX-A transitioned to included."""
     m = copy.deepcopy(manifest)
-    m["manifest_version"] = manifest["manifest_version"] + "-t"
+    m["manifest_version"] = f"fixture-{uuid.uuid4()}"
     m["documents"][0]["eligibility"].append(
-        {"state": "included", "date": "2026-07-29", "reason": "authored"}
+        {"state": "included", "date": "2026-07-15", "reason": "fixture inclusion"}
     )
     return m
 
 
-# -- 1. The committed seed manifest is valid ------------------------------
+# -- 1. The live governed manifest: shape invariants only -----------------
 
 
-def test_seed_manifest_parses_and_nothing_is_eligible(manifest):
-    assert len(manifest["documents"]) == 2
-    # both seeds are pending_review: nothing retrievable until real
-    # content exists (DEC-0014 / seed design)
-    assert corpus.eligible_documents(manifest) == []
+def test_live_manifest_shape():
+    """Invariants that hold for EVERY valid version of the governed
+    manifest — never counts, states or dates, which advance by
+    governed process."""
+    m = corpus.parse_manifest(LIVE_MANIFEST.read_text(encoding="utf-8"))
+    assert len(m["documents"]) >= 1
+    assert {d["licence"] for d in m["documents"]} <= corpus.LICENCES
+    # every eligibility state reachable in the file is in the enum
+    for d in m["documents"]:
+        for t in d["eligibility"]:
+            assert t["state"] in corpus.STATES
 
 
 # -- 2. Canonicalisation is reflow-invariant ------------------------------
@@ -61,7 +119,12 @@ def test_hash_survives_reserialisation(manifest):
 
 
 def test_hash_changes_with_content(manifest, evolved):
-    assert corpus.manifest_sha256(evolved) != corpus.manifest_sha256(manifest)
+    m2 = copy.deepcopy(manifest)
+    m2["manifest_version"] = manifest["manifest_version"]  # same label
+    m2["documents"][0]["eligibility"].append(
+        {"state": "included", "date": "2026-07-15", "reason": "fixture inclusion"}
+    )
+    assert corpus.manifest_sha256(m2) != corpus.manifest_sha256(manifest)
 
 
 # -- 3. Two hashes, two questions (panel Q4) ------------------------------
@@ -69,14 +132,23 @@ def test_hash_changes_with_content(manifest, evolved):
 
 def test_chunker_change_moves_snapshot_hash_only(evolved):
     rechunked = copy.deepcopy(evolved)
-    rechunked["documents"][0]["processing"]["chunker_version"] = "recursive-512-v2"
+    rechunked["documents"][0]["processing"]["chunker_version"] = "chunker-v2"
     assert corpus.eligible_set_sha256(rechunked) == corpus.eligible_set_sha256(evolved)
-    assert corpus.retrieval_snapshot_sha256(rechunked) != corpus.retrieval_snapshot_sha256(evolved)
+    assert corpus.retrieval_snapshot_sha256(rechunked) != corpus.retrieval_snapshot_sha256(
+        evolved
+    )
 
 
 def test_eligibility_change_moves_both_hashes(manifest, evolved):
     assert corpus.eligible_set_sha256(evolved) != corpus.eligible_set_sha256(manifest)
-    assert corpus.retrieval_snapshot_sha256(evolved) != corpus.retrieval_snapshot_sha256(manifest)
+    assert corpus.retrieval_snapshot_sha256(evolved) != corpus.retrieval_snapshot_sha256(
+        manifest
+    )
+
+
+def test_empty_corpus_hashes_are_constant(manifest):
+    # nothing eligible: both hashes are the hash of an empty list
+    assert corpus.eligible_set_sha256(manifest) == corpus.retrieval_snapshot_sha256(manifest)
 
 
 # -- 4. Eligibility as at a date (B7_GATE section 3) ----------------------
@@ -84,9 +156,10 @@ def test_eligibility_change_moves_both_hashes(manifest, evolved):
 
 def test_state_as_at(evolved):
     doc = evolved["documents"][0]
-    assert corpus.state_as_at(doc, datetime.date(2026, 7, 27)) is None
-    assert corpus.state_as_at(doc, datetime.date(2026, 7, 28)) == "pending_review"
-    assert corpus.state_as_at(doc, datetime.date(2026, 7, 29)) == "included"
+    assert corpus.state_as_at(doc, datetime.date(2026, 6, 30)) is None
+    assert corpus.state_as_at(doc, datetime.date(2026, 7, 1)) == "pending_review"
+    assert corpus.state_as_at(doc, datetime.date(2026, 7, 14)) == "pending_review"
+    assert corpus.state_as_at(doc, datetime.date(2026, 7, 15)) == "included"
     assert corpus.state_as_at(doc, datetime.date(2027, 1, 1)) == "included"
 
 
@@ -95,6 +168,13 @@ def test_state_as_at(evolved):
 
 def test_appending_a_transition_is_valid(manifest, evolved):
     corpus.check_append_only(manifest, evolved)  # must not raise
+
+
+def test_adding_a_document_is_valid(manifest):
+    grown = copy.deepcopy(manifest)
+    grown["documents"].append(copy.deepcopy(manifest["documents"][0]) | {
+        "id": "FIX-C", "content_sha256": _sha("fixture-c")})
+    corpus.check_append_only(manifest, grown)  # additions are legal
 
 
 @pytest.mark.parametrize(
@@ -107,10 +187,7 @@ def test_appending_a_transition_is_valid(manifest, evolved):
         ),
         pytest.param(lambda m: m["documents"].pop(0), id="document-removed"),
         pytest.param(
-            lambda m: m["documents"][0].__setitem__(
-                "content_sha256",
-                "2222222222222222222222222222222222222222222222222222222222222222",
-            ),
+            lambda m: m["documents"][0].__setitem__("content_sha256", _sha("tampered")),
             id="identity-changed",
         ),
     ],
@@ -137,8 +214,7 @@ def test_append_only_violations_raise(evolved, mutate):
             lambda m: m["documents"][0].__setitem__("content_sha256", "abc"), id="sha"
         ),
         pytest.param(
-            lambda m: m["documents"][1].__setitem__("id", m["documents"][0]["id"]),
-            id="duplicate-id",
+            lambda m: m["documents"][1].__setitem__("id", "FIX-A"), id="duplicate-id"
         ),
         pytest.param(
             lambda m: m["documents"][0]["eligibility"].insert(
@@ -163,7 +239,7 @@ def test_load_snapshot_idempotent_and_pinned(app_engine, evolved):
         row1 = corpus.load_snapshot(s, evolved)
         row2 = corpus.load_snapshot(s, evolved)
         assert row1.version_id == row2.version_id  # idempotent re-load
-        assert row1.eligible_doc_count == 1  # derived, cached
+        assert row1.eligible_doc_count == 1  # FIX-A included, FIX-B pending
 
         tampered = copy.deepcopy(evolved)
         tampered["documents"][0]["source"] = "rewritten history"
@@ -171,9 +247,9 @@ def test_load_snapshot_idempotent_and_pinned(app_engine, evolved):
             corpus.load_snapshot(s, tampered)  # same label, new content
 
 
-def test_corpus_version_update_delete_denied(app_engine, evolved):
+def test_corpus_version_update_delete_denied(app_engine, manifest):
     with Session(app_engine) as s:
-        corpus.load_snapshot(s, evolved)
+        corpus.load_snapshot(s, manifest)
     for statement in (
         "UPDATE corpus_version SET manifest_sha256 = 'rewritten'",
         "DELETE FROM corpus_version",
