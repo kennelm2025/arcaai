@@ -209,8 +209,12 @@ def check_append_only(old: dict[str, Any], new: dict[str, Any]) -> None:
         ot, nt = od["eligibility"], nd["eligibility"]
         if len(nt) < len(ot):
             raise AppendOnlyViolation(f"{doc_id}: transition(s) deleted")
-        for j, (a, b) in enumerate(zip(ot, nt)):
-            if json.dumps(a, sort_keys=True, default=str) != json.dumps(b, sort_keys=True, default=str):
+        # strict=False deliberately: nt longer than ot is the one valid
+        # change (a later transition appended); zip stops at ot's end.
+        for j, (a, b) in enumerate(zip(ot, nt, strict=False)):
+            a_c = json.dumps(a, sort_keys=True, default=str)
+            b_c = json.dumps(b, sort_keys=True, default=str)
+            if a_c != b_c:
                 raise AppendOnlyViolation(
                     f"{doc_id}.eligibility[{j}]: historical transition modified "
                     "or reordered")
