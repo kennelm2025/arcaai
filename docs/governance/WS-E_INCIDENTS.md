@@ -27,7 +27,8 @@ check is always cheaper than the recovery, and in every instance so far
 the information needed was already on screen and was not read.
 *Derived from items 24, 35, 41, 43, 46; extended by 51 (verification
 values), 52 (control-precondition existence), 53 (derived state asserted
-from one source) and 55 (recurrence of 51).*
+from one source) and 55 (recurrence of 51); item 56 escalates 51's rule from
+assent to structure (verify and commit may not share a paste).*
 
 **A caveat is not a gate.** An instruction not to proceed, expressed in
 prose alongside runnable content, will be overrun - the runnable
@@ -408,6 +409,40 @@ regardless of surrounding prose).*
     Logged as evidence that the rule needs a mechanical prompt rather
     than assent: the value is computed in the same message that states
     it, or it is not stated.
+
+56. **Decision ledger reverted by a stale-download copy; verification
+    present but structurally void (2026-07-28).** PR #45 was meant to
+    add DEC-0014 to `DECISIONS.md`. Its commit `e88c09f` carried the
+    DEC-0014 title but its content was a 25 Jul copy of the ledger:
+    `Copy-Item "D:\Downloads\DECISIONS.md"` picked up a three-day-old
+    file, the browser having suffixed the current download to
+    `DECISIONS (1).md` because the stale one occupied the name — the
+    items 38/52 class, now against the decision register itself. The
+    merge (`04cb022`) therefore DELETED two lines (DEC-0013 and its
+    preceding blank) and added nothing; main carried a ledger without
+    the package-path decision until the reland (`baee17a`, PR #46).
+    Three controls existed and none fired: (a) the instruction block
+    contained line-count, pattern-count and diff-stat checks, but ran
+    verify → stage → commit in ONE paste, so no output was seen before
+    the commit was issued — item 51's rule was formally present and
+    functionally absent; (b) the PR Files Changed tab would have shown
+    2 red / 0 green and was not opened; (c) ci-docs passed the broken
+    PR because the deleted entry was the only content citing a
+    then-missing path — the check that later correctly failed the
+    reland had nothing to object to in the inversion. Detection came
+    from the post-merge `git pull` diffstat reading `2 --`, read by
+    the coordinator. Instruction-side cause: the block author (Claude)
+    had gated commit on pasted output all of 27 Jul and regressed to a
+    single block on the morning of the 28th. RULES: (a) a command
+    block may contain verification OR mutation, never both — a commit,
+    push or merge is issued only in a message that follows the pasted
+    verification output it depends on; (b) `Copy-Item` from a
+    downloads directory names the exact file listed by an immediately
+    preceding `Get-ChildItem`, never a bare expected name; (c) the PR
+    Files Changed tab is read before every merge — green/red counts
+    against the intended diffstat — and this is the merge gate, not
+    the checks tick; (d) after any merge, the `git pull` diffstat is
+    read against the PR's intended shape before the next action.
 
 ## Footnotes
 
