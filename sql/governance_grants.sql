@@ -1,4 +1,5 @@
--- Governance trio — roles and grants (RAT-02 spec section 5).
+-- Governance trio + corpus snapshot — roles and grants
+-- (RAT-02 spec section 5; corpus_version per DEC-0014).
 --
 -- Two roles:
 --   arcaai_owner : owns the schema, runs DDL. Not used at runtime.
@@ -30,12 +31,14 @@ GRANT USAGE ON SCHEMA public TO arcaai_app;
 
 -- The whole runtime grant. Nothing else.
 GRANT SELECT, INSERT
-    ON audit_run, audit_run_terminal, audit_event, audit_payload
+    ON audit_run, audit_run_terminal, audit_event, audit_payload,
+       corpus_version
     TO arcaai_app;
 
 -- Belt and braces: strip anything wider that may have accumulated.
 REVOKE UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER
-    ON audit_run, audit_run_terminal, audit_event, audit_payload
+    ON audit_run, audit_run_terminal, audit_event, audit_payload,
+       corpus_version
     FROM arcaai_app;
 
 -- No default privileges leaking future width to the app role.

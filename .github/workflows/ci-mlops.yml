@@ -8,6 +8,8 @@ on:
   pull_request:
     paths:
       - "verticals/**"
+      - "arcaai/**"
+      - "sql/**"
       - "monitoring/evidently/**"
       - "contracts/**"
       - ".github/workflows/ci-mlops.yml"
@@ -27,6 +29,19 @@ jobs:
         run: ruff check verticals
       - name: Vertical test suites
         run: pytest verticals -q
+      - name: Corpus manifest verification (DEC-0014 item 7, CI leg)
+        run: |
+          python - <<'EOF'
+          import pathlib, sys
+          from arcaai.platform.governance import corpus
+          text = pathlib.Path("verticals/fraud/corpus/MANIFEST.yaml").read_text(encoding="utf-8")
+          m = corpus.parse_manifest(text)
+          print("manifest_version :", m["manifest_version"])
+          print("manifest_sha256  :", corpus.manifest_sha256(m))
+          print("eligible_set     :", corpus.eligible_set_sha256(m))
+          print("retrieval_snap   :", corpus.retrieval_snapshot_sha256(m))
+          print("eligible docs    :", len(corpus.eligible_documents(m)))
+          EOF
 
   promotion-gate:
     needs: vertical-tests
