@@ -1,0 +1,57 @@
+# ArcaAI B7 corpus manifest — the sole governing artefact for corpus
+# identity, licence, SA5 classification and retrieval eligibility
+# (DEC-0014). Postgres holds only load snapshots and must never be
+# used to regenerate this file.
+#
+# Rules (DEC-0014, enforced mechanically by the loader):
+#   - Identity fields (id, source, licence, sa5_classification,
+#     content_sha256) are immutable once a document is listed. A
+#     revised source document is a NEW entry with a new sha256.
+#   - licence is one of: synthetic-arcaai | OGL-v3.0 (DEC-0011).
+#   - eligibility is an append-only list of dated transitions
+#     (state: included | pending_review | withdrawn | deprecated).
+#     Deleting, modifying or reordering historical transitions is a
+#     hard load failure. A mutable flag is prohibited.
+#   - processing fields (chunker_version, embedding_model,
+#     chunk_count, ingest_timestamp) may change with a manifest
+#     version bump; identity fields may not.
+#   - manifest_version is a human label only; identity is the
+#     canonical content hash.
+#
+# The two entries below are SEED PLACEHOLDERS establishing the schema.
+# content_sha256 values are of the placeholder texts; both documents
+# are replaced by the real 50+ document corpus as B7 ingest proceeds.
+
+manifest_version: 2026-07-28.1
+
+documents:
+
+  - id: SYN-0001
+    source: "ArcaAI synthetic: transaction-monitoring guidance (placeholder)"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "seed placeholder; not yet authored"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: OGL-0001
+    source: "legislation.gov.uk extract (placeholder; OGL v3.0 expressly applies)"
+    licence: OGL-v3.0
+    sa5_classification: internal-sensitive
+    content_sha256: "1111111111111111111111111111111111111111111111111111111111111111"
+    eligibility:
+      - state: pending_review
+        date: 2026-07-28
+        reason: "seed placeholder; source extract not yet selected"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
