@@ -147,8 +147,9 @@ def test_abc_rejects_partial_implementation() -> None:
 
 # ------------------------------------------------- CF-1/B7-a import boundary
 
-ALLOWED_CHROMADB_IMPORTERS: set[str] = set()
-# inc2 adds exactly one entry: "arcaai/platform/retrieval/chroma_store.py"
+ALLOWED_CHROMADB_IMPORTERS: set[str] = {
+    "arcaai/platform/retrieval/chroma_store.py",  # the one adapter (inc2)
+}
 
 _IMPORT_RE = re.compile(r"^\s*(import\s+chromadb|from\s+chromadb)", re.MULTILINE)
 
