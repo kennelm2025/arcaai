@@ -47,7 +47,14 @@
 # OGL-0002..0004 not individually read. Appended transitions only;
 # nothing above is modified (DEC-0014 item 5).
 
-manifest_version: 2026-07-28.5
+# Version note (2026-07-29.6): first ingest run (B7 inc3). Processing
+# fields populated for all sixteen eligible documents: chunker and
+# embedding versions per the platform pins, chunk counts as produced,
+# one timestamp for the run. Identity fields and eligibility history
+# untouched; retrieval_snapshot_sha256 diverges from eligible_set_sha256
+# from this version, per the DEC-0014 two-hash design.
+
+manifest_version: 2026-07-29.6
 
 documents:
 
@@ -64,10 +71,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision, panel review accepted (all twelve)"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 4
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: SYN-CV-02
     source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Customer Vulnerability series · CV-02"
@@ -82,10 +89,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision, panel review accepted (all twelve)"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 3
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: SYN-DL-01
     source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Chief Executive letter series · DL-01"
@@ -100,10 +107,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision, panel review accepted (all twelve)"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 4
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: SYN-DL-02
     source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Chief Executive letter series · DL-02"
@@ -118,10 +125,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision, panel review accepted (all twelve)"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 3
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: SYN-DP-01
     source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Decision Procedures series · DP-01"
@@ -136,10 +143,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision, panel review accepted (all twelve)"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 4
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: SYN-DP-02
     source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Decision Procedures series · DP-02"
@@ -154,10 +161,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision, panel review accepted (all twelve)"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 3
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: SYN-SG-01
     source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Sector Guidance series · SG-01"
@@ -172,10 +179,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision, panel review accepted (all twelve)"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 4
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: SYN-SG-02
     source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Sector Guidance series · SG-02"
@@ -190,10 +197,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision, panel review accepted (all twelve)"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 4
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: SYN-TR-01
     source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Thematic Review series · TR-01"
@@ -208,10 +215,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision, panel review accepted (all twelve)"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 5
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: SYN-TR-02
     source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Thematic Review series · TR-02"
@@ -226,10 +233,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision, panel review accepted (all twelve)"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 4
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: SYN-TY-01
     source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Typology series · TY-01"
@@ -244,10 +251,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision, panel review accepted (all twelve)"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 4
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: SYN-TY-02
     source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Typology series · TY-02"
@@ -262,10 +269,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision, panel review accepted (all twelve)"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 4
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: OGL-0001
     source: "Fraud Act 2006 s.2 (fraud by false representation) — https://www.legislation.gov.uk/ukpga/2006/35/section/2/data.xht — Crown copyright, reused under the Open Government Licence v3.0"
@@ -280,10 +287,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision (all four); content read in full"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 1
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: OGL-0002
     source: "Fraud Act 2006 s.4 (fraud by abuse of position) — https://www.legislation.gov.uk/ukpga/2006/35/section/4/data.xht — Crown copyright, reused under the Open Government Licence v3.0"
@@ -298,10 +305,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision (all four); not individually read — licence and data.xht endpoint uniform with OGL-0001, read in full"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 1
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: OGL-0003
     source: "Proceeds of Crime Act 2002 s.327 (concealing etc. criminal property) — https://www.legislation.gov.uk/ukpga/2002/29/section/327/data.xht — Crown copyright, reused under the Open Government Licence v3.0"
@@ -316,10 +323,10 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision (all four); not individually read — licence and data.xht endpoint uniform with OGL-0001, read in full"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 7
+      ingest_timestamp: "2026-07-29T10:11:49Z"
 
   - id: OGL-0004
     source: "Proceeds of Crime Act 2002 s.330 (failure to disclose: regulated sector) — https://www.legislation.gov.uk/ukpga/2002/29/section/330/data.xht — Crown copyright, reused under the Open Government Licence v3.0"
@@ -334,7 +341,7 @@ documents:
         date: 2026-07-28
         reason: "operator inclusion decision (all four); not individually read — licence and data.xht endpoint uniform with OGL-0001, read in full"
     processing:
-      chunker_version: null
-      embedding_model: null
-      chunk_count: null
-      ingest_timestamp: null
+      chunker_version: "para-pack-v1;target=220w;cap=380w"
+      embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
+      chunk_count: 16
+      ingest_timestamp: "2026-07-29T10:11:49Z"
