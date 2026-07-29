@@ -40,7 +40,14 @@
 # material). Listed at pending_review; inclusion is a separate
 # governed act. Appended entries only; nothing above is modified.
 
-manifest_version: 2026-07-28.4
+# Version note (2026-07-28.5): operator inclusion decision — all four
+# OGL-v3.0 extracts transition to included; decision recorded
+# 2026-07-28. Review basis, recorded per that decision: OGL-0001 read
+# in full; licence and data.xht endpoint uniform across the set;
+# OGL-0002..0004 not individually read. Appended transitions only;
+# nothing above is modified (DEC-0014 item 5).
+
+manifest_version: 2026-07-28.5
 
 documents:
 
@@ -269,6 +276,9 @@ documents:
       - state: pending_review
         date: 2026-07-28
         reason: "fetched from legislation.gov.uk; awaiting operator content check and inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision (all four); content read in full"
     processing:
       chunker_version: null
       embedding_model: null
@@ -284,6 +294,9 @@ documents:
       - state: pending_review
         date: 2026-07-28
         reason: "fetched from legislation.gov.uk; awaiting operator content check and inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision (all four); not individually read — licence and data.xht endpoint uniform with OGL-0001, read in full"
     processing:
       chunker_version: null
       embedding_model: null
@@ -299,6 +312,9 @@ documents:
       - state: pending_review
         date: 2026-07-28
         reason: "fetched from legislation.gov.uk; awaiting operator content check and inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision (all four); not individually read — licence and data.xht endpoint uniform with OGL-0001, read in full"
     processing:
       chunker_version: null
       embedding_model: null
@@ -314,6 +330,9 @@ documents:
       - state: pending_review
         date: 2026-07-28
         reason: "fetched from legislation.gov.uk; awaiting operator content check and inclusion decision"
+      - state: included
+        date: 2026-07-28
+        reason: "operator inclusion decision (all four); not individually read — licence and data.xht endpoint uniform with OGL-0001, read in full"
     processing:
       chunker_version: null
       embedding_model: null
