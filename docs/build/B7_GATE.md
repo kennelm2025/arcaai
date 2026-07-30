@@ -166,6 +166,31 @@ expire; transcribed as text per RAT-01 §3.1:
 - ci-mlops #66 · push (main) · success · 2026-07-25 · 3m 51s · `8a5696a`
 - ci-docs #11 · push (main) · success · 2026-07-25 · 8s · `8a5696a`
 
+**inc4 governed-run transcription (2026-07-30).** CF-1/B7-c and B7-d
+evidence; runner `scripts/b7_run.py` (this PR), events read back via
+`AuditStore.events_for_run` on the runtime role. Dev-DB rows are wiped
+by the governance suite's session fixtures — this transcription, per
+RAT-01 §3.1, is the durable record.
+
+- Run 1 — correlation `019fb2b2-eee8-7882-8bde-07819f0fed1f` · seq 1
+  `retrieval_performed` · manifest_version=2026-07-29.6 · top_k=5 ·
+  result_count=5 · retrieval_ms 108.2 (first query after a fresh ONNX
+  extraction; cold file cache).
+- Run 2 — correlation `019fb2b6-813f-7ab1-ae50-f12eeaff0efe` · same
+  event shape and the identical five chunk ids (retrieval determinism
+  over the unchanged index) · retrieval_ms 87.5 (warm).
+- Chunk ids, both runs: SYN-CV-02#0002-45527cfa533d,
+  SYN-DP-01#0000-485e16df8b52, SYN-DP-01#0002-720264c12d81,
+  SYN-TR-01#0004-22f043383695, SYN-DL-01#0000-c4f5b4af4fb7.
+- Boundary (no direct audit writes from vertical code):
+  `tests/governance/test_audit_import_boundary.py`, zero offenders at
+  introduction (PR #56, `3857c77`); DB-backed events-present test
+  `tests/governance/test_retrieval_wiring.py` (this PR).
+- CF-1/B7-c: conforms-if met — events present for live end-to-end
+  runs, emission through the wrapper context only. CF-1/B7-d: R7
+  measured and recorded — 108.2 ms above the 100 ms rung recorded as
+  a finding per §1.1, 87.5 ms under it. Recorded, not gated.
+
 **Required** — these are the not-allowed deferrals at §5; absence
 blocks the gate.
 
@@ -195,10 +220,13 @@ blocks the gate.
       passing a threshold is not — B7 establishes the number later
       stages are measured against.
       → *evidence:*
-- [ ] Retrieval latency measured against the R7 ladder (< 100 ms rung,
+- [x] Retrieval latency measured against the R7 ladder (< 100 ms rung,
       carried forward from B6). Recorded, not gated — G9 was the
       latency gate and closed at B5. See CF-1/B7-d.
-      → *evidence:*
+      → *evidence:* two live measurements 2026-07-30 via
+      scripts/b7_run.py (state retrieval_ms, top_k=5 over 71 chunks):
+      108.2 ms (cold — a finding, above the rung) and 87.5 ms (warm —
+      under it). Full transcription in the inc4 block above.
 
 ## 4. Gate questions
 
