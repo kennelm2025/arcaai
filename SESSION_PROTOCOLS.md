@@ -208,3 +208,23 @@ Honesty matters here. These protocols substantially reduce continuity risk but d
 The SME review process catches some of these. The discipline of the spec template, ADRs, and sister specifications catches more. But the residual risk is real and worth being aware of.
 
 The mitigation for the residual risk is **Mike noticing**. You are the one constant across sessions. Trust your read when something feels off; ask Claude to explain its choices when they don't match prior patterns; push back when needed.
+
+---
+
+## Standing operational rules
+
+*Added 2026-07-30, ratified alongside WS-E 57-60. This document
+otherwise predates current practice (boot ritual, manifest, block
+protocol) - a currency observation for a future WS-C pass, noted, not
+fixed here.*
+
+- **Pinned-hash transfer check.** Every coordinator-delivered file
+  copied into the repo is verified by `Get-FileHash` SHA256 against
+  the coordinator-stated hash before use. Established 28-29 Jul (11
+  files verified 29 Jul); supersedes eyeball checks for transfers.
+- **Branch tidy-up.** GitHub auto-delete-head-branches is ON. After a
+  merge, tidy-up is the local delete of the merged branch plus
+  `git fetch --prune` - there is no remote delete step.
+- **Standing pre-push step.** `scripts\lint.cmd` clean before every
+  push. Adopted 28 Jul after three ruff-red CI rounds; zero CI red
+  rounds since.
