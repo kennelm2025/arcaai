@@ -444,6 +444,53 @@ regardless of surrounding prose).*
     the checks tick; (d) after any merge, the `git pull` diffstat is
     read against the PR's intended shape before the next action.
 
+57. **Test suite coupled to governed content - four tests red on a
+    content change (2026-07-28).** PR #49 r2: ci-devops #80 failed
+    with four governance-suite tests asserting properties of the live
+    MANIFEST.yaml (counts and hashes), so a legitimate governed
+    content change broke machinery tests. The parallel-document class
+    (item 53 rule (c)) in test form: a test that hardcodes governed
+    content is a parallel register of that content. Fixed at r3 by
+    the suite rewrite (48 tests: 27 trio + 21 corpus). RULE (recorded
+    in the suite docstring at the rewrite; this entry closes the
+    loop): machinery tests run against owned fixtures; the live
+    manifest receives only shape-invariant tests.
+58. **Verification-skip-under-momentum - three instances in one
+    session (2026-07-29).** The aa1a153 CI-green gate was asked four
+    times and the Block 3 mutation ran before it was answered
+    (resolved benign); Files Changed went unconfirmed pre-merge twice
+    (PR #51, #52; caught after by pull diffstat); the manifest-v6
+    git-diff eyeball was asked three times and never confirmed before
+    commit (belt-and-braces held: read-back, check_append_only,
+    silent generator, pinned load). Items 51/55 class, operator-side,
+    under session momentum. RULE: a block whose expectation is
+    unanswered blocks the next block - the coordinator holds the
+    sequence, not just states it; a mutation block is not delivered
+    until the verification output it depends on has been pasted.
+    Tooling notes to the same class: (a) short SHAs fail OPEN on the
+    Actions API head_sha filter (zero results, no error) - always the
+    full SHA; (b) an expectation statement names which hashes are
+    run-stable (eligible_set, retrieval_snapshot) and which
+    legitimately vary (manifest_sha, via ingest_timestamp) - a bare
+    "hashes match" expectation is unanswerable.
+59. **Angle-bracket placeholder in a runnable block,
+    coordinator-executed (2026-07-29).** A Copy-Item carrying a
+    placeholder path was authored by the coordinator and executed
+    (inc3 fixture redelivery). Third instance of the item 54 class,
+    first coordinator-executed. No new rule: the standing fix (no
+    angle-bracket placeholders in authored documents or runnable
+    examples, now design rule 10 of the corpus skeleton) was already
+    in force; this entry evidences it.
+60. **Windows newline translation broke content-hash fixtures after a
+    green sandbox run (2026-07-29).** pathlib write_text translated
+    LF to CRLF on the operator machine, changing fixture bytes and
+    therefore content hashes; the Linux sandbox suite had passed on
+    identical code. Fixed with write_bytes in the fixture; the
+    production ingest path was unaffected. CLASS NOTE: sandbox green
+    is advisory, local suites are runs of record - held exactly as
+    designed, and the divergence surfaced precisely where the design
+    said it would.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a
