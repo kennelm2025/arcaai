@@ -169,8 +169,8 @@ TY-09→TY-01. Word counts: 970 / 1,018 / 911 / 861 / 958 / 718 /
    so D1/D2 are authored against actual TR-04/SG-05 prose).
 6. **CL-23 circulation** — still DRAFT, oldest unreviewed; natural
    ride: the batch-1 panel round.
-7. **ci-mlops trigger gap** (`scripts/**` absent from pull_request
-   paths) — carried; one-line self-verifying fix.
+7. **ci-mlops trigger gap** (the `scripts` path glob absent from its
+   pull_request paths) — carried; one-line self-verifying fix.
 8. **DEC-0014 item 7 scheduled re-hash sweep** — carried; build it
    or record the substitution by addendum.
 9. Carried unchanged: manifest ARCAAI_MANIFEST_OUT default; Status
