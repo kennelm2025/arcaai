@@ -1,0 +1,77 @@
+# B7 corpus citation edges - the v0.2 skeleton's planned outbound
+# citations for all 38 new documents (skeleton v0.2, operator-approved
+# 2026-07-30). This file is the design source for the closure /
+# asymmetry / immutability check (scripts/corpus_edges_check.py).
+# v0.2.1: nine closure-repair edges approved by operator
+# 2026-07-30 after the mechanical check found nine documents
+# without design inbound (TY-05/08/09, DL-04/05, DP-04,
+# CV-04/05/06) - the v0.2 closure eyeball was wrong; the check
+# caught it on first run.
+#
+# Semantics: each list is the MINIMUM outbound citation set - every
+# listed edge must appear in the authored prose. Additional citations
+# are permitted where register-legal (an Authority document may never
+# cite a firm document) and are reported by the check for panel
+# visibility, not failed.
+#
+# The existing sixteen (12 SYN + 4 OGL) appear as targets only: their
+# outbound edges are committed and unchangeable (new-entry-new-hash),
+# and OGL statutes emit nothing by design (citation sinks).
+
+register:
+  authority: [TR-03, TR-04, TR-05, TR-06, SG-03, SG-04, SG-05, SG-06,
+              SG-07, SG-08, SG-09, TY-03, TY-04, TY-05, TY-06, TY-07,
+              TY-08, TY-09, DL-03, DL-04, DL-05, DL-06, DP-03, DP-04,
+              DP-05, CV-03, CV-04, CV-05, CV-06]
+  firm: [FW-01, PL-01, PL-02, PL-03, OP-01, OP-02, OP-03, OP-04, CS-01]
+  existing: [TR-01, TR-02, SG-01, SG-02, TY-01, TY-02, DL-01, DL-02,
+             DP-01, DP-02, CV-01, CV-02]
+  statute: [OGL-0001, OGL-0002, OGL-0003, OGL-0004]
+
+edges:
+  # Thematic Review series
+  TR-03: [TR-01, SG-01, TY-03, CV-01, OGL-0001]
+  TR-04: [TR-01, TY-04, SG-03, OGL-0003, OGL-0004]
+  TR-05: [TR-02, SG-05, TY-07, DP-01, TY-05]
+  TR-06: [CV-01, CV-02, CV-03, TR-03, SG-08, CV-04, CV-06]
+  # Sector Guidance series
+  SG-03: [SG-01, TY-01, OGL-0004, TR-01]
+  SG-04: [TR-03, TY-03, SG-01, OGL-0001]
+  SG-05: [SG-02, DP-02, TY-03, CV-03, DP-04]
+  SG-06: [OGL-0004, SG-03, DP-01, TY-08]
+  SG-07: [SG-01, TY-02, DL-06, TR-05, TY-09]
+  SG-08: [CV-01, TR-03, SG-04, CV-05]
+  SG-09: [DP-01, SG-06, OGL-0003]
+  # Typology series (batch 1)
+  TY-03: [OGL-0001, TY-01, SG-01]
+  TY-04: [OGL-0003, OGL-0004, TY-01, TR-01]
+  TY-05: [OGL-0001, OGL-0002, TY-03]
+  TY-06: [TY-03, CV-02, OGL-0001]
+  TY-07: [TY-02, SG-03, OGL-0001]
+  TY-08: [TY-01, OGL-0001, SG-06]
+  TY-09: [OGL-0002, TY-04, DP-03]
+  # Chief Executive letter series
+  DL-03: [TR-03, SG-04]
+  DL-04: [TR-04, TY-04]
+  DL-05: [SG-09, SG-06]
+  DL-06: [SG-07, TR-05, DL-02]
+  # Decision Procedures series (incl. R5 repair DP-04 -> DP-05)
+  DP-03: [DP-01, TR-01, OGL-0004]
+  DP-04: [DP-02, DP-03, SG-05, DP-05]
+  DP-05: [DP-01, DP-03]
+  # Customer Vulnerability series
+  CV-03: [CV-01, CV-02, TY-06]
+  CV-04: [CV-01, CV-03, SG-08]
+  CV-05: [CV-02, CV-03]
+  CV-06: [CV-03, TR-06, TY-06]
+  # Firm cluster (incl. R5 repairs: PL-01 supported-by children,
+  # OP-04 adjacent procedures; and the v0.2 repair OP-02 -> OP-04)
+  FW-01: [OGL-0003, OGL-0004, SG-01]
+  PL-01: [FW-01, OGL-0001, OGL-0003, DL-01, TR-01, SG-01, PL-02, PL-03, CS-01]
+  PL-02: [FW-01, PL-01, TR-03, DL-03]
+  PL-03: [FW-01, CV-01, CV-03, TR-06]
+  OP-01: [FW-01, PL-01, TR-03, SG-04, SG-08, TY-03]
+  OP-02: [FW-01, PL-01, TR-04, TY-04, SG-03, OGL-0004, OP-04, DL-04]
+  OP-03: [FW-01, PL-01, SG-05, TY-03]
+  OP-04: [FW-01, OP-02, SG-06, OGL-0004, DP-01, OP-01, OP-03]
+  CS-01: [FW-01, PL-02, SG-07, SG-03, TR-05, DL-05]
