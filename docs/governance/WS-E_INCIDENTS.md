@@ -491,6 +491,32 @@ regardless of surrounding prose).*
     designed, and the divergence surfaced precisely where the design
     said it would.
 
+61. **rehash_sweep first run: fixture rows in corpus_version; no
+    operational pin writer (2026-08-06).** The DEC-0014 item-7
+    operator-machine sweep (`scripts/rehash_sweep.py`, ruled
+    2026-08-04, landed PR #61), on its first live run, hard-failed
+    with two `corpus_version` rows whose pinned manifest_sha256
+    values are not reproducible from any historical MANIFEST.yaml.
+    Established: (a) both rows were test fixtures (`fixture-*`
+    labels) committed by `tests/governance/test_corpus_manifest.py`
+    via `load_snapshot` at 2026-07-30 11:00:35 UTC - `conftest.py`
+    defaults its DSNs into the local dev database and the tests do
+    not clean up; (b) the `.6` run-of-record pin (manifest_sha
+    `6a1371fc`, eligible 16) has never existed as a row - a
+    repo-wide caller search shows `load_snapshot` is invoked only by
+    its own tests; the operational ingest never writes the evidence
+    row that `corpus.py`'s docstring defines as proof a version was
+    loaded. Remediation ruled 2026-08-06: fixture rows deleted via
+    owner role (one-off; app-role DELETE first attempted and
+    correctly denied by the grants - a live validation of
+    `sql/governance_grants.sql`; transcripts in session record);
+    CL-24 raised (test DB isolation); CL-25 raised (wire
+    `load_snapshot` into operational ingest - candidate for inc4
+    scope); sweep re-run green (0 pins - vacuously and truthfully,
+    until CL-25 gives real loads a writer). CLASS NOTE: the sweep
+    detecting real state drift on first run, before its own PR
+    merged, is the intended behaviour of the control.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a
@@ -508,3 +534,26 @@ regardless of surrounding prose).*
   normalises `.md` to LF on staging, so CRLF in the working copy is
   harmless to the committed blob but warns on every `git diff` and
   leaves the working copy unlike what git checks out.
+- To 51/55: `git branch -d` reports the deleted branch's *tip*
+  commit, not the merge commit that absorbed it; and `git log
+  --oneline` on a just-created branch lists the merge first, its own
+  commit second (both parents walked in commit-date order). Two
+  coordinator expectation misses, benign, recorded so the
+  expectations stop being re-derived wrong at each encounter.
+- To 56/58: the 58-shape persisted post-ratification - Files Changed
+  unread before merge on PRs #55-#58 (one answered late); the 56(d)
+  post-merge diffstat read caught or confirmed every one. No new
+  rule - the belt-and-braces is carrying the load. Working
+  mechanical prompt, in force from the later merges of 30 Jul: the
+  coordinator withholds the merge-step block until the Files Changed
+  reading is pasted.
+- To the 30 Jul session (handover of record; no ledger item):
+  chromadb's ONNX cache existence probe fails *open* into a fresh
+  83 MB re-download when ACLs block traversal of the cached tree -
+  the probe cannot see the cache, assumes absence, re-downloads, and
+  the re-extraction then fails overwriting the unreadable survivors,
+  so the symptom (`PermissionError` inside `tarfile` extractall)
+  points at the archive when the fault is the tree's ACLs. Class
+  note from the elevated/normal shell mixing; diagnostic rule:
+  extraction PermissionError on a *cached* model -> check tree ACLs
+  before suspecting the download.
