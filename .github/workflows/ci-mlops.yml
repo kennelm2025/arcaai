@@ -12,6 +12,7 @@ on:
       - "sql/**"
       - "monitoring/evidently/**"
       - "contracts/**"
+      - "scripts/**"
       - ".github/workflows/ci-mlops.yml"
 
 jobs:
