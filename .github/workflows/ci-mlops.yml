@@ -79,3 +79,18 @@ jobs:
         with:
           name: provenance-manifest
           path: provenance_manifest.json
+
+  manifest-history:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Manifest history append-only sweep (DEC-0014 item 7, Option 1)
+        run: python scripts/manifest_history_check.py
