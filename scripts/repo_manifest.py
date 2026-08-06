@@ -331,7 +331,7 @@ def code_dirs(repo: Path) -> list[str]:
                     if not any(part in SKIP for part in f.parts))
             if n:
                 subs.append(f"{sub.name}/ {n}")
-        tail = f" [{', '.join(subs[:5])}]" if subs else ""
+        tail = f" incl. {', '.join(subs[:5])}" if subs else ""
         out.append(f"{p.name}/ ({len(pys)} .py){tail}")
     return out
 

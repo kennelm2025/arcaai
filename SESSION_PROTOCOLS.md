@@ -1,5 +1,7 @@
 # Session Protocols
 
+*Currency note (2026-08-04): parts of this document predate current practice. A fresh session orients from the latest `docs/governance/SESSION_HANDOVER_*.md` boot line and `REPO_MANIFEST.md`, not from the opening protocol below; full revision awaits a WS-C pass.*
+
 This document defines the rituals at the start and end of every chat session, plus the continuity-risk mitigations agreed for the design phase.
 
 The purpose of these protocols is to **make every Claude session start and end the same way**, so that the work survives the boundaries between sessions. The repository is the source of truth; these protocols are how Claude sessions stay synchronised with it.
