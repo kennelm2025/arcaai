@@ -10,7 +10,7 @@ Repo state at ruling: nothing landed; HEAD main b611044 (sandbox view); branch h
 
 Operator ruling issued 2026-08-04: all six items approved as recommended, no divergence.
 
-1. ci-mlops trigger gap — Variant A approved: bare scripts/** glob added to pull_request paths. Variant B set aside.
+1. ci-mlops trigger gap — Variant A approved: bare scripts glob (all paths under scripts/, written as prose here for the ci-docs bold-parity check - the 30 Jul precedent) added to pull_request paths. Variant B set aside.
 
 2. DEC-0014 item 7 — both options approved: Option 1 CI history sweep (verify/lift loader's append-only callable first; fetch-depth: 0) + Option 2 operator-machine rehash_sweep with DECISIONS addendum. Approach approved, not the draft script as-is — two marked assumptions (DB accessor helper name; corpus_version column names) verify on-machine before the script enters the repo.
 
