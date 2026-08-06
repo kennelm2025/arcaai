@@ -54,7 +54,21 @@
 # untouched; retrieval_snapshot_sha256 diverges from eligible_set_sha256
 # from this version, per the DEC-0014 two-hash design.
 
-manifest_version: 2026-07-29.6
+# Version note (2026-08-06.7): batch-1 typology set — seven documents
+# (SYN-TY-03..09) authored per the v0.2 skeleton (WS-E 58 sequencing)
+# and reviewed by a three-reviewer panel (Grok; Gemini substituting
+# for ChatGPT; DeepSeek), all seven accepted; operator rulings at
+# docs/governance/RULINGS_RECORD_2026-08-06_batch1.md, round record at
+# docs/governance/B7_BATCH1_PANEL_CONSOLIDATION_2026-08-06.md. Listed
+# at pending_review per the .4 precedent; inclusion is a separate
+# operator decision. Hashes computed by
+# scripts/corpus_manifest_entries.py this date (drift check clean).
+# EDGES.yaml revised to v0.2.2 in the same commit (two panel-ruled
+# promotions: CV-01 into TY-04's minimum set, TR-01 into TY-07's).
+# Appended entries and transitions only; nothing above is modified
+# (DEC-0014 item 5).
+
+manifest_version: 2026-08-06.7
 
 documents:
 
@@ -345,3 +359,108 @@ documents:
       embedding_model: "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
       chunk_count: 16
       ingest_timestamp: "2026-07-29T10:11:49Z"
+
+  - id: SYN-TY-03
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Typology series · TY-03"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "1022b7c562fe087196e2f2066e96ef7bf4a0e09c04d65a26280e8177197a855e"
+    eligibility:
+      - state: pending_review
+        date: 2026-08-06
+        reason: "authored; batch-1 panel review accepted 2026-08-06 (three reviewers); operator rulings RULINGS_RECORD_2026-08-06_batch1; awaiting operator inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-TY-04
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Typology series · TY-04"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "75f3abde979250e3a1356dc5128379a2b63bccb1460ba04cffb48abebfcd6682"
+    eligibility:
+      - state: pending_review
+        date: 2026-08-06
+        reason: "authored; batch-1 panel review accepted 2026-08-06 (three reviewers); operator rulings RULINGS_RECORD_2026-08-06_batch1; awaiting operator inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-TY-05
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Typology series · TY-05"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "bb91f79791332ff39ebb3183a86893d90fba0fd29a2d037f1fa9ac84bc666ba8"
+    eligibility:
+      - state: pending_review
+        date: 2026-08-06
+        reason: "authored; batch-1 panel review accepted 2026-08-06 (three reviewers); operator rulings RULINGS_RECORD_2026-08-06_batch1; awaiting operator inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-TY-06
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Typology series · TY-06"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "f4ccd4bb79b8f4ef38f604d0fc433c8290cbecac3c4bc38ef0c30969d2c2753e"
+    eligibility:
+      - state: pending_review
+        date: 2026-08-06
+        reason: "authored; batch-1 panel review accepted 2026-08-06 (three reviewers); operator rulings RULINGS_RECORD_2026-08-06_batch1; awaiting operator inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-TY-07
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Typology series · TY-07"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "367057c4f1bc8157aee2eb8f1e34b737db79504bd40303c9b429bf67cfbb30fe"
+    eligibility:
+      - state: pending_review
+        date: 2026-08-06
+        reason: "authored; batch-1 panel review accepted 2026-08-06 (three reviewers); operator rulings RULINGS_RECORD_2026-08-06_batch1; awaiting operator inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-TY-08
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Typology series · TY-08"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "5b3ed45ff7f3944b0a7c628cd7bcb2c032809c42aa7bd6ae5e655282f2ebbec4"
+    eligibility:
+      - state: pending_review
+        date: 2026-08-06
+        reason: "authored; batch-1 panel review accepted 2026-08-06 (three reviewers); operator rulings RULINGS_RECORD_2026-08-06_batch1; awaiting operator inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-TY-09
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Typology series · TY-09"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "0d9392427db474f115376be8c9ce08efba15d64332a9c234c6061a87af33d4ca"
+    eligibility:
+      - state: pending_review
+        date: 2026-08-06
+        reason: "authored; batch-1 panel review accepted 2026-08-06 (three reviewers); operator rulings RULINGS_RECORD_2026-08-06_batch1; awaiting operator inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
