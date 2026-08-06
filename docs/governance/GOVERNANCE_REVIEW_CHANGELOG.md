@@ -193,6 +193,19 @@ principle mapping for the B8/B9 artefact set.
   in full text — the morning's withdrawn checker-bug draft never entered this
   register)*
 
+- [ ] **CL-24** *(new, 6 Aug)* Governance test suite must not default into the
+  dev database: isolate `conftest.py` DSN defaults to a scratch database or
+  schema, and/or roll back rather than commit fixture `corpus_version` rows.
+  Until then, running the governance tests locally recreates the WS-E 61
+  condition. *(Source: WS-E 61 — rehash_sweep first run, 6 Aug; fixture rows
+  found in the dev `corpus_version` table from the 30 Jul test run)*
+- [ ] **CL-25** *(new, 6 Aug)* Operational ingest must write the
+  `corpus_version` evidence row: wire `corpus.load_snapshot` into the ingest
+  path so real loads produce real pins (DEC-0014 intent; the row is currently
+  written only by tests — the `.6` run of record was never row-recorded).
+  Candidate home: inc4 governance wiring; rule scope at inc4 entry.
+  *(Source: WS-E 61)*
+
 ## Workstream E — Engineering process & protocols
 - [ ] **CL-E1** (carried in) Record the force-push-to-main incident + add a guard
   (branch protection / documented exception). *(F-007)*
