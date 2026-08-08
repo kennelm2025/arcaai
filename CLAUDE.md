@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository. Guidance here is the soft layer; hard rules are also enforced by hooks in `.claude/settings.json` (see "Enforcement layer" below). If guidance and a hook disagree, the hook wins and the discrepancy is a WS-E item.
 
 ## What this repo is
 
@@ -17,6 +17,16 @@ able to reconstruct a decision months later.
 SESSION_HANDOVER file under `docs/governance/` is the single source of truth for the
 state of play; `CURRENT_STATE.md` and `SESSION_PROTOCOLS.md` lag it. Read the newest
 handover's boot line before trusting either.
+
+**Register state is derived, never quoted from memory or from a found file.** This
+document deliberately carries no register numbers, no corpus snapshot hash, no HEAD
+sha — every static pinning of them has gone stale within a session (the CL-26
+stale-origin pattern). Register numbering (WS-E / DEC / ADR / CL), build-stage state
+and divergences come from `python scripts/repo_manifest.py` run **in this session**
+(`/session-open` does this). A `REPO_MANIFEST.md` found on disk or pasted into
+context is presumed stale until regenerated — its own header says so. Corpus
+identity comes from `MANIFEST.yaml`; citation-edge minimums from `EDGES.yaml` at its
+current version.
 
 ## Commands
 
@@ -38,7 +48,7 @@ pytest -k test_score_node -q                         # one test
 python scripts/check_docs.py .                       # what ci-docs runs (markdown structural checks)
 dvc repro verticals/fraud/dvc.yaml                   # regenerate the fraud pipeline
 python scripts/b7_run.py                             # governed end-to-end agent run (dry-run; --live executes)
-python scripts/rehash_sweep.py                       # standing boot act (corpus pin sweep)
+python scripts/rehash_sweep.py                       # standing boot act (corpus pin sweep; expect 0 pins)
 python scripts/repo_manifest.py --out D:/Downloads   # session boot snapshot; write OUTSIDE the tree
 ```
 
@@ -102,6 +112,42 @@ artefacts). `verticals/fraud/serving/scorer.py` re-states the two-line margin→
 rather than importing the trainer; `verticals/fraud/tests/test_serving.py` parity-checks
 it against the offline pipeline. Data itself never enters git.
 
+## Enforcement layer — hooks and protected files
+
+`.claude/hooks/governance_guard.py` runs as a PreToolUse hook on every Bash/Edit/Write
+call. It is deterministic and cannot be skipped or talked around.
+
+**Denied outright (no exception path — do not ask):** `git push --force` in any form
+(the CL-E1 incident guard), git history rewrites (`filter-branch` / `filter-repo`),
+recursive force deletes (`rm -rf`, `Remove-Item -Recurse -Force`).
+
+**Operator confirmation required (every touch, by design):** any edit or writing shell
+command reaching `MANIFEST.yaml`, `EDGES.yaml`, `docs/governance/WS-E_INCIDENTS.md`,
+`DECISIONS.md`, `docs/governance/RULINGS_RECORD*.md`,
+`docs/governance/document-register.yaml`. Legitimate appends to these are normal
+governed acts; the gate exists to make every touch deliberate, not to prevent them.
+When the confirmation prompt fires, restate which governed act the edit serves before
+proceeding.
+
+Background subagent tasks are disabled project-wide
+(`CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` in `.claude/settings.json`). Sessions are
+attended, single-arc. Do not suggest detached (`/bg`) sessions on this repo.
+
+## Ceremonies (slash skills, user-invoked only)
+
+- `/session-open` — boot ritual: clean-tree check, env check, live register
+  regeneration, rehash sweep, queue readback, arc selection. Run before substantive
+  work in every session.
+- `/session-close` — regenerate manifest snapshot, update the queue section below,
+  draft the arc summary in handover style.
+- `/ledger-touch` — WS-E append with the sequence-hold check enforced.
+- `/hash-verify` — SHA256 pinned-transfer verification (the only skill Claude may
+  invoke unprompted).
+- `/pr-prep` — pre-PR battery (diff-stat first) and house-style PR body draft.
+
+Any session touching retrieval starts with the standing first act: the normal-shell
+ONNX cache traversal check, before other work.
+
 ## Conventions that will bite you
 
 - **Never commit to `main`.** Feature branch → PR → merge. Delete the local branch after
@@ -121,32 +167,68 @@ it against the offline pipeline. Data itself never enters git.
 - Docstrings here carry decision history (which increment, which ruling, why the shape).
   Match that when adding modules — a comment explaining *why* the constraint exists is the
   house style, and several of them are the only record of an incident.
+- Governance artefacts change by explicit full-file replacement or scripted writes, never
+  through a markdown-aware editor that reformats on save. Prototype/experiment files are
+  each their own file (v0a, v0b, …); no overwrites of prior versions.
 
 ## Working protocol (non-negotiable)
 
 1. **Environment.** `conda activate arcaai` (Python 3.11) before any Python work. Every
    script in this repo assumes that environment; a bare system interpreter will resolve
-   the wrong dependency set.
+   the wrong dependency set. If the env cannot be confirmed, stop and say so.
 2. **One act at a time.** Propose a single command or edit, wait for approval, read the
    output before the next act. Verification precedes mutation: check state first
    (`git status`, `git diff --stat`, or read the file) before changing it, and after any
-   act verify its effect before proceeding. An empty diff after a supposed change means
-   the change did not happen — say so rather than assuming it landed.
+   act verify its effect before proceeding. **`git diff --stat` comes FIRST in any
+   verification battery** — an empty diff after a supposed change means the change did
+   not happen, whatever else is green; say so rather than assuming it landed.
 3. **Corpus governance.** Never edit anything under `verticals/fraud/corpus/` outside a
    governed act. `verticals/fraud/corpus/MANIFEST.yaml` changes only as appended
    eligibility transitions in a new manifest version — DEC-0014 item 5 enforces this
    mechanically. Authored corpus documents are immutable once committed: a correction is a
    new entry with a new hash, never an edit. `verticals/fraud/corpus/EDGES.yaml` changes
-   are versioned acts and carry a version note.
-4. **Registers are append-only.** DEC, ADR, CL and WS-E numbers come from the current
-   REPO_MANIFEST "Register numbering" section — never guessed, never reused.
+   are versioned acts and carry a version note. **Authoring and listing are separate
+   governed acts** — writing a corpus document and listing it in MANIFEST.yaml never
+   happen in the same uncommanded flow; ask before each act, never chain them.
+4. **Registers are append-only.** DEC, ADR, CL and WS-E numbers come from a
+   REPO_MANIFEST regenerated **this session** — never guessed, never reused, never read
+   from a stale snapshot. Sequence-hold rule (WS-E 58): next number is highest+1, only.
 5. **Docs discipline.** Run `python scripts/check_docs.py .` before any push containing
    markdown. `scripts\lint.cmd` is narrower than CI's docs check; passing lint does not
    imply docs will pass.
+6. **Hash-pinned transfers.** Any artefact crossing a machine or session boundary gets a
+   SHA256, verified in full on arrival (`/hash-verify`). On mismatch: stop, do not open
+   or act on the artefact.
+7. **External AI panel.** Panel composition and primers are governed by
+   `docs/governance/sme-panel.md` and `docs/governance/sme-prompt-primers/` — never
+   enumerate members from memory (Mistral sits on the roster primarily for European
+   regulation cross-checking). Every circulation records its ACTUAL composition in the
+   circulation/rulings artefact: which members were fielded, any substitutions (and for
+   whom), and any member unavailable (down, token-limited, etc.) with the reason. A
+   panel outcome without its composition record is incomplete. Panel members act as
+   interrogators, never authors; panel material leaves and returns hash-pinned; rulings
+   are the operator's alone.
+
+## Current queue
+
+Maintained by `/session-close` at end of each session. Queue source of truth is the
+latest committed session handover (plus addendum if any) under `docs/governance/`;
+this section is a working pointer, not the record.
+
+<!-- QUEUE-START -->
+1. Boot ritual via /session-open (incl. rehash_sweep; expect 0 pins).
+2. Batch-2 authoring — SG series per v0.2 skeleton and EDGES v0.2.2 minimums;
+   SG-03/SG-04 landed (PR #67); SG-05 next (carries AO-2 as the batch's check),
+   then SG-06..09. One document-arc per session.
+3. Operator inclusion decision for TY-03..09 when ready (separate act; next ingest
+   then populates processing fields at a .8 version).
+4. CL-25 / inc4 (pin writer) pending agent module; CL-24 when convenient.
+<!-- QUEUE-END -->
 
 ## Orientation for a new session
 
-`START_HERE.md` → `DECISIONS.md` (rulings R1–R13, DEC series, ADRs) → `BUILD_TRACKER.md`
-(next unpassed gate) → the newest `docs/governance/SESSION_HANDOVER_*.md`, whose boot line
-is the current state of play. `CURRENT_STATE.md` and `SESSION_PROTOCOLS.md` both lag
-current practice — treat the latest handover as authoritative where they disagree.
+Run `/session-open` first. Then: `START_HERE.md` → `DECISIONS.md` (rulings R1–R13, DEC
+series, ADRs) → `BUILD_TRACKER.md` (next unpassed gate) → the newest
+`docs/governance/SESSION_HANDOVER_*.md`, whose boot line is the current state of play.
+`CURRENT_STATE.md` and `SESSION_PROTOCOLS.md` both lag current practice — treat the
+latest handover as authoritative where they disagree.
