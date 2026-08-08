@@ -217,15 +217,36 @@ this section is a working pointer, not the record.
 
 <!-- QUEUE-START -->
 1. Boot ritual via /session-open (incl. rehash_sweep; expect 0 pins).
-2. Batch-2 authoring — SG series per v0.2 skeleton and EDGES v0.2.2 minimums;
+2. **Parked elevated-session findings — blocking for retrieval.**
+   - ONNX cache ACL fault, confirmed live. Repair before any `--live` retrieval
+     act; a stub-flag run is unaffected.
+   - Elevated-harness-shell breach, recorded.
+   - The ONNX cache traversal check returns green under an elevated shell — a
+     false-green defect. Fix the check to assert non-elevation before its result
+     is trusted as the standing first act again.
+3. WS-E entry for the render-abort class — ruled, **one entry for the class**,
+   owed at the next non-corpus session via /ledger-touch. Number comes from that
+   session's own manifest regeneration under the sequence-hold rule (63 was next
+   as at this close).
+4. Batch-2 authoring — SG series per v0.2 skeleton and EDGES v0.2.2 minimums;
    SG-03/SG-04 landed (PR #67), SG-05/SG-06 landed (PR #68, AO-2 discharged in
-   SG-05); SG-07 next, then SG-08/09. One document-arc per session.
-3. Operator inclusion decision for TY-03..09 when ready (separate act; next ingest
+   SG-05), SG-07 landed (PR #74); SG-08 next, then SG-09. One document-arc per
+   session.
+5. PRs #64/#65 standing tree verification — **partially chipped, not
+   discharged.** EDGES v0.2.2 was read in full during the SG-07 arc and the
+   manifest-history job ran live on PR #74; the MANIFEST.yaml side of #64 and
+   the rest of #65 are still owed a look.
+6. Operator inclusion decision for TY-03..09 when ready (separate act; next ingest
    then populates processing fields at a .8 version).
-4. CL-25 / inc4 (pin writer) pending agent module; CL-24 when convenient.
-5. Governance-guard deny path for history rewrites (`filter-branch` / `filter-repo`)
+7. CL-25 / inc4 (pin writer) pending agent module; CL-24 when convenient.
+8. Governance-guard deny path for history rewrites (`filter-branch` / `filter-repo`)
    is the one documented category still unexercised; test needs a throwaway clone,
    not this working tree.
+9. Consistency read of SG-07 §2.2 (TR-05) and §5.2 (DL-06) when those two
+   documents are drafted — both are characterised by series role only, per the
+   SG-05 precedent for CV-03 and DP-04.
+10. Commit-trailer convention — ruled: no `Co-Authored-By` trailer on corpus
+    authoring commits. Owed as a standing rule in this file at its next revision.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
