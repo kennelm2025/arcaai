@@ -9,13 +9,27 @@ allowed-tools: Bash(python:*), Bash(git diff:*)
 
 Entry to append (operator's words): $ARGUMENTS
 
-Current ledger tail:
+Current ledger tail — CONTEXT ONLY, never a numbering source. This is
+the file's last 30 lines, which are addendum cross-references ("To
+51/55:", "To 56/58:") and footnotes. The numbers appearing in it are
+back-references to earlier items, not the sequence head, so it cannot
+contain the highest item number:
 !`python -c "import io; lines=io.open('docs/governance/WS-E_INCIDENTS.md',encoding='utf-8').readlines(); print(''.join(lines[-30:]))"`
+
+Numbered-item sequence — the authoritative numbering source (last five
+items, read from the item headings themselves):
+!`python -c "import re,io; ls=[l.rstrip() for l in io.open('docs/governance/WS-E_INCIDENTS.md',encoding='utf-8') if re.match(r'^[0-9]{1,3}\. ',l)]; print('\n'.join(ls[-5:]))"`
 
 # Your task
 
-1. From the tail above, identify the highest existing WS-E number.
-   State it explicitly.
+1. Identify the highest existing WS-E number from the ledger's
+   numbered sequence itself — the item headings in
+   `docs/governance/WS-E_INCIDENTS.md`, as rendered above — and
+   corroborate it against the WS-E figure in this session's
+   regenerated REPO_MANIFEST. Never derive it from the tail render,
+   and never from a manifest found on disk. State the number
+   explicitly and name the two sources that agreed. If they
+   disagree, stop and reconcile before writing anything.
 2. Sequence-hold check (WS-E 58 rule): the next number is highest+1,
    and only that number. If the operator's text implies a different
    number, stop and reconcile before writing anything.

@@ -517,6 +517,26 @@ regardless of surrounding prose).*
     detecting real state drift on first run, before its own PR
     merged, is the intended behaviour of the control.
 
+62. **CI paths-filter coverage gap, third recurrence: the `.claude/`
+    tree absent from the ci-devops PR trigger (2026-08-08).** The
+    harness PR (#70) touched only `CLAUDE.md`, the `.claude/` tree
+    and `.gitignore`; none matched the `ci-devops` pull_request
+    paths filter, so the PR ran `ci-docs` alone (matched via the
+    top-level markdown entry) and reported green with no lint leg.
+    The repo-wide `ruff check .` therefore first executed on the
+    unfiltered `push: branches: [main]` trigger and failed I001
+    (import block un-formatted) in
+    `.claude/hooks/governance_guard.py` after merge. Remediated
+    same-day on branch harness-doc-fix-2026-08-08: autofix applied
+    (one blank line; no behavioural change, deny path re-tested and
+    still blocking), full lint green, and a recursive `.claude/`
+    entry added to the ci-devops paths filter. Same shape as WS-E
+    45's two exhibits (`docs/`, then `scripts/`), which the
+    workflow's own header comment records. CLASS NOTE: a new
+    top-level directory is uncovered until named in each workflow's
+    PR filter, and the push-to-main trigger carrying no filter of
+    its own makes post-merge the first place the gap can show.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a
