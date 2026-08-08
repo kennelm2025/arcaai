@@ -141,3 +141,14 @@ untouched.
 - `/pr-prep`'s check_docs render calls `scripts/check_docs.py` without
   the `.` argument; it defaults correctly, so this is a note, not a
   defect.
+- **Two items inherited as verified-by-record, awaiting independent
+  confirmation in the tree.** The 2026-08-06 addendum records both as
+  landed with CI green at the time: PR #64 (batch-1 listing —
+  MANIFEST.yaml at `2026-08-06.7`, SYN-TY-03..09 appended at
+  pending_review, drift clean 23/23; EDGES.yaml at v0.2.2 with CV-01
+  into TY-04's minimums and TR-01 into TY-07's) and PR #65 (DEC-0014
+  item 7 Option 1 — `scripts/manifest_history_check.py` plus the
+  manifest-history job in ci-mlops at fetch-depth 0). No session since
+  has re-verified either against the working tree, and this session
+  touched neither. Carried as a standing verification, not as an open
+  question — the record says landed; what is owed is a look.
