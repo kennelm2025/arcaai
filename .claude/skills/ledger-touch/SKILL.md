@@ -2,7 +2,7 @@
 name: ledger-touch
 description: Append a WS-E incidents-ledger entry with the sequence-hold check enforced. User-invoked only; never chained from another act.
 disable-model-invocation: true
-allowed-tools: Bash(python:*), Bash(git diff:*)
+allowed-tools: Bash(python:*), Bash(git diff:*), Bash(echo:*)
 ---
 
 # Ledger touch — governed WS-E append
@@ -13,12 +13,16 @@ Current ledger tail — CONTEXT ONLY, never a numbering source. This is
 the file's last 30 lines, which are addendum cross-references ("To
 51/55:", "To 56/58:") and footnotes. The numbers appearing in it are
 back-references to earlier items, not the sequence head, so it cannot
-contain the highest item number:
-!`python -c "import io; lines=io.open('docs/governance/WS-E_INCIDENTS.md',encoding='utf-8').readlines(); print(''.join(lines[-30:]))"`
+contain the highest item number. Both renders below fall back to a
+marker rather than failing hard — a non-zero `!` render aborts the
+skill before the task text is read, and an append attempted without the
+sequence render is exactly the uncorroborated numbering WS-E 58 exists
+to prevent:
+!`python -c "import io; lines=io.open('docs/governance/WS-E_INCIDENTS.md',encoding='utf-8').readlines(); print(''.join(lines[-30:]))" 2>&1 || echo "(ledger tail render FAILED — see above)"`
 
 Numbered-item sequence — the authoritative numbering source (last five
 items, read from the item headings themselves):
-!`python -c "import re,io; ls=[l.rstrip() for l in io.open('docs/governance/WS-E_INCIDENTS.md',encoding='utf-8') if re.match(r'^[0-9]{1,3}\. ',l)]; print('\n'.join(ls[-5:]))"`
+!`python -c "import re,io; ls=[l.rstrip() for l in io.open('docs/governance/WS-E_INCIDENTS.md',encoding='utf-8') if re.match(r'^[0-9]{1,3}\. ',l)]; print('\n'.join(ls[-5:]))" 2>&1 || echo "(sequence render FAILED — see above; numbering source UNAVAILABLE, append nothing)"`
 
 # Your task
 
@@ -29,7 +33,10 @@ items, read from the item headings themselves):
    regenerated REPO_MANIFEST. Never derive it from the tail render,
    and never from a manifest found on disk. State the number
    explicitly and name the two sources that agreed. If they
-   disagree, stop and reconcile before writing anything.
+   disagree, stop and reconcile before writing anything. If the
+   sequence render shows a FAILED marker, one of the two required
+   sources does not exist: stop and report, and append nothing. An
+   empty render is never evidence that the ledger has no items.
 2. Sequence-hold check (WS-E 58 rule): the next number is highest+1,
    and only that number. If the operator's text implies a different
    number, stop and reconcile before writing anything.

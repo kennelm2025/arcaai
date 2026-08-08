@@ -2,16 +2,21 @@
 name: session-close
 description: ArcaAI session close ceremony — regenerate the manifest, update the CLAUDE.md queue, summarise the arc for handover. User-invoked at the end of every session.
 disable-model-invocation: true
-allowed-tools: Bash(python:*), Bash(git status:*), Bash(git diff:*), Bash(git log:*)
+allowed-tools: Bash(python:*), Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(echo:*)
 ---
 
 # Session close — closing ceremony
 
-Live state, captured now:
+Live state, captured now. Each render falls back to a marker line
+rather than exiting non-zero: a hard-failing `!` render aborts the
+ceremony before the task text is read, losing the arc summary over a
+shell error. All three are LOAD-BEARING — a marker is a stop-and-report,
+and in particular a failed diff render is NOT the empty diff that step 3
+treats as proof an act did not happen:
 
-!`git status`
-!`git diff --stat`
-!`git log --oneline -8`
+!`git status 2>&1 || echo "(git status FAILED — see above; tree state UNKNOWN)"`
+!`git diff --stat 2>&1 || echo "(git diff FAILED — see above; NOT an empty diff, tree state UNKNOWN)"`
+!`git log --oneline -8 2>&1 || echo "(git log FAILED — see above)"`
 
 # Your task
 
