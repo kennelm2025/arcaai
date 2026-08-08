@@ -5,6 +5,10 @@
 # not a PR trigger); postgres:16 service + role bootstrap added so the
 # governance suite's grant-denial and NULL-discipline tests run pre-merge -
 # the append-only property is CI-checked, not claimed (CF-1/B7-c evidence).
+# 2026-08-08: paths gain .claude/** (WS-E 62, third exhibit - the harness
+# PR #70 touched only CLAUDE.md and .claude/**, matched ci-docs alone, and
+# the repo-wide `ruff check .` first ran on the unfiltered push-to-main
+# trigger, failing I001 post-merge).
 name: ci-devops
 on:
   push:
@@ -21,6 +25,7 @@ on:
       - "sql/**"
       - "tests/**"
       - "pyproject.toml"
+      - ".claude/**"
       - ".github/workflows/ci-devops.yml"
 jobs:
   lint-test:

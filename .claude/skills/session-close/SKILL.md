@@ -15,11 +15,13 @@ Live state, captured now:
 
 # Your task
 
-1. Regenerate the repo manifest so the committed snapshot is current:
-   `python scripts/repo_manifest.py` (writing REPO_MANIFEST.md per the
-   script's convention). Note: this snapshot is a convenience for the
-   *next* session's paste-in contexts; the next session must still
-   regenerate (see CLAUDE.md register-state rule).
+1. Regenerate the repo manifest for this session's live register
+   numbers: `python scripts/repo_manifest.py --out D:/Downloads` —
+   written OUTSIDE the tree. REPO_MANIFEST.md is gitignored and
+   untracked by design; there is no committed snapshot to refresh. It
+   is a convenience for the *next* session's paste-in contexts, and
+   that session must still regenerate it (see CLAUDE.md register-state
+   rule) — a manifest found on disk is presumed stale.
 2. Update ONLY the section between `<!-- QUEUE-START -->` and
    `<!-- QUEUE-END -->` in CLAUDE.md to reflect the queue as it now
    stands: items completed this arc removed or marked, new items

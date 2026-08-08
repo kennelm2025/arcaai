@@ -22,7 +22,6 @@ import json
 import re
 import sys
 
-
 PROTECTED_PATTERNS = [
     r"MANIFEST\.ya?ml",
     r"EDGES\.ya?ml",
