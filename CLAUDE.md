@@ -218,11 +218,14 @@ this section is a working pointer, not the record.
 <!-- QUEUE-START -->
 1. Boot ritual via /session-open (incl. rehash_sweep; expect 0 pins).
 2. Batch-2 authoring — SG series per v0.2 skeleton and EDGES v0.2.2 minimums;
-   SG-03/SG-04 landed (PR #67); SG-05 next (carries AO-2 as the batch's check),
-   then SG-06..09. One document-arc per session.
+   SG-03/SG-04 landed (PR #67), SG-05/SG-06 landed (PR #68, AO-2 discharged in
+   SG-05); SG-07 next, then SG-08/09. One document-arc per session.
 3. Operator inclusion decision for TY-03..09 when ready (separate act; next ingest
    then populates processing fields at a .8 version).
 4. CL-25 / inc4 (pin writer) pending agent module; CL-24 when convenient.
+5. Governance-guard deny path for history rewrites (`filter-branch` / `filter-repo`)
+   is the one documented category still unexercised; test needs a throwaway clone,
+   not this working tree.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
