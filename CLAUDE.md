@@ -222,31 +222,35 @@ this section is a working pointer, not the record.
      act; a stub-flag run is unaffected.
    - Elevated-harness-shell breach, recorded.
    - The ONNX cache traversal check returns green under an elevated shell — a
-     false-green defect. Fix the check to assert non-elevation before its result
-     is trusted as the standing first act again.
-3. WS-E entry for the render-abort class — ruled, **one entry for the class**,
-   owed at the next non-corpus session via /ledger-touch. Number comes from that
-   session's own manifest regeneration under the sequence-hold rule (63 was next
-   as at this close).
-4. Batch-2 authoring — SG series per v0.2 skeleton and EDGES v0.2.2 minimums;
+     false-green defect. Its result is not to be trusted as the standing first
+     act until it asserts non-elevation. **Restated 2026-08-10: this is an
+     authoring job, not a fix.** The check has no implementing artefact — it
+     exists only as a named procedure in this file and in
+     `.claude/skills/session-open/SKILL.md`, with no script behind it, so there
+     is nothing to add the assertion to. Operator decision owed on whether it
+     warrants a CL.
+3. Batch-2 authoring — SG series per v0.2 skeleton and EDGES v0.2.2 minimums;
    SG-03/SG-04 landed (PR #67), SG-05/SG-06 landed (PR #68, AO-2 discharged in
    SG-05), SG-07 landed (PR #74); SG-08 next, then SG-09. One document-arc per
    session.
-5. PRs #64/#65 standing tree verification — **partially chipped, not
+4. PRs #64/#65 standing tree verification — **partially chipped, not
    discharged.** EDGES v0.2.2 was read in full during the SG-07 arc and the
    manifest-history job ran live on PR #74; the MANIFEST.yaml side of #64 and
    the rest of #65 are still owed a look.
-6. Operator inclusion decision for TY-03..09 when ready (separate act; next ingest
+5. Operator inclusion decision for TY-03..09 when ready (separate act; next ingest
    then populates processing fields at a .8 version).
-7. CL-25 / inc4 (pin writer) pending agent module; CL-24 when convenient.
-8. Governance-guard deny path for history rewrites (`filter-branch` / `filter-repo`)
+6. CL-25 / inc4 (pin writer) pending agent module; CL-24 when convenient.
+7. Governance-guard deny path for history rewrites (`filter-branch` / `filter-repo`)
    is the one documented category still unexercised; test needs a throwaway clone,
    not this working tree.
-9. Consistency read of SG-07 §2.2 (TR-05) and §5.2 (DL-06) when those two
+8. Consistency read of SG-07 §2.2 (TR-05) and §5.2 (DL-06) when those two
    documents are drafted — both are characterised by series role only, per the
    SG-05 precedent for CV-03 and DP-04.
-10. Commit-trailer convention — ruled: no `Co-Authored-By` trailer on corpus
-    authoring commits. Owed as a standing rule in this file at its next revision.
+9. Commit-trailer convention — ruled: no `Co-Authored-By` trailer on corpus
+   authoring commits. Owed as a standing rule in this file at its next revision.
+   Note for that revision: the operator applied no trailer to either commit of
+   2026-08-10, neither of which was corpus authoring — the ruled scope may be
+   narrower than the practice.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
