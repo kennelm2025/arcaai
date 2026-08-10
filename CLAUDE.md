@@ -217,6 +217,11 @@ this section is a working pointer, not the record.
 
 <!-- QUEUE-START -->
 1. Boot ritual via /session-open (incl. rehash_sweep; expect 0 pins).
+   **Expect 1 divergence, and it is expected:** `DEC — cited but above the
+   DECISIONS.md high-water mark: DEC-0015. Ledger entry missing.` The TOR and
+   its rulings record cite DEC-0015 as the harness register home while
+   DECISIONS.md still tops out at 0014. It clears when item 15 executes. Any
+   *other* divergence is a genuine stop.
 2. **Parked elevated-session findings — blocking for retrieval.**
    - ONNX cache ACL fault, confirmed live. Repair before any `--live` retrieval
      act; a stub-flag run is unaffected.
@@ -253,11 +258,17 @@ this section is a working pointer, not the record.
    ci-docs runs for both corpus PRs are `push` events on main, never
    `pull_request`. The 2026-08-08b handover's statement that both workflows
    cover a corpus document is wrong as to ci-docs. Fix is one line; whether it
-   also warrants WS-E 64 or CL-26 is an operator decision.
+   also warrants WS-E 64 or CL-26 is an operator decision. **Control case now
+   on record:** PR #83 (2026-08-10c, two files under `docs/`) fired ci-docs on
+   the `pull_request` event and passed in 16s. The filter works for covered
+   paths, so the defect is isolated to the root-only `*.md` glob failing to
+   reach corpus markdown — not to ci-docs triggering generally.
    Carried alongside it: a lint false-red observed 2026-08-10 — `cmd /c
    scripts\lint.cmd` by relative path exits 1 ("system cannot find the path
    specified") while the same script by absolute path and a bare `ruff check .`
    both exit 0, cwd confirmed as the repo root. Undiagnosed, non-blocking.
+   Reproduced once more at the 2026-08-10c arc: absolute path exits 0. The
+   absolute-path invocation is now the working practice in the PR battery.
 6. **Batch-2 panel circulation — now unblocked; scope decision owed.** Ruled
    2026-08-10: circulation is not a per-document precondition for batch-2
    authoring, on the evidence of the SG-05/SG-06 and SG-07 arcs. It is a
@@ -291,12 +302,15 @@ this section is a working pointer, not the record.
     keep it that way. SG-09 is the first batch-2 document to add nothing here.
 12. Commit-trailer convention — ruled: no `Co-Authored-By` trailer on corpus
     authoring commits. Owed as a standing rule in this file at its next revision.
-    Two corpus-authoring instances now: `59fb216` (SG-08) and `66041e5` (SG-09),
-    both asserted by trailer count 0 rather than by eyeball. Open for that
-    revision: whether the rule extends to PR bodies — the generated-with footer
-    was omitted from PR #80 and again from PR #81 on the ruling's spirit, but
-    its terms reach commit trailers only, so the practice is now two instances
-    ahead of the rule.
+    Three instances now, all asserted by trailer count 0 rather than by eyeball:
+    `59fb216` (SG-08) and `66041e5` (SG-09), both corpus authoring, and
+    `99b63cd` (TOR panel-pass artefacts) — **the first outside corpus**, ruled
+    at the 2026-08-10c arc on the ground that the build agent authored no part
+    of either document. Open for that revision: whether the rule extends to PR
+    bodies — the generated-with footer was omitted from PRs #80, #81 and #83 on
+    the ruling's spirit, but its terms reach corpus commit trailers only, so the
+    practice now runs ahead of the rule on two axes (non-corpus commits, and PR
+    bodies). The rule gets written once, properly, at that revision.
 13. **`corpus_edges_check.py` design-mode false green — decision owed.** Run
     without `--docs`, it prints `OK: closure, asymmetry, immutability, and
     authored-doc checks pass` having read no authored document at all: `--docs`
@@ -314,6 +328,37 @@ this section is a working pointer, not the record.
     §1.2 pattern, but the underlying gap is a property of the corpus rather than
     of SG-09 and will recur for any document reaching into the disclosure
     regime.
+15. **NEXT ARC, named by the operator at the 2026-08-10c close: DEC-0015
+    authoring paired with the D2.0 commissioning frame.** Small, paired, and it
+    claims the DEC number while the TOR's ink is wet — the sequence-hold rule
+    (WS-E 58) means a competing act otherwise takes 0015, and the number is
+    already cited in two committed documents. Authoring it also clears the
+    expected boot divergence at item 1. CL-26 is a separate later claim, made
+    when the runner pre-flight is authored at the D2.2a spike; that same
+    pre-flight is what finally gives the ONNX cache check at item 2 an
+    implementing artefact, discharging the parked authoring debt.
+16. **TOR errata — carry to the Test Plan (D1.1) and any future TOR revision.**
+    The TOR entered the repo at Rev C RULED (PR #83) and is immutable as
+    committed, so both are recorded rather than amended, and both are stated in
+    the PR #83 body at the point the error entered the repo.
+    - §2 and §7 cite PR #80 for batch-2 completion; batch 2 completed at PR #81.
+      Operator's own note for the record: the claim was wrong at the moment of
+      writing, not merely stale — batch 2 stood at 6/7 when Rev B was drafted
+      and SG-09 did not yet exist. Coordinator defect.
+    - §2's authored count should read **30 of 54** — the parenthetical
+      enumeration (16 + TY-03..09 + SG-03..09) is the correct one. 23 belongs to
+      the listing pipeline, not to authoring: 16 currently listed/eligible → 23
+      after the batch-1 listing act → 30 after batch-2's. The TOR text conflated
+      authored-on-disk with eligible-listed, and it propagated outward —
+      Reviewer B's "23-document corpus" phrasing derives from it, which makes
+      this a correction owed to the panel record and not only to the TOR.
+17. **Gemini architecture-review return — consolidation owed.** Gemini's
+    assessment of the orchestration / memory / dreaming document arrived in the
+    same circulation as the TOR pass but reviews a different document; it is
+    recorded as out of scope in the rulings record and forms no part of it. It
+    stands as an unconsolidated two-reviewer return with Grok's. **Consolidate
+    before the Agentic Topology ADR work opens** — ADR-0011 is the next free
+    ADR number and that work would consume it.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
