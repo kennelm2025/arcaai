@@ -220,8 +220,10 @@ rather than drift.
 8. **Batch-2 panel circulation** — unblocked; open whether SG-03..SG-06
    sit inside it.
 9. **ci-docs paths-filter fix** — one line; PR #83 supplies the control
-   case. Whether it also warrants WS-E 64 or CL-26 is an operator
-   decision.
+   case. Whether it also warrants a WS-E ledger entry or a CL item is an
+   operator decision. *(Numbers deliberately not cited here: a bare
+   citation of an unconsumed register number in a `docs/` file registers
+   as a manifest divergence. See the correction note below.)*
 10. **`corpus_edges_check.py` design-mode false green** — minimum fix is
     wording, not logic.
 11. **PRs #64/#65 standing tree verification**, TY-03..09 inclusion
@@ -232,3 +234,39 @@ rather than drift.
 The `CLAUDE.md` queue block was updated as its own step of the close
 ceremony and rides the same PR as this handover, both authored on
 explicit command.
+
+## Correction note — return queue item 9, post-merge
+
+*Appended after this handover merged in PR #84, on operator ruling. The
+body above is otherwise unchanged.*
+
+As first merged, return queue item 9 cited the next free WS-E number and
+the next free CL number bare, as digits. The post-merge manifest
+regeneration then reported a **second** divergence — the WS-E scanner
+reporting that number as cited elsewhere but absent from the ledger —
+because a bare citation of an unconsumed number in a `docs/` file is
+indistinguishable, to the scanner, from a claim that the item exists.
+(This note deliberately does not reproduce the original wording: quoting
+it verbatim re-creates the citation and the divergence with it, which is
+exactly what the first attempt at this note did.) The identical phrasing had sat in `CLAUDE.md` since before
+this session without effect: the scanner walks the governance document
+tree and not that file, so moving the phrase into a handover is what
+made it bite.
+
+This mattered beyond tidiness. The boot line above instructs the next
+session to expect **exactly one** divergence and to treat any other as a
+genuine stop. A second divergence, self-inflicted by this file's own
+wording, would have produced a false stop at the next boot — the precise
+failure the boot line exists to prevent. Item 9 is therefore reworded to
+pointer form and the number withheld; the ruled fix was to remove the
+spurious flag, not to teach the boot to tolerate flags.
+
+**Convention this establishes, owed in `CLAUDE.md` at its next
+revision:** in any document under `docs/`, cite an unconsumed register
+number as "next N" or not at all — never as a bare "N". The prior
+handover observed this without stating it (`WS-E next **64**`), which is
+why it never surfaced until now.
+
+The DEC-0015 divergence is unaffected and remains expected: it is a real
+forward commitment made by two ruled documents, and it clears when
+DEC-0015 is authored.
