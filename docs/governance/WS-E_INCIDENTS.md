@@ -537,6 +537,35 @@ regardless of surrounding prose).*
     PR filter, and the push-to-main trigger carrying no filter of
     its own makes post-merge the first place the gap can show.
 
+63. **Ceremony renders aborted the ceremony: a non-zero `!` render
+    destroyed the skill it belonged to, silently (2026-08-08).** All
+    five ceremony skills embedded `!` shell renders whose non-zero
+    exit aborted skill expansion before a word of the task text was
+    read, so a shell error produced no ceremony and no diagnosis of
+    itself - the operator saw an absence, not a failure. The
+    sharpest case is `scripts/check_docs.py`, which exits 1 by
+    design on any finding: the intolerant render aborted `/pr-prep`
+    precisely when the docs check had something to say. Remediated
+    same-day in PR #73 (`e8d1a5e`): all five skills audited, every
+    render given a marker-line fallback so a failure names its
+    cause, and each render labelled OPTIONAL or LOAD-BEARING so the
+    task text, not the shell, decides what a failure means. Ruled
+    one entry for the class rather than one per skill. Exercised
+    2026-08-10, this entry's own session: `/session-open`,
+    `/pr-prep` and `/ledger-touch` each rendered under the new
+    scheme with every render returning. The fault path itself was
+    not exercised - check_docs exited 0 at 100 files - so read as
+    scheme in use, not as the abort path proven closed. CLASS NOTE:
+    third instance of a family - a check whose green cannot mean
+    what it is read to mean - after the three ceremony-skill
+    stale-source defects of PR #71 (of which the `/ledger-touch`
+    case would have written entry 59 over live items 59-61) and the
+    ONNX cache traversal check that returns green under an elevated
+    shell. The common shape is an instrument trusted past its
+    precondition, and it carries an ordering trap: the defective
+    check is the instrument the standing first act relies on, so
+    fixing the check precedes trusting any future green from it.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a
