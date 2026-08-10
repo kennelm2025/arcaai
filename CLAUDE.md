@@ -229,28 +229,91 @@ this section is a working pointer, not the record.
      `.claude/skills/session-open/SKILL.md`, with no script behind it, so there
      is nothing to add the assertion to. Operator decision owed on whether it
      warrants a CL.
-3. Batch-2 authoring — SG series per v0.2 skeleton and EDGES v0.2.2 minimums;
-   SG-03/SG-04 landed (PR #67), SG-05/SG-06 landed (PR #68, AO-2 discharged in
-   SG-05), SG-07 landed (PR #74); SG-08 next, then SG-09. One document-arc per
-   session.
-4. PRs #64/#65 standing tree verification — **partially chipped, not
+3. **Batch-2 authoring — COMPLETE at 7/7.** SG-03/SG-04 (PR #67), SG-05/SG-06
+   (PR #68, AO-2 discharged in SG-05), SG-07 (PR #74), SG-08 (PR #80), SG-09
+   (PR #81, 2026-08-10). No SG authoring remains; the downstream acts are the
+   listing at item 4 and the circulation at item 6.
+4. **Corpus listing owed for SG-07, SG-08 and SG-09.** All three are authored
+   and none is listed: listing in `verticals/fraud/corpus/MANIFEST.yaml` is a
+   separate governed act and was deliberately not chained to any of the three
+   authoring arcs. The corpus pin is unmoved and eligible remains 16 until it
+   happens. The debt has now grown once per authoring arc for three consecutive
+   arcs — worth deciding whether it clears in one act or per document.
+5. **ci-docs paths-filter gap — decision owed.** `ci-docs` cannot fire on corpus
+   markdown: its `pull_request` paths are `docs/**`, `decisions/**`, `*.md`,
+   `scripts/check_docs.py` and `.github/workflows/ci-docs.yml`, and `*.md`
+   matches root-level files only. Structural checks on corpus documents
+   therefore run post-merge or not at all on a PR — the condition WS-E 45
+   created ci-docs to abolish. Fourth recurrence of that family (`docs/`, then
+   `scripts/`, then `.claude/`, now corpus markdown). **Evidence is now as
+   complete as it will get: three instances, the third predicted in advance.**
+   PR #74 carried the gap unnoticed; PR #80 evidenced it after the fact; PR #81
+   was called in the PR body before the run and confirmed — ci-docs did not fire
+   on the PR and ran green post-merge on main. `gh run list` shows the only
+   ci-docs runs for both corpus PRs are `push` events on main, never
+   `pull_request`. The 2026-08-08b handover's statement that both workflows
+   cover a corpus document is wrong as to ci-docs. Fix is one line; whether it
+   also warrants WS-E 64 or CL-26 is an operator decision.
+   Carried alongside it: a lint false-red observed 2026-08-10 — `cmd /c
+   scripts\lint.cmd` by relative path exits 1 ("system cannot find the path
+   specified") while the same script by absolute path and a bare `ruff check .`
+   both exit 0, cwd confirmed as the repo root. Undiagnosed, non-blocking.
+6. **Batch-2 panel circulation — now unblocked; scope decision owed.** Ruled
+   2026-08-10: circulation is not a per-document precondition for batch-2
+   authoring, on the evidence of the SG-05/SG-06 and SG-07 arcs. It is a
+   batch-level act at batch end, and batch end has arrived — all of
+   SG-03..SG-09 is authored as of PR #81. Open: whether SG-03..SG-06 — authored
+   under the batch-1 rulings of 2026-08-06 — sit inside that circulation or are
+   treated as already covered. Ruled into the pack as a stated condition: SG-09
+   lands as a **leaf in the authored subgraph** — its only design inbound is
+   `DL-05: [SG-09, SG-06]` and DL-05 is unauthored, so no authored document
+   cites SG-09. Not a check failure (closure runs against the design file, not
+   prose), but it is the condition the v0.2.1 closure repair exists to prevent
+   at design level.
+7. PRs #64/#65 standing tree verification — **partially chipped, not
    discharged.** EDGES v0.2.2 was read in full during the SG-07 arc and the
    manifest-history job ran live on PR #74; the MANIFEST.yaml side of #64 and
-   the rest of #65 are still owed a look.
-5. Operator inclusion decision for TY-03..09 when ready (separate act; next ingest
+   the rest of #65 are still owed a look. Untouched by the SG-08 and SG-09 arcs.
+8. Operator inclusion decision for TY-03..09 when ready (separate act; next ingest
    then populates processing fields at a .8 version).
-6. CL-25 / inc4 (pin writer) pending agent module; CL-24 when convenient.
-7. Governance-guard deny path for history rewrites (`filter-branch` / `filter-repo`)
-   is the one documented category still unexercised; test needs a throwaway clone,
-   not this working tree.
-8. Consistency read of SG-07 §2.2 (TR-05) and §5.2 (DL-06) when those two
-   documents are drafted — both are characterised by series role only, per the
-   SG-05 precedent for CV-03 and DP-04.
-9. Commit-trailer convention — ruled: no `Co-Authored-By` trailer on corpus
-   authoring commits. Owed as a standing rule in this file at its next revision.
-   Note for that revision: the operator applied no trailer to either commit of
-   2026-08-10, neither of which was corpus authoring — the ruled scope may be
-   narrower than the practice.
+9. CL-25 / inc4 (pin writer) pending agent module; CL-24 when convenient.
+10. Governance-guard deny path for history rewrites (`filter-branch` / `filter-repo`)
+    is the one documented category still unexercised; test needs a throwaway clone,
+    not this working tree.
+11. Consistency reads owed when their targets are drafted — SG-07 §2.2 (TR-05)
+    and §5.2 (DL-06), both characterised by series role only per the SG-05
+    precedent for CV-03 and DP-04; and SG-08 §2.3 (TR-03) and §5.2 (CV-05),
+    where TR-03 was characterised from SG-04 §2.1's committed wording rather
+    than bare series role and CV-05 by series role only. **Unchanged by the
+    SG-09 arc, and deliberately so:** all three of SG-09's minimum targets
+    (DP-01, SG-06, OGL-0003) were already authored, so every citation landed by
+    pinpoint and the ruled-in extra (TY-04) was read in full before drafting to
+    keep it that way. SG-09 is the first batch-2 document to add nothing here.
+12. Commit-trailer convention — ruled: no `Co-Authored-By` trailer on corpus
+    authoring commits. Owed as a standing rule in this file at its next revision.
+    Two corpus-authoring instances now: `59fb216` (SG-08) and `66041e5` (SG-09),
+    both asserted by trailer count 0 rather than by eyeball. Open for that
+    revision: whether the rule extends to PR bodies — the generated-with footer
+    was omitted from PR #80 and again from PR #81 on the ruling's spirit, but
+    its terms reach commit trailers only, so the practice is now two instances
+    ahead of the rule.
+13. **`corpus_edges_check.py` design-mode false green — decision owed.** Run
+    without `--docs`, it prints `OK: closure, asymmetry, immutability, and
+    authored-doc checks pass` having read no authored document at all: `--docs`
+    defaults to `None` and the authored-document loop never runs. Observed live
+    during the SG-09 arc — a bare run reported that line, and the docs-mode
+    re-run was what actually evidenced SG-09. Same false-green shape as the ONNX
+    cache traversal check at item 2: a check whose success message claims more
+    than it verified. Whether it warrants a CL is an operator decision; the
+    minimum fix is wording, not logic.
+14. **Statute-edge width — corpus-design fact for the circulation pack.** The
+    corpus holds POCA s.327 (OGL-0003) and s.330 (OGL-0004) and no text of
+    s.338, s.339A, MLR 2017 reg 28, or the tipping-off provisions — all of which
+    s.327 depends on by reference. SG-09 §1.2 states the boundary on the face of
+    the document rather than papering it, per the operator ruling and the SG-08
+    §1.2 pattern, but the underlying gap is a property of the corpus rather than
+    of SG-09 and will recur for any document reaching into the disclosure
+    regime.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
