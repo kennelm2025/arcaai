@@ -219,53 +219,57 @@ this section is a working pointer, not the record.
 1. Boot ritual via /session-open (incl. rehash_sweep; expect 0 pins).
    **Expect 0 divergences.** The DEC-0015 divergence that stood by
    construction across the 10c and 11 arcs cleared at PR #86 when the ledger
-   entry landed. There is no longer an expected divergence: **any** divergence
-   is now a genuine stop.
-2. **Parked elevated-session findings — blocking for retrieval, and now
-   blocking a committed deliverable.**
-   - ONNX cache ACL fault, confirmed live. Repair before any `--live` retrieval
-     act; a stub-flag run is unaffected.
-   - Elevated-harness-shell breach, recorded.
-   - The ONNX cache traversal check returns green under an elevated shell — a
-     false-green defect. Its result is not to be trusted as the standing first
-     act until it asserts non-elevation. Restated 2026-08-10 as an authoring
-     job, not a fix: the check has no implementing artefact, existing only as a
-     named procedure in this file and in `.claude/skills/session-open/SKILL.md`.
-   - **Escalated 2026-08-11.** The D2.0 commissioning frame is now merged and
-     makes a green pre-flight — non-elevation and cache traversal among its
-     four assertions — an entry criterion. The machine therefore fails the
-     entry criteria of a committed governance document. The implementing
-     artefact still arrives at the D2.2a pre-flight, which is also where the
-     next free CL number is claimed.
-3. **D2.0 commissioning frame merged UNRULED — operator ruling owed, and it
-   gates the next build step.** `docs/governance/D2.0_COMMISSIONING_FRAME_2026-08-11.md`
-   carries `Status: awaiting operator ruling`; TOR Section 5A reserves the
-   commissioning frame to the operator's direct ruling and nothing executes
-   under it until ruled. Two decisions travel together, and both were left open
-   deliberately rather than assumed at authoring:
-   - The ruling itself (status line flips; a governed act on its own branch,
-     since the authoring PR has merged).
-   - **Scope.** The frame is written as scoped to the D2.2a spike session, with
-     extension to any further commissioning session stated as an operator
-     ruling. Section 5A's literal wording is "frame per commissioning session";
-     a standing frame would avoid re-ruling an identical page but is not what
-     the TOR says. One-line change either way.
-4. **TOR sequencing after the frame: D2.1 spec schema v0.1 is the keystone.**
-   Section 9's proof-first order is frame → schema v0.1 → D2.2a runner spike
-   (first real test result) → Test Plan draft → panel. Schema v0.1 carries
-   rulings-record amendments 3, 5 and 6 from the start: per-scenario
-   migration-diff comparison semantics, gap-detection scoring defined
-   mathematically, and mandatory `generator_seed` for scoring-class scenarios.
-   Both scenario classes present from v0.1.
-5. **Corpus listing owed for SG-07, SG-08 and SG-09.** All three authored, none
+   entry landed, and 0 has held since across PR #88 and this close. There is
+   no longer an expected divergence: **any** divergence is now a genuine stop.
+2. **D2.2a pre-flight implementing artefact — the residue of the parked
+   elevated-session findings, most of which discharged at PR #88.**
+   Discharged: the ONNX cache ACL fault is repaired. The operator deleted the
+   locked directory from their own elevated terminal; chromadb then re-extracted
+   locally from the existing archive under the normal identity (archive size,
+   mtime and SHA256 all unchanged, so no network fetch), and traversal plus a
+   full model read now pass from a shell corroborated as non-elevated. Root
+   cause, the false-green mechanism and the constraints they place on the
+   artefact are recorded at
+   `docs/governance/FINDINGS_2026-08-11_onnx-acl-root-cause.md`: the ACL fault
+   and the elevated-harness-shell breach were **one incident, cause and
+   effect**, not two findings. Still owed:
+   - The pre-flight has **no implementing artefact**. It exists only as a named
+     procedure in this file and in `.claude/skills/session-open/SKILL.md`, and
+     was run ad-hoc this arc. It arrives at D2.2a and claims the next free CL
+     number there — next 26.
+   - It must carry the three-state constraint: an assertion is GREEN, RED or
+     **UNKNOWN**, and UNKNOWN exits non-zero and never renders as green. Every
+     false green catalogued so far is an UNKNOWN rendered as a GREEN.
+     Non-elevation is asserted first and, if it fails, the artefact refuses to
+     report the remaining assertions at all rather than reporting them passing.
+   - **Latent hazard, recorded not repaired.** The corpus index directory is
+     still owned by `BUILTIN\Administrators` from the same elevated interlude,
+     usable only through an inherited grant to authenticated users. Repair
+     needs elevation and is therefore the operator's.
+   - **Standing rule, permanent (operator, 2026-08-11): the harness never
+     elevates.** Any fix requiring elevation is the operator's, at their own
+     terminal, and the assertion it repairs is re-verified afterwards from a
+     non-elevated shell.
+3. **D2.1 spec schema v0.1 is the live keystone — unblocked at PR #88**, where
+   the commissioning frame was ruled. Section 9's proof-first order now stands
+   at schema v0.1 → D2.2a runner spike (first real test result) → Test Plan
+   draft → panel. Schema v0.1 carries rulings-record amendments 3, 5 and 6 from
+   the start: per-scenario migration-diff comparison semantics, gap-detection
+   scoring defined mathematically, and mandatory `generator_seed` for
+   scoring-class scenarios. Both scenario classes present from v0.1. Note the
+   sequencing interaction with item 2: the spike cannot run its pre-flight until
+   that artefact exists, so schema and artefact are both upstream of the first
+   real test result.
+4. **Corpus listing owed for SG-07, SG-08 and SG-09.** All three authored, none
    listed: listing in `verticals/fraud/corpus/MANIFEST.yaml` is a separate
    governed act and was deliberately not chained to any authoring arc. The
    corpus pin is unmoved and eligible remains 16. Debt has grown once per
    authoring arc for three consecutive arcs — worth deciding whether it clears
-   in one act or per document. Note the interaction with item 3: commissioning
-   runs pin the snapshot current at spike time and do **not** wait on this act,
-   but Regime-2 formal runs use listed snapshots only.
-6. **ci-docs paths-filter gap — decision owed; evidence now complete.**
+   in one act or per document. The ruled frame settles the interaction rather
+   than leaving it open: commissioning runs pin the snapshot current at spike
+   time and do **not** wait on this act, but Regime-2 formal runs use listed
+   snapshots only.
+5. **ci-docs paths-filter gap — decision owed; evidence now complete.**
    `ci-docs` cannot fire on corpus markdown: its `pull_request` paths are
    `docs/**`, `decisions/**`, `*.md`, `scripts/check_docs.py` and
    `.github/workflows/ci-docs.yml`, and `*.md` matches root-level files only.
@@ -278,8 +282,11 @@ this section is a working pointer, not the record.
    7s. Both covered path classes work in a single run, which isolates the defect
    conclusively to the root-only `*.md` glob failing to reach corpus markdown.
    Fix is one line; whether it also warrants a WS-E ledger entry or a CL item is
-   an operator decision.
-7. **Lint invocation defects — two now, with opposite polarity.** Carried:
+   an operator decision. PR #88 (2026-08-11) is a third confirming case for the
+   covered classes — two files under `docs/`, ci-docs fired and passed in 7s —
+   and adds nothing on corpus markdown, which no run can reach and so no run can
+   evidence.
+6. **Lint invocation defects — two now, with opposite polarity.** Carried:
    `cmd /c scripts\lint.cmd` by relative path exits 1 ("system cannot find the
    path specified") while the same script by absolute path and a bare
    `ruff check .` both exit 0, cwd confirmed as the repo root. Undiagnosed,
@@ -289,6 +296,23 @@ this section is a working pointer, not the record.
    running ruff at all** — a false green, where the carried defect is a false
    red. The absolute-path practice holds only under PowerShell. Exit code alone
    does not evidence that the check ran; the "All checks passed!" line does.
+7. **Check-method defect family — five instances now, and a pattern-level
+   decision is owed rather than five separate fixes.** The shape is constant: a
+   check whose success message claims more than it verified, or an exit status
+   evidencing neither success nor failure. Instances: the ONNX traversal check
+   green under elevation (diagnosed and constrained at PR #88, item 2); both
+   lint invocation defects at item 6; `scripts/corpus_edges_check.py` at item
+   15; and two observed during the PR #88 arc and written up in §5 of
+   `docs/governance/FINDINGS_2026-08-11_onnx-acl-root-cause.md` — a structured
+   exception handler wrapped around a native command, which can never fire
+   because native commands set an exit code rather than raising, and a git
+   invocation piped into a first-item selector returning exit 255 while
+   succeeding completely. The generalisation to rule on: **an exit code alone
+   evidences nothing.** A check must assert on the substance of what it returns,
+   must name the assertions it actually evaluated, and where it does rely on an
+   exit code must invoke the command in a form that lets that code mean what it
+   appears to mean. Bears directly on item 2 — the D2.2a pre-flight is the first
+   artefact that would encode the rule.
 8. **Batch-2 panel circulation — unblocked; scope decision owed.** Ruled
    2026-08-10: circulation is a batch-level act at batch end, not a
    per-document precondition, and batch end has arrived (SG-03..SG-09 authored
@@ -301,11 +325,14 @@ this section is a working pointer, not the record.
    should be written once, together, rather than accreting.**
    - **Commit trailers.** No `Co-Authored-By` on corpus authoring commits
      (ruled). Practice now runs ahead of the rule on two axes: non-corpus
-     commits and PR bodies. Five instances, all asserted by trailer count 0
+     commits and PR bodies. Seven instances, all asserted by trailer count 0
      rather than by eyeball: `59fb216` (SG-08), `66041e5` (SG-09), `99b63cd`
-     (TOR panel-pass artefacts), and both commits of PR #86 (`cffafe0`,
-     `7b07dbd`) — governance authoring where the build agent *did* draft the
-     text, which is the case the ruled wording does not yet reach.
+     (TOR panel-pass artefacts), both commits of PR #86 (`cffafe0`, `7b07dbd`)
+     and both of PR #88 (`8cc66b8`, `a20a03b`) — governance authoring where the
+     build agent *did* draft the text, which is the case the ruled wording does
+     not yet reach. Seven instances across three arcs is no longer practice
+     running ahead of the rule; it is an unwritten rule, and writing it down is
+     overdue.
    - **Register-number citation.** In any document under `docs/`, cite an
      unconsumed register number as "next N" or not at all, never as a bare "N":
      the manifest scanner cannot distinguish a bare number from a claim the item
@@ -339,10 +366,10 @@ this section is a working pointer, not the record.
 15. **`corpus_edges_check.py` design-mode false green — decision owed.** Run
     without `--docs`, it prints `OK: closure, asymmetry, immutability, and
     authored-doc checks pass` having read no authored document at all: `--docs`
-    defaults to `None` and the authored-document loop never runs. Same
-    false-green shape as the ONNX check at item 2 and the new lint defect at
-    item 7 — a check whose success message claims more than it verified. Three
-    instances of that family now. Minimum fix is wording, not logic.
+    defaults to `None` and the authored-document loop never runs. A member of
+    the check-method defect family now consolidated at item 7 — a check whose
+    success message claims more than it verified. Minimum fix is wording, not
+    logic, but see item 7 before fixing it in isolation.
 16. **Statute-edge width — corpus-design fact for the circulation pack.** The
     corpus holds POCA s.327 (OGL-0003) and s.330 (OGL-0004) and no text of
     s.338, s.339A, MLR 2017 reg 28, or the tipping-off provisions — all of which
