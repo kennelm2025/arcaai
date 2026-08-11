@@ -221,7 +221,20 @@ this section is a working pointer, not the record.
    construction across the 10c and 11 arcs cleared at PR #86 when the ledger
    entry landed, and 0 has held since across PR #88 and this close. There is
    no longer an expected divergence: **any** divergence is now a genuine stop.
-2. **D2.2a pre-flight implementing artefact — the residue of the parked
+2. **D2.1 spec schema v0.1 is the live keystone — unblocked at PR #88**, where
+   the commissioning frame was ruled. Section 9's proof-first order now stands
+   at schema v0.1 → D2.2a runner spike (first real test result) → Test Plan
+   draft → panel. Schema v0.1 carries rulings-record amendments 3, 5 and 6 from
+   the start: per-scenario migration-diff comparison semantics, gap-detection
+   scoring defined mathematically, and mandatory `generator_seed` for
+   scoring-class scenarios. Both scenario classes present from v0.1. Note the
+   sequencing interaction with item 3: the spike cannot run its pre-flight until
+   that artefact exists, so schema and artefact are both upstream of the first
+   real test result. **Items 2 and 3 are numbered in TOR Section 9's
+   proof-first order, not by priority — an in-place reduction of either must
+   not silently invert them, which is how the inverted ordering corrected at
+   the 2026-08-11b arc arose.**
+3. **D2.2a pre-flight implementing artefact — the residue of the parked
    elevated-session findings, most of which discharged at PR #88.**
    Discharged: the ONNX cache ACL fault is repaired. The operator deleted the
    locked directory from their own elevated terminal; chromadb then re-extracted
@@ -250,16 +263,6 @@ this section is a working pointer, not the record.
      elevates.** Any fix requiring elevation is the operator's, at their own
      terminal, and the assertion it repairs is re-verified afterwards from a
      non-elevated shell.
-3. **D2.1 spec schema v0.1 is the live keystone — unblocked at PR #88**, where
-   the commissioning frame was ruled. Section 9's proof-first order now stands
-   at schema v0.1 → D2.2a runner spike (first real test result) → Test Plan
-   draft → panel. Schema v0.1 carries rulings-record amendments 3, 5 and 6 from
-   the start: per-scenario migration-diff comparison semantics, gap-detection
-   scoring defined mathematically, and mandatory `generator_seed` for
-   scoring-class scenarios. Both scenario classes present from v0.1. Note the
-   sequencing interaction with item 2: the spike cannot run its pre-flight until
-   that artefact exists, so schema and artefact are both upstream of the first
-   real test result.
 4. **Corpus listing owed for SG-07, SG-08 and SG-09.** All three authored, none
    listed: listing in `verticals/fraud/corpus/MANIFEST.yaml` is a separate
    governed act and was deliberately not chained to any authoring arc. The
@@ -296,11 +299,11 @@ this section is a working pointer, not the record.
    running ruff at all** — a false green, where the carried defect is a false
    red. The absolute-path practice holds only under PowerShell. Exit code alone
    does not evidence that the check ran; the "All checks passed!" line does.
-7. **Check-method defect family — five instances now, and a pattern-level
-   decision is owed rather than five separate fixes.** The shape is constant: a
+7. **Check-method defect family — six instances now, and a pattern-level
+   decision is owed rather than six separate fixes.** The shape is constant: a
    check whose success message claims more than it verified, or an exit status
    evidencing neither success nor failure. Instances: the ONNX traversal check
-   green under elevation (diagnosed and constrained at PR #88, item 2); both
+   green under elevation (diagnosed and constrained at PR #88, item 3); both
    lint invocation defects at item 6; `scripts/corpus_edges_check.py` at item
    15; and two observed during the PR #88 arc and written up in §5 of
    `docs/governance/FINDINGS_2026-08-11_onnx-acl-root-cause.md` — a structured
@@ -311,7 +314,7 @@ this section is a working pointer, not the record.
    evidences nothing.** A check must assert on the substance of what it returns,
    must name the assertions it actually evaluated, and where it does rely on an
    exit code must invoke the command in a form that lets that code mean what it
-   appears to mean. Bears directly on item 2 — the D2.2a pre-flight is the first
+   appears to mean. Bears directly on item 3 — the D2.2a pre-flight is the first
    artefact that would encode the rule.
 8. **Batch-2 panel circulation — unblocked; scope decision owed.** Ruled
    2026-08-10: circulation is a batch-level act at batch end, not a
