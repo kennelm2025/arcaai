@@ -609,6 +609,43 @@ regardless of surrounding prose).*
     guard's stated coverage is a claim about its wiring rather than
     about the patterns it contains.
 
+65. **The governance suite destroys the audit store it exists to
+    verify (2026-08-11).** The session-scoped schema fixture in
+    `tests/governance/conftest.py` runs `drop_all` then `create_all`
+    against the dev `arcaai_audit` database as `arcaai_owner`, so
+    every run of the mandatory battery erases every audit event and
+    every corpus-version row before the first test executes. Found at
+    the 2026-08-11d close from an anomaly rather than by review: the
+    boot sweep reported two `fixture-*` pin rows, the battery ran once
+    during the arc, and the closing sweep reported two rows again with
+    *different identifiers* - not four. Residue that does not
+    accumulate is residue being destroyed. CORRECTS WS-E 61, which
+    recorded the mechanism as tests that do not clean up. The inverse
+    is true and worse: they do not fail to clean up afterwards, they
+    destroy beforehand - so that entry's remediation deleted rows
+    whose cause was never diagnosed, and the sweep going green
+    afterwards was the next suite run's doing as much as the
+    deletion's. The append-only property holds exactly as designed for
+    the application role, `sql/governance_grants.sql` withholding
+    UPDATE and DELETE and two tests in that same file asserting the
+    denial, while the owner role drops the tables wholesale: the
+    repository's own mandatory battery defeats the guarantee its own
+    suite proves. WHY NO HARM RESULTED: nothing of record has ever
+    been in that store. CL-25 is open precisely because no operational
+    writer exists, so every row the store has ever held was written by
+    its own tests. That is a benign accident of sequencing, not a
+    control, and it expires the moment an operational writer lands.
+    ROUTED, not remediated here: the fix belongs to CL-24, whose scope
+    this enlarges from test-data isolation to the separability of test
+    writes from governed writes - by database, by schema, or by a
+    marker the sweep treats as excluded-by-rule. Owed before D2.2a,
+    where the first Commissioning Session Records would be written
+    into that store and erased by the next battery run. CLASS NOTE:
+    what exposed it was a count that stayed constant when it should
+    have grown. An expectation stated as "two rows" would have passed
+    every time; the expectation that caught it was "two rows, and
+    these two". Identity, not count.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a
