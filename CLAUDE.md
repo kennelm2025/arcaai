@@ -114,20 +114,46 @@ it against the offline pipeline. Data itself never enters git.
 
 ## Enforcement layer — hooks and protected files
 
-`.claude/hooks/governance_guard.py` runs as a PreToolUse hook on every Bash/Edit/Write
-call. It is deterministic and cannot be skipped or talked around.
+Permissions run in three tiers, ruled 2026-08-11.
+`docs/governance/HARNESS_PERMISSION_TIERS_2026-08-11.md` is **authoritative**; what
+follows describes it and will drift first. Read the doc before relying on this summary,
+and in particular before concluding that something is or is not gated.
 
-**Denied outright (no exception path — do not ask):** `git push --force` in any form
-(the CL-E1 incident guard), git history rewrites (`filter-branch` / `filter-repo`),
-recursive force deletes (`rm -rf`, `Remove-Item -Recurse -Force`).
+**Tier 1 — auto-allow.** Read-only operations, the mandatory batteries, routine git
+writes on feature branches, and edits to ordinary non-protected files. Auto-allow moves
+the gate from before the act to the evidence after it: it removes prompts, never
+verification. The batteries in "Working protocol" below are unchanged and remain
+mandatory.
 
-**Operator confirmation required (every touch, by design):** any edit or writing shell
-command reaching `MANIFEST.yaml`, `EDGES.yaml`, `docs/governance/WS-E_INCIDENTS.md`,
-`DECISIONS.md`, `docs/governance/RULINGS_RECORD*.md`,
-`docs/governance/document-register.yaml`. Legitimate appends to these are normal
-governed acts; the gate exists to make every touch deliberate, not to prevent them.
-When the confirmation prompt fires, restate which governed act the edit serves before
-proceeding.
+**Tier 2 — gated on every touch.** The six governed stores — `MANIFEST.yaml`,
+`EDGES.yaml`, `docs/governance/WS-E_INCIDENTS.md`, `DECISIONS.md`,
+`docs/governance/RULINGS_RECORD*.md`, `docs/governance/document-register.yaml` — plus
+`pyproject.toml`, `.github/workflows/`, the permission and ceremony system itself
+(`.claude/settings.json`, `.claude/hooks/`, `.claude/skills/`), and `decisions/`, which
+is gated because `scripts/repo_manifest.py` reads register numbers off filenames there,
+making any write to it register-consuming by mechanism. Gated by repository state rather
+than by path: PR merge, branch deletion, and any git write while HEAD is main. Legitimate
+touches are normal governed acts; the gate makes each one deliberate, not impossible.
+When the prompt fires, restate which governed act the edit serves before proceeding.
+
+**Tier 3 — operator rulings.** Arc selection, scope, merges, frame rulings, register
+decisions. Not tool gates, and no mechanism grants them.
+
+**Denied outright (no exception path — do not ask):** force push in any form (the CL-E1
+incident guard), git history rewrites, recursive force deletes, and elevation — the
+harness never elevates, and never assumes the database owner role. Any fix requiring
+either is the operator's, at their own terminal, re-verified afterwards from a
+non-elevated shell.
+
+`.claude/hooks/governance_guard.py` enforces the denies and the Tier 2 asks, routed by
+the PreToolUse matcher in `.claude/settings.json`. **Coverage is two-part and both parts
+must name a tool:** the matcher routes the call, and the module's shell-tool set decides
+whether the command is inspected. Either alone is a silent no-op — WS-E 64 records three
+days in which the guard was wired to the Bash tool while PowerShell, this repo's primary
+shell, went unguarded. Adding a shell tool means adding it in both places. The guard
+returns deny or ask and **never** allow: it can narrow a Tier 1 grant but can never widen
+one. Ceremony skills carry their own `allowed-tools` frontmatter, which governs inside
+that ceremony — Tier 1 grants are not in force there.
 
 Background subagent tasks are disabled project-wide
 (`CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` in `.claude/settings.json`). Sessions are
@@ -170,6 +196,30 @@ ONNX cache traversal check, before other work.
 - Governance artefacts change by explicit full-file replacement or scripted writes, never
   through a markdown-aware editor that reformats on save. Prototype/experiment files are
   each their own file (v0a, v0b, …); no overwrites of prior versions.
+- **No `Co-Authored-By` trailer on any commit in this repo**, and none in PR bodies.
+  Ruled first for corpus authoring; practice then ran ahead of the rule across non-corpus
+  commits, PR bodies and code for ten consecutive instances, which made it an unwritten
+  rule rather than a habit. Assert it by trailer count, never by eyeball.
+- **Cite an unconsumed register number as "next N", never as a bare "N"** in any document
+  under `docs/`. `scripts/repo_manifest.py` cannot distinguish a bare number from a claim
+  that the item exists, and reports a spurious divergence. Established by the PR #85
+  correction note.
+- **A DEC entry belongs in `DECISIONS.md`, never as a numbered file under `decisions/`.**
+  That filesystem is the ADR register — the manifest scanner reads leading filename
+  digits — so a DEC-numbered file there silently consumes ADR numbers; and because the
+  DEC ledger is parsed from `DECISIONS.md` alone, such a file would not clear the very
+  divergence it was written to clear. Gated mechanically since 2026-08-11, because the
+  one near miss was caught by the working protocol and not by any control (WS-E 64).
+- **Commit via a message file**, never an inline message string. House commit messages
+  carry the reasoning and the verification battery, and inline quoting mangles multi-line
+  text on Windows.
+- **Every test cycle closes with a governed reporting artefact** (operator ruling,
+  2026-08-11), and is not complete until the operator rules on the cycle outcome. Regime 2
+  formal execution produces a TEST REPORT, specified in the Test Plan (D1.1). Regime 1
+  commissioning produces a COMMISSIONING SESSION RECORD — deliberately not called a report
+  and carrying no pass/fail summary, because commissioning results are permanently
+  inadmissible and a report format would invite promotion by osmosis. Full text of the
+  ruling lives in the handover of record.
 
 ## Working protocol (non-negotiable)
 
