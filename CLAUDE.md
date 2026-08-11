@@ -119,11 +119,12 @@ Permissions run in three tiers, ruled 2026-08-11.
 follows describes it and will drift first. Read the doc before relying on this summary,
 and in particular before concluding that something is or is not gated.
 
-**Tier 1 — auto-allow.** Read-only operations, the mandatory batteries, routine git
-writes on feature branches, and edits to ordinary non-protected files. Auto-allow moves
-the gate from before the act to the evidence after it: it removes prompts, never
-verification. The batteries in "Working protocol" below are unchanged and remain
-mandatory.
+**Tier 1 — auto-allow.** Read-only operations, the mandatory batteries, and git
+navigation (checkout, switch, fetch, fast-forward-only pull). Auto-allow moves the gate
+from before the act to the evidence after it: it removes prompts, never verification. The
+batteries in "Working protocol" below are unchanged and remain mandatory. **Narrowed
+2026-08-11 on evidence** — edits and git write verbs were withdrawn from Tier 1 when the
+precedence test failed; see the tiers doc.
 
 **Tier 2 — gated on every touch.** The six governed stores — `MANIFEST.yaml`,
 `EDGES.yaml`, `docs/governance/WS-E_INCIDENTS.md`, `DECISIONS.md`,
@@ -150,10 +151,15 @@ the PreToolUse matcher in `.claude/settings.json`. **Coverage is two-part and bo
 must name a tool:** the matcher routes the call, and the module's shell-tool set decides
 whether the command is inspected. Either alone is a silent no-op — WS-E 64 records three
 days in which the guard was wired to the Bash tool while PowerShell, this repo's primary
-shell, went unguarded. Adding a shell tool means adding it in both places. The guard
-returns deny or ask and **never** allow: it can narrow a Tier 1 grant but can never widen
-one. Ceremony skills carry their own `allowed-tools` frontmatter, which governs inside
-that ceremony — Tier 1 grants are not in force there.
+shell, went unguarded. Adding a shell tool means adding it in both places.
+
+**A Tier 1 allow rule pre-empts a Tier 2 guard ask** — tested 2026-08-11, and the guard
+loses. The two mechanisms are alternatives, not layers, so: **never grant in Tier 1
+anything Tier 2 is relied on to gate.** An allow rule covering the same ground as a guard
+ask is not belt-and-braces; it is the gate switched off silently. Whether a deny is
+pre-empted the same way is untested and untestable safely, so never allow-list a command
+family that carries a deny. Ceremony skills carry their own `allowed-tools` frontmatter,
+which governs inside that ceremony — Tier 1 grants are not in force there.
 
 Background subagent tasks are disabled project-wide
 (`CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` in `.claude/settings.json`). Sessions are
@@ -306,14 +312,17 @@ this section is a working pointer, not the record.
    and `docs/governance/FINDINGS_2026-08-11_onnx-acl-root-cause.md`.
    Reporting rule inherited: the spike closes with a Commissioning
    Session Record, not a report (operator ruling 2026-08-11).
-5. **Permission-tiering post-merge verification — OPEN, one item
-   blocking-shaped.** Precedence between a Tier 1 allow rule and a Tier
-   2 guard ask is UNVERIFIED: if a settings allow pre-empts the guard,
-   bare `Edit` and `Write` in Tier 1 neutralise every protected-path ask
-   and Tier 1 must be narrowed to enumerated paths before any further
-   governed act. Also unverified: the permission rule strings
-   themselves, and hook routing of skill and subagent calls. Detail and
-   the resolving test for each:
+5. **Permission-tiering follow-through — precedence RESOLVED against
+   the design; three parts still open.** Tested 2026-08-11: a Tier 1
+   allow rule pre-empts a Tier 2 guard ask, so the two are alternatives
+   and not layers. Tier 1 narrowed the same day to read-only, batteries
+   and git navigation. Open: (a) restoring edits and git writes to
+   Tier 1 needs an enumeration of paths provably containing no
+   protected path, which `docs/` and `verticals/` both defeat
+   wholesale; (b) whether a deny is pre-empted the same way is untested
+   and has no safe probe, so no command family carrying a deny may be
+   allow-listed; (c) the rule strings themselves, and hook routing of
+   skill and subagent calls, remain unverified. Detail:
    `docs/governance/HARNESS_PERMISSION_TIERS_2026-08-11.md`.
 6. **Corpus listing owed for SG-07, SG-08 and SG-09** — OPEN;
    operator's decision whether it clears in one act or per document.
