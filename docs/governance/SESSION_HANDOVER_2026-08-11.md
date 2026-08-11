@@ -53,8 +53,11 @@ chained: the ledger entry first, then the frame that cites it.
   Ruling 1 (OQ1) and consumes the number that two ruled documents —
   `docs/governance/TOR_test-capability_RevC_RULED_2026-08-10.md` and
   `docs/governance/RULINGS_RECORD_2026-08-10_TOR-test-capability.md` —
-  already cited forward. Authored as a full register-establishing entry
-  on the DEC-0010 / DEC-0014 precedent rather than a bare pointer: the
+  already cited forward. Authored as a ledger bullet in `DECISIONS.md` on
+  the DEC-0014 house style, not as a standalone document: at +3 lines it
+  cannot carry the TOR and rulings-record content inline, and does not
+  try to — it establishes the register home and binds that content **by
+  citation**. What the entry fixes in the ledger: the
   capability under the existing register structure with **no new
   workstream ID**, WS-T deliverable naming, all four rulings with OQ3's
   divergent panel position recorded as divergent, the nine amendments as
@@ -111,15 +114,25 @@ gets written down because it will be proposed again.
   than a markdown-aware editor. Bytes outside the QUEUE-START /
   QUEUE-END markers asserted unchanged at 13873 by the replacement
   script on both of its runs.
-- **`python scripts/check_docs.py .`** — `No findings` across 105 files,
-  run four times across the arc. **One intermediate red, recorded
-  rather than quietly fixed:** the first queue write reported an
-  unbalanced bold span at 115 marker occurrences, an odd count. Cause
-  was a third literal
-  `docs` glob in the queue prose, where the pre-existing text happened
-  to carry exactly two and was even by luck. Fixed by writing the glob
-  as prose, per the 30 Jul precedent recorded at item 1 of
-  `docs/governance/RULINGS_RECORD_2026-08-04.md`. Re-run green.
+- **`python scripts/check_docs.py .`** — `No findings` across 106 files at
+  close, this handover being the 106th. Run repeatedly across the arc.
+  **Two intermediate reds, both recorded rather than quietly fixed.**
+  *Red 1:* the first queue write reported an unbalanced bold span at 115
+  marker occurrences, an odd count, caused by a third literal `docs` glob
+  in the queue prose where the pre-existing text happened to carry
+  exactly two and was even by luck. Fixed by writing the glob as prose,
+  per the 30 Jul precedent recorded at item 1 of
+  `docs/governance/RULINGS_RECORD_2026-08-04.md`. *Red 2:* this handover
+  file then failed on an unbalanced bold span at 95 marker occurrences
+  together with a dead-path citation of the rejected `decisions/`
+  filename — **created by the act of recording red 1**. That is the
+  self-inflicting shape, and this is its second instance: the 10c
+  correction note re-created its own divergence by quoting it, and the
+  note's first attempt did so twice. **General rule, stated here because
+  two instances make it a pattern and not a coincidence: a defect is
+  recorded as a prose description, never as a live reproduction, because
+  quoting a defect verbatim can reconstitute it.** Both reds fixed;
+  re-run green.
 - **Lint:** `scripts/lint.cmd` by absolute path under PowerShell exits 0
   with "All checks passed!", and a bare `ruff check .` exits 0
   independently. No Python changed in this arc.
@@ -195,12 +208,16 @@ once again a plain stop condition.
 
 ## Return queue, in order
 
+Enumerates the `CLAUDE.md` queue block committed at `229b5d8`, item for
+item and in its order, so the two agree by construction rather than by
+assertion.
+
 1. **Boot ritual via /session-open** (incl. rehash sweep; expect 0 pins,
    expect **0** divergences).
-2. **ONNX cache ACL repair — ruled ahead of the frame ruling.** It
-   blocks `--live` retrieval and now also blocks satisfying the entry
-   criteria of a committed document. The elevated-shell breach and the
-   false-green traversal check travel with it.
+2. **Parked elevated-session findings** — the ONNX cache ACL repair, the
+   elevated-harness-shell breach, and the false-green traversal check.
+   **Ruled ahead of the frame ruling.** Blocks `--live` retrieval and now
+   also blocks satisfying the entry criteria of a committed document.
 3. **Rule the D2.0 commissioning frame**, and with it the scope
    question (D2.2a-session-only, or standing for the commissioning
    regime). Own branch; the status line flips as part of the ruling.
@@ -213,25 +230,51 @@ once again a plain stop condition.
    operator's decision. Note the interaction with the harness:
    commissioning runs pin the snapshot current at spike time and do not
    wait on this act, but Regime-2 formal runs use listed snapshots only.
-6. **ci-docs paths-filter fix** — one line; the evidence is now complete
-   and the defect isolated conclusively to corpus markdown. Whether it
-   also warrants a WS-E ledger entry or a CL item is an operator
+6. **ci-docs paths-filter fix** — one line. This is the pre-existing and
+   separately evidenced defect: ci-docs cannot fire on corpus markdown at
+   PR time, because the root-level glob does not reach it, and PR #86
+   isolated that conclusively by exercising both covered path classes in
+   a single run. **Distinct from open verification 6**, which parks a
+   different observation entirely — the push-event triggering of ci-mlops
+   and ci-devops on a docs-only merge. Different workflows, different
+   events, different defects; neither is evidence for the other. Whether
+   this one also warrants a WS-E ledger entry or a CL item is an operator
    decision.
-7. **Conventions owed in `CLAUDE.md` at its next revision** — the
-   commit-trailer rule, the register-number citation rule, and the DEC
-   placement rule, written once together rather than accreting.
+7. **Lint invocation defects — two, of opposite polarity.** The carried
+   relative-path false red, and the false green newly observed this arc
+   where `cmd /c` by absolute path from the Bash tool exits 0 without
+   running ruff at all.
 8. **Batch-2 panel circulation** — unblocked; open whether SG-03..SG-06
    sit inside it.
-9. **Gemini consolidation before the Agentic Topology ADR work opens**,
-   which would consume ADR next 0011.
-10. **TOR errata** carried to the Test Plan (D1.1), including the
+9. **Conventions owed in `CLAUDE.md` at its next revision** — the
+   commit-trailer rule, the register-number citation rule, and the DEC
+   placement rule, written once together rather than accreting.
+10. **PRs #64/#65 standing tree verification** — partially chipped, not
+    discharged; the MANIFEST.yaml side of #64 and the rest of #65 are
+    still owed a look.
+11. **Operator inclusion decision for TY-03..09** when ready; the next
+    ingest then populates processing fields at a .8 version.
+12. **CL-25 / inc4** (pin writer) pending agent module; **CL-24** when
+    convenient.
+13. **Governance-guard deny path for history rewrites** — the one
+    documented category still unexercised; needs a throwaway clone, not
+    this working tree.
+14. **Consistency reads owed** when their targets are drafted — SG-07
+    §2.2 and §5.2, SG-08 §2.3 and §5.2.
+15. **`corpus_edges_check.py` design-mode false green** — minimum fix is
+    wording, not logic.
+16. **Statute-edge width** — the corpus holds POCA s.327 and s.330 and no
+    text of the disclosure-regime provisions they depend on by reference.
+    A property of the corpus rather than of any one document, and it will
+    recur.
+17. **TOR errata** carried to the Test Plan (D1.1), including the
     correction owed to the panel record for the propagated
     "23-document corpus" phrasing.
-11. `corpus_edges_check.py` design-mode false green; PRs #64/#65 tree
-    verification; TY-03..09 inclusion decision; CL-25 / CL-24;
-    history-rewrite deny-path test; consistency reads; stale local
-    branches — all carried unchanged.
+18. **Gemini consolidation before the Agentic Topology ADR work opens**,
+    which would consume ADR next 0011.
+19. **Housekeeping, non-blocking** — stale local branches from past arcs
+    remain after their merges.
 
-The `CLAUDE.md` queue block committed at `229b5d8` already orders the
-ONNX repair ahead of the frame ruling, so the ruled sequencing above and
-the committed block agree; no correction is flagged against it.
+The ordering above is the committed block's ordering, item for item,
+including the ruled sequencing of the ONNX repair ahead of the frame
+ruling. No correction is flagged against the block because none is owed.
