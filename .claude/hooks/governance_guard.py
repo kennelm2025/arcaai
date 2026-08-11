@@ -16,11 +16,27 @@ ASK (operator confirmation required — governed stores):
     DECISIONS.md, RULINGS_RECORD*.md, document-register.yaml
   - Bash/PowerShell commands that redirect or stream into those files
 
+Coverage is two-part and both parts must name a tool for it to be
+guarded: the PreToolUse matcher in .claude/settings.json routes the
+call here, and SHELL_TOOLS below decides whether the command string is
+inspected. WS-E 64 records what happens when they disagree.
+
 Cross-platform: pure stdlib, no shell assumptions. Windows-safe.
 """
 import json
 import re
 import sys
+
+# Every tool that executes a shell command string. PowerShell is this
+# repo's primary shell, and both halves of the guard missed it until
+# WS-E 64 (2026-08-11): the settings.json matcher did not route the
+# tool here, AND this module gated on tool == "Bash" alone. The
+# PowerShell-shaped patterns below (Remove-Item, Set-Content, Out-File,
+# Copy-Item) were present from the install commit and unreachable for
+# three days — written for a shell the wiring never delivered. Add a
+# tool here and to the settings.json matcher together; either alone is
+# a silent no-op, which is how the original gap read as green.
+SHELL_TOOLS = ("Bash", "PowerShell")
 
 PROTECTED_PATTERNS = [
     r"MANIFEST\.ya?ml",
@@ -77,7 +93,7 @@ def main() -> None:
     tool = payload.get("tool_name", "")
     tool_input = payload.get("tool_input", {}) or {}
 
-    if tool in ("Bash",):
+    if tool in SHELL_TOOLS:
         command = tool_input.get("command", "") or ""
         for pattern, message in DENY_COMMAND_RES:
             if pattern.search(command):
