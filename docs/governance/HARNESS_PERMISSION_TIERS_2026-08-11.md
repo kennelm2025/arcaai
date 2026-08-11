@@ -17,13 +17,27 @@ Read-only operations (git status, diff, log, show, branch listing,
 blame, rev-parse, fetch; file reads; directory listings; `Get-Acl`;
 `Test-NetConnection`). The mandatory batteries (`scripts/check_docs.py`,
 lint, tests, pytest, `scripts/repo_manifest.py`,
-`scripts/rehash_sweep.py`). Routine git writes on feature branches
-(add, commit, checkout, switch, push, fetch, fast-forward-only pull).
-Edits to ordinary, non-protected files.
+`scripts/rehash_sweep.py`). Non-gated git navigation (checkout, switch,
+fetch, fast-forward-only pull).
 
 *Rationale:* every one of these is reversible, branch-isolated, and
 verified by batteries that run regardless of whether a prompt preceded
 them. The prompt was never the control; the evidence after the act is.
+
+**NARROWED 2026-08-11, same day, on evidence.** Tier 1 as first merged
+also granted bare `Edit` and `Write` and the git write verbs (add,
+commit, push, branch). All of those are withdrawn. The precedence
+question recorded below as UNVERIFIED was tested and **failed**: a
+settings allow rule pre-empts the guard's ask, so every allow rule
+silently disabled the Tier 2 gate covering the same ground. Bare
+`Edit` and `Write` neutralised every protected-path gate; the git
+write verbs neutralised the branch-deletion and HEAD-on-main gates.
+Restoring those grants safely requires enumerating paths that provably
+contain no protected path — `docs/` and `verticals/` each contain
+several, so neither subtree can be granted wholesale — and that
+enumeration is deliberately not attempted here. Until it exists, Tier 1
+is read-only operations, the batteries, and git navigation. Edits and
+git writes prompt as they did before the tiering.
 
 ## Tier 2 — gated, every touch
 
@@ -102,9 +116,20 @@ mechanisms exist, and they do not cover the same ground.
    may prompt where Tier 1 says it will not. Harmonising the
    frontmatter is a follow-up, deliberately not folded into this arc.
 
-**The guard may only ever restrict.** It returns deny or ask and never
-allow. It can narrow a Tier 1 grant but can never enlarge one, so a
-permission granted on the record cannot be quietly widened by a hook.
+**The guard may only ever restrict** — it returns deny or ask and never
+allow, so it cannot widen a granted permission. **But it cannot narrow
+one either, and that is not what this document first claimed.** Tested
+2026-08-11: an allow rule in `.claude/settings.json` pre-empts the
+guard's ask for the same command, so the two mechanisms do not compose
+as allow-narrowed-by-guard. They are alternatives, and the allow rule
+wins. The practical rule that follows is blunt and load-bearing:
+**never grant in Tier 1 anything Tier 2 is relied on to gate.** An
+allow rule and a guard ask covering the same ground is not
+belt-and-braces; it is the gate silently switched off. Whether the
+guard's *deny* is likewise pre-empted has NOT been tested, because
+every deny in this repository is destructive and no harmless probe
+exists on that path — treat deny coverage as unverified rather than
+assumed, and never rely on a deny to catch an allow-listed command.
 
 ## Soft-enforced — named, not implied covered
 
@@ -134,12 +159,20 @@ false-green shape this repository catalogues.
   declaring them working on merge would be exactly the false green
   this repository keeps cataloguing. The PowerShell rule forms in
   particular are asserted by construction, not by observation.
-- **Precedence between a Tier 1 allow rule and a Tier 2 guard ask is
-  UNVERIFIED.** The design assumes the guard's ask prevails over a
-  settings allow. The guard is confirmed live in-session and its
-  decisions are confirmed correct in isolation, but the interaction
-  itself has not been observed. The resolving test is in the
-  post-merge note below.
+- **Precedence between a Tier 1 allow rule and a Tier 2 guard ask:
+  TESTED 2026-08-11, and it FAILED.** The allow rule wins; the guard's
+  ask does not reach the operator. Tier 1 was narrowed the same day.
+  See the narrowing note under Tier 1 and the amended coverage rule
+  above.
+- **Whether an allow rule also pre-empts a guard DENY is UNVERIFIED,
+  and it cannot be tested safely.** Every deny here is destructive —
+  force push, history rewrite, recursive force delete — so no harmless
+  probe exists on that path. If deny is pre-empted the same way ask is,
+  then for the interval in which `git push` sat in the allow-list the
+  force-push guard was not in force. That interval is recorded rather
+  than papered over: it began when the tiering merged and ended with
+  the same-day narrowing. **Never allow-list a command family that
+  carries a deny.**
 
 ## Post-merge verification — required
 
@@ -151,11 +184,32 @@ wrote this.
    repository's history. A new prompt is the matcher fix working. The
    first such prompt is its live confirmation, and must not be read as
    a failure of the tiering.
-2. **Resolve the precedence UNKNOWN.** Attempt an edit to a governed
-   store. Tier 1 grants `Write`; Tier 2 must still ask. If it asks,
-   precedence is confirmed and the allow-narrowed-by-guard design
-   holds. If it does not, the allow-list is too broad and `Write` must
-   be removed from Tier 1 in favour of enumerated paths.
+2. **Resolve the precedence UNKNOWN — DONE 2026-08-11, and it failed.**
+   The test as first written turned on observing an *ask*, which the
+   harness cannot observe from inside a session; that flaw is why the
+   question survived the arc that created it. The working form inverts
+   the signal: run an allow-listed command that also carries a guard
+   ask, and have the operator **decline** if prompted. A refusal is
+   visible in the tool result where an approved ask is not, so both
+   outcomes are observable. The probe — `git branch -d` on a throwaway
+   branch — executed with no prompt, while the guard returned `ask` for
+   that exact string when fed the payload directly. Tier 1 narrowed the
+   same day. **Design lesson worth more than the result: a verification
+   whose only signal is a prompt cannot be self-verified, and must be
+   rebuilt around a signal the harness can see.**
+   **Confirmed after the narrowing, which makes this a controlled pair
+   rather than a single observation.** One alternative explanation
+   survived the probe: that the session was auto-approving at the
+   permission-mode level, in which case Tier 2 had never gated anything
+   and the narrowing addressed the wrong cause. The two are
+   indistinguishable from inside the harness and demand different
+   fixes. What separates them is what happened next. With the allow
+   entries removed and nothing else changed — same session, same guard,
+   same operator — a protected-path edit and a `git push` both
+   prompted, minutes after an allow-listed command had executed
+   silently. The allow rule is the only variable between the two
+   observations. Mode-level auto-approval is excluded; precedence is
+   the cause; and the narrowing addressed it rather than a symptom.
 3. **Confirm Tier 1 actually reduces prompts.** If routine git and
    battery calls still prompt, the rule strings do not match and are
    to be corrected against observed behaviour rather than reasoned
