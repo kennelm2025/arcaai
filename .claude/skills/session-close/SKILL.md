@@ -43,4 +43,19 @@ treats as proof an act did not happen:
    handover document. Do NOT write the handover file yourself unless
    the operator explicitly commands it — handover authoring is a
    governed act in its own right.
-5. Remind the operator: `/clear` before starting the next arc.
+5. Ask the operator explicitly for the handover command, and do not
+   report this ceremony as complete until the handover is either
+   commanded, or deferred on the record in the operator's own words.
+   Silence is not deferral. The queue update at step 2 lands by
+   ceremony while the handover needs an operator command, so the two
+   drift apart unless the gap is named here — this has now happened
+   twice consecutively, the queue merging ahead of its handover and
+   leaving the newest handover on disk contradicting the committed
+   queue (open verification 6 of
+   `docs/governance/SESSION_HANDOVER_2026-08-11b.md`, and again at
+   open verification 6 of
+   `docs/governance/SESSION_HANDOVER_2026-08-11c.md`). Handover
+   authoring itself stays a governed act on operator command —
+   unchanged by this step, which asks for the command and never
+   substitutes for it.
+6. Remind the operator: `/clear` before starting the next arc.

@@ -566,6 +566,49 @@ regardless of surrounding prose).*
     check is the instrument the standing first act relies on, so
     fixing the check precedes trusting any future green from it.
 
+64. **The governance guard never saw the primary shell: a hook wired
+    to one tool of two (2026-08-11).** The PreToolUse matcher in
+    `.claude/settings.json` named the Bash tool and not the
+    PowerShell tool, and `.claude/hooks/governance_guard.py` gated
+    its command-inspection branch on the Bash tool alone. Either
+    half makes the other a silent no-op. For three days every deny -
+    force push, history rewrite, recursive force delete - and every
+    protected-store ask was enforced on the Bash path only, while
+    PowerShell was and remains this repository's primary shell. Not
+    an omission but a severed connection: the guard was written for
+    PowerShell from the start, its deny list carrying the recursive
+    force-delete forms in both argument orders and its
+    write-detection regex carrying the PowerShell content-writing
+    cmdlets, all of it unreachable through the very shell it was
+    written for. `git blame` puts both halves at the harness install
+    commit df3f77d of 2026-08-08, and the hook has been touched once
+    since, a lint autofix the same day, so coverage was never
+    revisited and the gap was never narrower than at discovery.
+    CLAUDE.md's statement that hard rules are enforced by hooks and
+    that the hook wins was therefore true of one shell out of two,
+    which is the guidance/enforcement discrepancy that document
+    itself names a WS-E item. WHY NO HARM RESULTED: the soft layer
+    held, and which soft layer held is worth stating, because the
+    comfortable answer is wrong. The nearest miss of the period was
+    the DEC placement trap of the 2026-08-11 arc, where a document
+    was commanded as a four-digit-numbered file under `decisions/`
+    and would have consumed ADR numbers silently. No prompt caught
+    it and none could have: that path matches none of the guard's
+    protected patterns, and no write was ever attempted, because
+    `scripts/repo_manifest.py` was read first. What held was the
+    working protocol's verification-precedes-mutation rule, not a
+    gate. Closed the same day it was found, in the PR carrying this
+    entry: the matcher extended to the PowerShell tool and the
+    module's shell-tool set made explicit, verified by five crafted
+    payloads asserting on decision substance rather than exit status
+    and by one end-to-end refusal through the live PowerShell tool
+    aimed at a throwaway scratchpad path. CLASS NOTE: the second
+    half was found only by probing the first - the matcher change
+    alone still returned allow - so a fix to a two-part mechanism is
+    unproven until the mechanism is exercised end to end, and a
+    guard's stated coverage is a claim about its wiring rather than
+    about the patterns it contains.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a
