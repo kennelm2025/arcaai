@@ -217,148 +217,161 @@ this section is a working pointer, not the record.
 
 <!-- QUEUE-START -->
 1. Boot ritual via /session-open (incl. rehash_sweep; expect 0 pins).
-   **Expect 1 divergence, and it is expected:** `DEC — cited but above the
-   DECISIONS.md high-water mark: DEC-0015. Ledger entry missing.` The TOR and
-   its rulings record cite DEC-0015 as the harness register home while
-   DECISIONS.md still tops out at 0014. It clears when item 15 executes. Any
-   *other* divergence is a genuine stop.
-2. **Parked elevated-session findings — blocking for retrieval.**
+   **Expect 0 divergences.** The DEC-0015 divergence that stood by
+   construction across the 10c and 11 arcs cleared at PR #86 when the ledger
+   entry landed. There is no longer an expected divergence: **any** divergence
+   is now a genuine stop.
+2. **Parked elevated-session findings — blocking for retrieval, and now
+   blocking a committed deliverable.**
    - ONNX cache ACL fault, confirmed live. Repair before any `--live` retrieval
      act; a stub-flag run is unaffected.
    - Elevated-harness-shell breach, recorded.
    - The ONNX cache traversal check returns green under an elevated shell — a
      false-green defect. Its result is not to be trusted as the standing first
-     act until it asserts non-elevation. **Restated 2026-08-10: this is an
-     authoring job, not a fix.** The check has no implementing artefact — it
-     exists only as a named procedure in this file and in
-     `.claude/skills/session-open/SKILL.md`, with no script behind it, so there
-     is nothing to add the assertion to. Operator decision owed on whether it
-     warrants a CL.
-3. **Batch-2 authoring — COMPLETE at 7/7.** SG-03/SG-04 (PR #67), SG-05/SG-06
-   (PR #68, AO-2 discharged in SG-05), SG-07 (PR #74), SG-08 (PR #80), SG-09
-   (PR #81, 2026-08-10). No SG authoring remains; the downstream acts are the
-   listing at item 4 and the circulation at item 6.
-4. **Corpus listing owed for SG-07, SG-08 and SG-09.** All three are authored
-   and none is listed: listing in `verticals/fraud/corpus/MANIFEST.yaml` is a
-   separate governed act and was deliberately not chained to any of the three
-   authoring arcs. The corpus pin is unmoved and eligible remains 16 until it
-   happens. The debt has now grown once per authoring arc for three consecutive
-   arcs — worth deciding whether it clears in one act or per document.
-5. **ci-docs paths-filter gap — decision owed.** `ci-docs` cannot fire on corpus
-   markdown: its `pull_request` paths are `docs/**`, `decisions/**`, `*.md`,
-   `scripts/check_docs.py` and `.github/workflows/ci-docs.yml`, and `*.md`
-   matches root-level files only. Structural checks on corpus documents
-   therefore run post-merge or not at all on a PR — the condition WS-E 45
-   created ci-docs to abolish. Fourth recurrence of that family (`docs/`, then
-   `scripts/`, then `.claude/`, now corpus markdown). **Evidence is now as
-   complete as it will get: three instances, the third predicted in advance.**
-   PR #74 carried the gap unnoticed; PR #80 evidenced it after the fact; PR #81
-   was called in the PR body before the run and confirmed — ci-docs did not fire
-   on the PR and ran green post-merge on main. `gh run list` shows the only
-   ci-docs runs for both corpus PRs are `push` events on main, never
-   `pull_request`. The 2026-08-08b handover's statement that both workflows
-   cover a corpus document is wrong as to ci-docs. Fix is one line; whether it
-   also warrants WS-E 64 or CL-26 is an operator decision. **Control case now
-   on record:** PR #83 (2026-08-10c, two files under `docs/`) fired ci-docs on
-   the `pull_request` event and passed in 16s. The filter works for covered
-   paths, so the defect is isolated to the root-only `*.md` glob failing to
-   reach corpus markdown — not to ci-docs triggering generally.
-   Carried alongside it: a lint false-red observed 2026-08-10 — `cmd /c
-   scripts\lint.cmd` by relative path exits 1 ("system cannot find the path
-   specified") while the same script by absolute path and a bare `ruff check .`
-   both exit 0, cwd confirmed as the repo root. Undiagnosed, non-blocking.
-   Reproduced once more at the 2026-08-10c arc: absolute path exits 0. The
-   absolute-path invocation is now the working practice in the PR battery.
-6. **Batch-2 panel circulation — now unblocked; scope decision owed.** Ruled
-   2026-08-10: circulation is not a per-document precondition for batch-2
-   authoring, on the evidence of the SG-05/SG-06 and SG-07 arcs. It is a
-   batch-level act at batch end, and batch end has arrived — all of
-   SG-03..SG-09 is authored as of PR #81. Open: whether SG-03..SG-06 — authored
-   under the batch-1 rulings of 2026-08-06 — sit inside that circulation or are
-   treated as already covered. Ruled into the pack as a stated condition: SG-09
-   lands as a **leaf in the authored subgraph** — its only design inbound is
-   `DL-05: [SG-09, SG-06]` and DL-05 is unauthored, so no authored document
-   cites SG-09. Not a check failure (closure runs against the design file, not
-   prose), but it is the condition the v0.2.1 closure repair exists to prevent
-   at design level.
-7. PRs #64/#65 standing tree verification — **partially chipped, not
-   discharged.** EDGES v0.2.2 was read in full during the SG-07 arc and the
-   manifest-history job ran live on PR #74; the MANIFEST.yaml side of #64 and
-   the rest of #65 are still owed a look. Untouched by the SG-08 and SG-09 arcs.
-8. Operator inclusion decision for TY-03..09 when ready (separate act; next ingest
-   then populates processing fields at a .8 version).
-9. CL-25 / inc4 (pin writer) pending agent module; CL-24 when convenient.
-10. Governance-guard deny path for history rewrites (`filter-branch` / `filter-repo`)
-    is the one documented category still unexercised; test needs a throwaway clone,
-    not this working tree.
-11. Consistency reads owed when their targets are drafted — SG-07 §2.2 (TR-05)
+     act until it asserts non-elevation. Restated 2026-08-10 as an authoring
+     job, not a fix: the check has no implementing artefact, existing only as a
+     named procedure in this file and in `.claude/skills/session-open/SKILL.md`.
+   - **Escalated 2026-08-11.** The D2.0 commissioning frame is now merged and
+     makes a green pre-flight — non-elevation and cache traversal among its
+     four assertions — an entry criterion. The machine therefore fails the
+     entry criteria of a committed governance document. The implementing
+     artefact still arrives at the D2.2a pre-flight, which is also where the
+     next free CL number is claimed.
+3. **D2.0 commissioning frame merged UNRULED — operator ruling owed, and it
+   gates the next build step.** `docs/governance/D2.0_COMMISSIONING_FRAME_2026-08-11.md`
+   carries `Status: awaiting operator ruling`; TOR Section 5A reserves the
+   commissioning frame to the operator's direct ruling and nothing executes
+   under it until ruled. Two decisions travel together, and both were left open
+   deliberately rather than assumed at authoring:
+   - The ruling itself (status line flips; a governed act on its own branch,
+     since the authoring PR has merged).
+   - **Scope.** The frame is written as scoped to the D2.2a spike session, with
+     extension to any further commissioning session stated as an operator
+     ruling. Section 5A's literal wording is "frame per commissioning session";
+     a standing frame would avoid re-ruling an identical page but is not what
+     the TOR says. One-line change either way.
+4. **TOR sequencing after the frame: D2.1 spec schema v0.1 is the keystone.**
+   Section 9's proof-first order is frame → schema v0.1 → D2.2a runner spike
+   (first real test result) → Test Plan draft → panel. Schema v0.1 carries
+   rulings-record amendments 3, 5 and 6 from the start: per-scenario
+   migration-diff comparison semantics, gap-detection scoring defined
+   mathematically, and mandatory `generator_seed` for scoring-class scenarios.
+   Both scenario classes present from v0.1.
+5. **Corpus listing owed for SG-07, SG-08 and SG-09.** All three authored, none
+   listed: listing in `verticals/fraud/corpus/MANIFEST.yaml` is a separate
+   governed act and was deliberately not chained to any authoring arc. The
+   corpus pin is unmoved and eligible remains 16. Debt has grown once per
+   authoring arc for three consecutive arcs — worth deciding whether it clears
+   in one act or per document. Note the interaction with item 3: commissioning
+   runs pin the snapshot current at spike time and do **not** wait on this act,
+   but Regime-2 formal runs use listed snapshots only.
+6. **ci-docs paths-filter gap — decision owed; evidence now complete.**
+   `ci-docs` cannot fire on corpus markdown: its `pull_request` paths are
+   `docs/**`, `decisions/**`, `*.md`, `scripts/check_docs.py` and
+   `.github/workflows/ci-docs.yml`, and `*.md` matches root-level files only.
+   Fourth recurrence of that family (`docs/`, then `scripts/`, then `.claude/`,
+   now corpus markdown). PR #74 carried the gap unnoticed; PR #80 evidenced it
+   after the fact; PR #81 called it in the PR body before the run and confirmed
+   it. **Second control case, PR #86 (2026-08-11), and it is the decisive one:**
+   that PR changed a root-level `*.md` (`DECISIONS.md`) and a file under `docs/` in
+   the same diff, and ci-docs fired on the `pull_request` event and passed in
+   7s. Both covered path classes work in a single run, which isolates the defect
+   conclusively to the root-only `*.md` glob failing to reach corpus markdown.
+   Fix is one line; whether it also warrants a WS-E ledger entry or a CL item is
+   an operator decision.
+7. **Lint invocation defects — two now, with opposite polarity.** Carried:
+   `cmd /c scripts\lint.cmd` by relative path exits 1 ("system cannot find the
+   path specified") while the same script by absolute path and a bare
+   `ruff check .` both exit 0, cwd confirmed as the repo root. Undiagnosed,
+   non-blocking; the absolute-path invocation is the working practice.
+   **New 2026-08-11 and more dangerous:** invoking the absolute path via
+   `cmd /c` *from the Bash tool* printed a cmd banner and exited **0 without
+   running ruff at all** — a false green, where the carried defect is a false
+   red. The absolute-path practice holds only under PowerShell. Exit code alone
+   does not evidence that the check ran; the "All checks passed!" line does.
+8. **Batch-2 panel circulation — unblocked; scope decision owed.** Ruled
+   2026-08-10: circulation is a batch-level act at batch end, not a
+   per-document precondition, and batch end has arrived (SG-03..SG-09 authored
+   as of PR #81). Open: whether SG-03..SG-06 — authored under the batch-1
+   rulings of 2026-08-06 — sit inside that circulation or are treated as
+   already covered. Ruled into the pack as a stated condition: SG-09 lands as a
+   leaf in the authored subgraph, its only design inbound being `DL-05` which is
+   unauthored, so no authored document cites SG-09.
+9. **Conventions owed in this file at its next revision — three, and they
+   should be written once, together, rather than accreting.**
+   - **Commit trailers.** No `Co-Authored-By` on corpus authoring commits
+     (ruled). Practice now runs ahead of the rule on two axes: non-corpus
+     commits and PR bodies. Five instances, all asserted by trailer count 0
+     rather than by eyeball: `59fb216` (SG-08), `66041e5` (SG-09), `99b63cd`
+     (TOR panel-pass artefacts), and both commits of PR #86 (`cffafe0`,
+     `7b07dbd`) — governance authoring where the build agent *did* draft the
+     text, which is the case the ruled wording does not yet reach.
+   - **Register-number citation.** In any document under `docs/`, cite an
+     unconsumed register number as "next N" or not at all, never as a bare "N":
+     the manifest scanner cannot distinguish a bare number from a claim the item
+     exists, and it produces a spurious divergence. Established by the PR #85
+     correction note.
+   - **DEC placement.** A DEC entry belongs in `DECISIONS.md`, never as a
+     numbered file under `decisions/`. `scripts/repo_manifest.py` treats that
+     filesystem as the ADR register and reads leading filename digits, so a
+     DEC-numbered file there silently consumes ADR numbers; and because the DEC
+     ledger is parsed from `DECISIONS.md` alone, it would not clear the very
+     divergence it was written to clear. Caught live at the 2026-08-11 arc
+     before mutation; recorded in the DEC-0015 entry, but it is a general hazard
+     for every future DEC and belongs here too.
+10. PRs #64/#65 standing tree verification — **partially chipped, not
+    discharged.** EDGES v0.2.2 read in full during the SG-07 arc and the
+    manifest-history job ran live on PR #74; the MANIFEST.yaml side of #64 and
+    the rest of #65 are still owed a look. Untouched since.
+11. Operator inclusion decision for TY-03..09 when ready (separate act; next
+    ingest then populates processing fields at a .8 version).
+12. CL-25 / inc4 (pin writer) pending agent module; CL-24 when convenient.
+13. Governance-guard deny path for history rewrites (`filter-branch` /
+    `filter-repo`) is the one documented category still unexercised; test needs
+    a throwaway clone, not this working tree.
+14. Consistency reads owed when their targets are drafted — SG-07 §2.2 (TR-05)
     and §5.2 (DL-06), both characterised by series role only per the SG-05
     precedent for CV-03 and DP-04; and SG-08 §2.3 (TR-03) and §5.2 (CV-05),
     where TR-03 was characterised from SG-04 §2.1's committed wording rather
-    than bare series role and CV-05 by series role only. **Unchanged by the
-    SG-09 arc, and deliberately so:** all three of SG-09's minimum targets
-    (DP-01, SG-06, OGL-0003) were already authored, so every citation landed by
-    pinpoint and the ruled-in extra (TY-04) was read in full before drafting to
-    keep it that way. SG-09 is the first batch-2 document to add nothing here.
-12. Commit-trailer convention — ruled: no `Co-Authored-By` trailer on corpus
-    authoring commits. Owed as a standing rule in this file at its next revision.
-    Three instances now, all asserted by trailer count 0 rather than by eyeball:
-    `59fb216` (SG-08) and `66041e5` (SG-09), both corpus authoring, and
-    `99b63cd` (TOR panel-pass artefacts) — **the first outside corpus**, ruled
-    at the 2026-08-10c arc on the ground that the build agent authored no part
-    of either document. Open for that revision: whether the rule extends to PR
-    bodies — the generated-with footer was omitted from PRs #80, #81 and #83 on
-    the ruling's spirit, but its terms reach corpus commit trailers only, so the
-    practice now runs ahead of the rule on two axes (non-corpus commits, and PR
-    bodies). The rule gets written once, properly, at that revision.
-13. **`corpus_edges_check.py` design-mode false green — decision owed.** Run
+    than bare series role and CV-05 by series role only. Unchanged by the SG-09
+    arc, deliberately: all three of SG-09's minimum targets were already
+    authored.
+15. **`corpus_edges_check.py` design-mode false green — decision owed.** Run
     without `--docs`, it prints `OK: closure, asymmetry, immutability, and
     authored-doc checks pass` having read no authored document at all: `--docs`
-    defaults to `None` and the authored-document loop never runs. Observed live
-    during the SG-09 arc — a bare run reported that line, and the docs-mode
-    re-run was what actually evidenced SG-09. Same false-green shape as the ONNX
-    cache traversal check at item 2: a check whose success message claims more
-    than it verified. Whether it warrants a CL is an operator decision; the
-    minimum fix is wording, not logic.
-14. **Statute-edge width — corpus-design fact for the circulation pack.** The
+    defaults to `None` and the authored-document loop never runs. Same
+    false-green shape as the ONNX check at item 2 and the new lint defect at
+    item 7 — a check whose success message claims more than it verified. Three
+    instances of that family now. Minimum fix is wording, not logic.
+16. **Statute-edge width — corpus-design fact for the circulation pack.** The
     corpus holds POCA s.327 (OGL-0003) and s.330 (OGL-0004) and no text of
     s.338, s.339A, MLR 2017 reg 28, or the tipping-off provisions — all of which
     s.327 depends on by reference. SG-09 §1.2 states the boundary on the face of
-    the document rather than papering it, per the operator ruling and the SG-08
-    §1.2 pattern, but the underlying gap is a property of the corpus rather than
-    of SG-09 and will recur for any document reaching into the disclosure
-    regime.
-15. **NEXT ARC, named by the operator at the 2026-08-10c close: DEC-0015
-    authoring paired with the D2.0 commissioning frame.** Small, paired, and it
-    claims the DEC number while the TOR's ink is wet — the sequence-hold rule
-    (WS-E 58) means a competing act otherwise takes 0015, and the number is
-    already cited in two committed documents. Authoring it also clears the
-    expected boot divergence at item 1. CL-26 is a separate later claim, made
-    when the runner pre-flight is authored at the D2.2a spike; that same
-    pre-flight is what finally gives the ONNX cache check at item 2 an
-    implementing artefact, discharging the parked authoring debt.
-16. **TOR errata — carry to the Test Plan (D1.1) and any future TOR revision.**
+    the document rather than papering it, but the gap is a property of the
+    corpus and will recur for any document reaching into the disclosure regime.
+17. **TOR errata — carry to the Test Plan (D1.1) and any future TOR revision.**
     The TOR entered the repo at Rev C RULED (PR #83) and is immutable as
     committed, so both are recorded rather than amended, and both are stated in
-    the PR #83 body at the point the error entered the repo.
+    the PR #83 body.
     - §2 and §7 cite PR #80 for batch-2 completion; batch 2 completed at PR #81.
-      Operator's own note for the record: the claim was wrong at the moment of
-      writing, not merely stale — batch 2 stood at 6/7 when Rev B was drafted
-      and SG-09 did not yet exist. Coordinator defect.
+      The claim was wrong at the moment of writing, not merely stale — batch 2
+      stood at 6/7 when Rev B was drafted and SG-09 did not yet exist.
     - §2's authored count should read **30 of 54** — the parenthetical
       enumeration (16 + TY-03..09 + SG-03..09) is the correct one. 23 belongs to
-      the listing pipeline, not to authoring: 16 currently listed/eligible → 23
-      after the batch-1 listing act → 30 after batch-2's. The TOR text conflated
-      authored-on-disk with eligible-listed, and it propagated outward —
-      Reviewer B's "23-document corpus" phrasing derives from it, which makes
-      this a correction owed to the panel record and not only to the TOR.
-17. **Gemini architecture-review return — consolidation owed.** Gemini's
+      the listing pipeline, not to authoring. The conflation propagated outward:
+      Reviewer B's "23-document corpus" phrasing derives from it, making this a
+      correction owed to the panel record and not only to the TOR.
+18. **Gemini architecture-review return — consolidation owed.** Gemini's
     assessment of the orchestration / memory / dreaming document arrived in the
     same circulation as the TOR pass but reviews a different document; it is
     recorded as out of scope in the rulings record and forms no part of it. It
     stands as an unconsolidated two-reviewer return with Grok's. **Consolidate
-    before the Agentic Topology ADR work opens** — ADR-0011 is the next free
-    ADR number and that work would consume it.
+    before the Agentic Topology ADR work opens** — ADR-0011 is the next free ADR
+    number and that work would consume it. Note that ADR-0011 was nearly
+    consumed by accident at the 2026-08-11 arc (item 9, DEC placement).
+19. Housekeeping, non-blocking: 19 stale local branches from past arcs remain
+    after their merges. The delete-after-merge convention has held for recent
+    arcs; these predate it.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
