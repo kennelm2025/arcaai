@@ -197,6 +197,19 @@ wrote this.
    same day. **Design lesson worth more than the result: a verification
    whose only signal is a prompt cannot be self-verified, and must be
    rebuilt around a signal the harness can see.**
+   **Confirmed after the narrowing, which makes this a controlled pair
+   rather than a single observation.** One alternative explanation
+   survived the probe: that the session was auto-approving at the
+   permission-mode level, in which case Tier 2 had never gated anything
+   and the narrowing addressed the wrong cause. The two are
+   indistinguishable from inside the harness and demand different
+   fixes. What separates them is what happened next. With the allow
+   entries removed and nothing else changed — same session, same guard,
+   same operator — a protected-path edit and a `git push` both
+   prompted, minutes after an allow-listed command had executed
+   silently. The allow rule is the only variable between the two
+   observations. Mode-level auto-approval is excluded; precedence is
+   the cause; and the narrowing addressed it rather than a symptom.
 3. **Confirm Tier 1 actually reduces prompts.** If routine git and
    battery calls still prompt, the rule strings do not match and are
    to be corrected against observed behaviour rather than reasoned

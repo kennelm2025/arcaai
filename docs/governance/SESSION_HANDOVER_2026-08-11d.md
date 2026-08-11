@@ -126,6 +126,21 @@ refusal *is* visible. Both outcomes then observable. The alternative
 explanation — a pattern that simply missed the string — was ruled out by
 feeding the guard the exact string, not a paraphrase.
 
+**A second alternative survived the probe and was excluded afterwards,
+which is what makes the diagnosis a controlled pair rather than an
+inference.** The session might have been auto-approving at the
+permission-mode level, in which case Tier 2 had never gated anything and
+the narrowing addressed the wrong cause — indistinguishable from inside
+the harness, and demanding a different fix. What separates them is what
+happened next: with the allow entries removed and nothing else changed,
+same session and same guard, the protected-path edit appending WS-E 65
+and the `git push` of the close branch **both prompted**, minutes after
+an allow-listed command had executed silently. The allow rule is the
+only variable between the two observations. Mode-level auto-approval is
+excluded and precedence is the cause. Recorded because the conclusion is
+now load-bearing for every future permission decision here, and a reader
+who cannot see this pair can reasonably raise the alternative again.
+
 ### WS-E 65, found by a count that did not grow
 
 The boot sweep reported two `fixture-*` pin rows. The mandatory battery
