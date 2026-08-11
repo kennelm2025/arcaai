@@ -1,0 +1,16 @@
+# TEST FIXTURE — deliberately malformed. Its job is to be rejected.
+# Negative case: a scenario of neither ruled class. Both classes are present
+# from v0.1 by ruling and the set is closed; a third class arrives by a new
+# schema version, never by a spec asserting one.
+schema_version: "0.1"
+scenario_id: LAT-001
+title: Fixture — scenario of neither ruled class
+scenario_class: latency
+vertical: fraud
+typology: card_not_present
+migration_diff:
+  comparison: bit_identical
+acceptance:
+  metric: p99_ms
+  operator: "<="
+  value: 250

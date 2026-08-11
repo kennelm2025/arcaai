@@ -1,0 +1,33 @@
+# TEST FIXTURE — not a reference document and not a real scenario.
+# The schema at arcaai/harness/schema/scenario_spec_v0.1.schema.json is the
+# sole authority on what a valid spec is. This file is exercise material.
+schema_version: "0.1"
+scenario_id: SCT-001
+title: Fixture — scoring-class scenario over generated records
+description: >
+  Exercises the amendment 6 path: a scoring-class scenario invokes the
+  synthetic data generator and therefore must carry generator_seed, without
+  which its result is not reproducible from its own payload.
+scenario_class: scoring
+vertical: fraud
+typology: card_not_present
+generator_seed: 20260811
+scoring:
+  parameters:
+    amount:
+      min: 1.0
+      max: 5000.0
+    channel:
+      values:
+        - ecommerce
+        - pos
+  n_records: 1000
+  expected_outcome:
+    metric: roc_auc
+    direction: higher_is_better
+migration_diff:
+  comparison: bit_identical
+acceptance:
+  metric: roc_auc
+  operator: ">="
+  value: 0.85

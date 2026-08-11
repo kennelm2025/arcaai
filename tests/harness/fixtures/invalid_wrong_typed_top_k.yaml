@@ -1,0 +1,27 @@
+# TEST FIXTURE — deliberately malformed. Its job is to be rejected.
+# Negative case: top_k carries a string where the schema requires an integer.
+# Retrieval cut-off k is arithmetic — every scoring formula is evaluated over
+# the top-k result set — so a string here would fail late, inside scoring,
+# rather than at the gate.
+schema_version: "0.1"
+scenario_id: RQA-002
+title: Fixture — retrieval scenario with a wrong-typed cut-off
+scenario_class: retrieval
+vertical: fraud
+typology: disclosure_regime
+corpus_snapshot:
+  manifest_version: "0.0-fixture"
+  manifest_sha256: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+retrieval:
+  retrieval_kind: corpus_qa
+  query: Which provision governs the reporting obligation?
+  top_k: "five"
+  expected_document_ids:
+    - FIXTURE-0004
+  scoring_method: semantic_distance
+migration_diff:
+  comparison: bit_identical
+acceptance:
+  metric: recall_at_k
+  operator: ">="
+  value: 0.9
