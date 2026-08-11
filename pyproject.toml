@@ -26,6 +26,7 @@ dependencies = [
     "ollama>=0.6.2",
     "uuid6>=2024.7.10",
     "chromadb==1.5.9",
+    "jsonschema>=4.26",
 ]
 
 [project.optional-dependencies]
@@ -37,7 +38,7 @@ dev = [
 ]
 
 [tool.setuptools]
-packages = ["agent", "api", "contracts", "verticals", "ingest", "arcaai", "arcaai.platform", "arcaai.platform.governance"]
+packages = ["agent", "api", "contracts", "verticals", "ingest", "arcaai", "arcaai.platform", "arcaai.platform.governance", "arcaai.harness"]
 
 [tool.ruff]
 line-length = 100

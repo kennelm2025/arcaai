@@ -1,0 +1,26 @@
+# TEST FIXTURE — deliberately malformed. Its job is to be rejected.
+# Negative case: scoring-class scenario with generator_seed absent.
+# Amendment 6 makes that field mandatory for this class, so this spec must
+# hard-reject. If it ever validates, the schema has stopped enforcing the
+# amendment and the harness's reproducibility claim is hollow.
+schema_version: "0.1"
+scenario_id: SCT-002
+title: Fixture — scoring-class scenario with no generator seed
+scenario_class: scoring
+vertical: fraud
+typology: card_not_present
+scoring:
+  parameters:
+    amount:
+      min: 1.0
+      max: 5000.0
+  n_records: 500
+  expected_outcome:
+    metric: roc_auc
+    direction: higher_is_better
+migration_diff:
+  comparison: bit_identical
+acceptance:
+  metric: roc_auc
+  operator: ">="
+  value: 0.85

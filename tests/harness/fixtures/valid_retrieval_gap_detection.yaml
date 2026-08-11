@@ -1,0 +1,42 @@
+# TEST FIXTURE — not a reference document and not a real scenario.
+# The schema at arcaai/harness/schema/scenario_spec_v0.1.schema.json is the
+# sole authority on what a valid spec is. This file is exercise material:
+# its ids, hashes and corpus references are deliberately synthetic so it
+# cannot be mistaken for a scenario anyone should run.
+schema_version: "0.1"
+scenario_id: RGD-001
+title: Fixture — planted-gap detection over a synthetic snapshot
+description: >
+  Exercises the amendment 5 scoring path: the retriever should decline to
+  ground a claim for which no grounding document exists, and should avoid
+  the near-miss distractors a similarity ranker would otherwise surface.
+scenario_class: retrieval
+vertical: fraud
+typology: disclosure_regime
+corpus_snapshot:
+  manifest_version: "0.0-fixture"
+  manifest_sha256: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+  retrieval_snapshot_sha256: "fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210"
+retrieval:
+  retrieval_kind: gap_detection
+  query: What obligation applies where the disclosure provision is not held in the corpus?
+  top_k: 5
+  distractor_document_ids:
+    - FIXTURE-0001
+    - FIXTURE-0002
+    - FIXTURE-0003
+  ground_truth_ref: D1
+  scoring_method: gap_detection
+  gap_detection_scoring:
+    abstention_weight: 0.6
+    distractor_avoidance_weight: 0.4
+migration_diff:
+  comparison: tolerance
+  tolerance:
+    metric: gap_detection_score
+    max_abs_delta: 0.02
+    nondeterminism_source: approximate nearest-neighbour ordering in the vector store
+acceptance:
+  metric: gap_detection_score
+  operator: ">="
+  value: 0.8
