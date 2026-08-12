@@ -135,10 +135,8 @@ with the test cited as provenance.
 
 ## Open verifications carried forward
 
-1. **`.claude/` CI coverage is a green of unknown meaning.** Two checks passed on
-   a PR whose largest surface was `.claude/`, and no workflow's `paths` filter
-   was confirmed to name that directory. Not a known gap — an unverified pass,
-   which is the worse shape. Queue item 24.
+1. ~~**`.claude/` CI coverage is a green of unknown meaning.**~~ **SETTLED after
+   this file was authored — see the addendum below.** Queue item 24.
 2. **Skill and subagent hook routing remain unprobed**, as do the Tier 1 and
    Tier 2 rule strings. Only PowerShell-tool routing is now evidenced. Queue
    item 4(c).
@@ -172,3 +170,35 @@ widened from five skills to eight.
 
 The next arc should be a build item under DEC-0017. Nearest is queue item 3,
 which sits behind the operator's item 2.
+
+## Addendum — after this file was authored, same session
+
+Two acts followed the close, in DEC-0017 order: the build item first, the
+governance correction after it presented.
+
+**Open verification 1 is settled, and the concern was disconfirmed.**
+`.github/workflows/ci-devops.yml` line 33 names a recursive `.claude/` entry
+explicitly and has since `402e698`. The `lint-test` pass on PR #98 was genuinely triggered by, and
+did cover, the `.claude/` changes. Queue item 24 is rewritten accordingly rather
+than deleted, because a disconfirmed suspicion is evidence and the read that
+settled it is the read that found the real gap.
+
+**The real gap is narrower and in the checker, not the filters.**
+`scripts/check_docs.py` scopes itself to `ROOTS = ("docs", "decisions")` plus a
+root-level `*.md` glob, so the ten markdown files under `.claude/` are never
+structurally checked at all — by CI or locally. Their repo-relative path
+citations are unverified, and the house rule is that a cited path must exist.
+Recorded tonight as queue item 25; the fix is a future session's work.
+
+**A bounded `corpus-lister` pilot ran as the build act**, three documents and
+three concurrent agents, drafts only, nothing committed and the corpus untouched.
+Full record at `docs/governance/PILOT_2026-08-12_corpus-lister-fan-out.md`. It
+found that the agent cannot perform its own core function — its definition
+ordered hashes "computed, not guessed" while granting no execution tool, so every
+invocation reports failure mode 2 on the identity field. Four transcription
+defects in `.claude/agents/corpus-lister.md` were repaired; three design
+questions it raised were deliberately left for ruling at queue item 26. The
+agents' conduct was the pilot's best outcome: all three refused to fabricate a
+hash, all three left deliberately malformed placeholders so a paste-through
+fails loudly, and all three independently found that the "two-hash design per
+document" their own brief demanded does not exist.

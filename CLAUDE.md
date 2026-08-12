@@ -498,15 +498,58 @@ this section is a working pointer, not the record.
     excepted at `/session-close`. Note against this queue: items 1, 2
     and 3 are the near-term build lane; most of the remainder are
     refinement and now yield to them. Detail: `DECISIONS.md` DEC-0017.
-24. **`.claude/` CI paths-filter coverage is UNVERIFIED** — NEW
-    2026-08-12, and it is a green-of-unknown-meaning rather than a
-    known gap. PR #98's largest surface was `.claude/`, both checks
-    reported pass, and no workflow's `paths` filter was confirmed to
-    name that directory — so the passes may not have covered the
-    changed files at all. Same family as item 6 and the fourth
-    appearance of the paths-filter class. Cheap to settle: read the
-    three filters against a `.claude/` path. Detail: PR #98 body,
-    "Not addressed here", and the closing report of this arc.
+24. **`.claude/` CI paths-filter coverage — SETTLED 2026-08-12, and
+    the concern was DISCONFIRMED.** `.github/workflows/ci-devops.yml`
+    line 33 names a recursive `.claude/` entry explicitly, and has
+    since `402e698`
+    ("Close the CI paths-filter gap: WS-E 62"). The `lint-test` pass on
+    PR #98 was therefore genuinely triggered by, and did cover, the
+    `.claude/` changes; that green meant what it appeared to mean.
+    Recorded rather than deleted because the item was raised as a
+    suspected false green and the check that settled it is the same
+    read that found item 25 — a disconfirmed suspicion is evidence, and
+    a queue that only records confirmed defects teaches the wrong
+    lesson about which checks were worth running.
+25. **`scripts/check_docs.py` does not scan `.claude/`** — NEW
+    2026-08-12, FINDING RECORDED, fix is a future session's work. The
+    script's scope is `ROOTS = ("docs", "decisions")` plus a root-level
+    `*.md` glob, so the **ten** markdown files under `.claude/` — five
+    ceremony skills, three reference skills, two agent definitions —
+    are never structurally checked, by CI or by `scripts\test.cmd`. No
+    paths filter can reach this; the scope is in the script. It matters
+    because those files cite repo-relative paths in backticks and the
+    house rule is that a cited path must exist: a skill citing a moved
+    file would fail silently and surface only when an agent followed
+    the dead path. Same family as item 6.
+    **A second defect in the same script, found while writing this
+    item and of the opposite polarity — a FALSE-RED (check-method
+    failure mode 3).** The bold-parity check counts doubled-asterisk
+    markers without excluding code spans, so a backticked glob ending
+    in a doublestar — the exact string `ci-devops.yml` line 33 uses —
+    is counted as an unterminated bold marker and the document is
+    failed while being correct. It fired twice on this very queue
+    edit, and the wording above is phrased around it rather than
+    triggering it, which is a workaround and not a fix. Note the shape:
+    the checker cannot express the one path expression this repository
+    most needs to cite in prose. Detail:
+    `docs/governance/PILOT_2026-08-12_corpus-lister-fan-out.md` and the
+    settling read at item 24.
+26. **`corpus-lister` scaling decisions owed before any wider fan-out**
+    — NEW 2026-08-12, three design questions the pilot raised and did
+    not decide. (a) Whether the agent should hold an execution tool at
+    all, a permissions decision deliberately not taken as part of the
+    transcription repair; (b) whether fan-out is the right instrument,
+    given `scripts/corpus_manifest_entries.py` already emits a complete
+    entry with hash for every unlisted document in one pass and writes
+    nothing — the mechanical fields want a script, and the agents' real
+    contribution was governance judgment; (c) the divergent shapes need
+    pre-ruling, `processing` as `null` versus placeholder and the
+    eligibility date as authoring act versus listing act, both of which
+    validate against the parser. Note also that the listing debt is
+    **seven documents wide, not three** — SG-03 through SG-09 are all
+    unlisted — and that SG-03..06 stay excluded pending the item 9
+    scope decision. Detail:
+    `docs/governance/PILOT_2026-08-12_corpus-lister-fan-out.md`.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
