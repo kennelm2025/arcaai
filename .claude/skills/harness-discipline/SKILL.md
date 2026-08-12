@@ -37,6 +37,17 @@ temporary elevation to unblock a task.
 - Writes under `HKLM`, `Program Files`, `C:\Windows`
 - Service install/uninstall/restart requiring admin
 - Docker Desktop settings changes requiring admin consent
+- **Assuming a privileged database account** — the cluster superuser or the
+  schema owner role (`arcaai`, `arcaai_owner`). The harness connects as
+  `arcaai_app` and no other. This holds for reads: the rule is written about
+  which account is assumed, never about what is done once assumed, precisely
+  so that "it was only a SELECT" never has to be adjudicated. Provenance:
+  WS-E 66 (2026-08-12), where three read-only inspections issued as the
+  cluster superuser were self-disclosed as a breach, and where the
+  non-elevated route turned out to have existed all along — `pg_database` is
+  world-readable, so the listing that prompted it never needed the superuser.
+  Before reaching for the account that certainly works, check whether the
+  unprivileged one suffices; it costs nothing.
 
 ## Relationship to the ruled permission system
 

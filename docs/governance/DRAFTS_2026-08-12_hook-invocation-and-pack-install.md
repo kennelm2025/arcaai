@@ -4,8 +4,23 @@ Register anchor: REPO_MANIFEST regenerated this session 2026-08-12 09:01 UTC —
 WS-E highest 67 → **next 68**; DEC highest 0016 → next 0017; ADR highest 0010 →
 next 0011; CL highest 25 → next 26. Divergences 0.
 
-Nothing below is ruled. Unconsumed numbers are cited as "next N" per the PR #85
-correction note.
+**RULED 2026-08-12.** This file was the drafting surface for the arc and is
+retained as provenance for what was proposed and on what evidence. All items
+below were subsequently ruled in by the operator and have landed in their
+governed homes:
+
+- The WS-E draft at §1 is now **WS-E 68** in `docs/governance/WS-E_INCIDENTS.md`.
+- Both convention lines at §2 are now in `CLAUDE.md`, "Conventions that will
+  bite you".
+- Hook path §3 **Option A** was ruled in and applied; the machine-specific
+  absolute path was an interim within this PR and does not survive in it.
+- The companion change at §4 was ruled in and applied to
+  `.claude/hooks/governance_guard.py`.
+
+Register numbers consumed by this arc: **DEC-0017** and **WS-E 68**, both read
+from a manifest regenerated in-session. Where the text below still says "next
+68" it is preserved as written at drafting time, per the PR #85 convention
+that an unconsumed number is cited as "next N".
 
 ---
 

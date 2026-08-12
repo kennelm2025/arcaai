@@ -698,6 +698,71 @@ regardless of surrounding prose).*
     `Measure-Object -Line` instance and the queue-block measurement — a
     check whose stated subject is not the subject it interrogates.
 
+68. **A relative-path hook command plus a persisted shell cwd deadlocked
+    every tool, fail-closed (2026-08-12).** `.claude/settings.json` invoked
+    the governance guard as `python .claude/hooks/governance_guard.py`, a
+    path resolved against the process working directory. A `cd .claude`
+    issued in the persistent PowerShell session moved that directory to
+    `.claude`, where that relative path does not resolve. Every subsequent
+    call matching the PreToolUse matcher then invoked a hook that could not
+    start. The session could not run a command, could not edit a file, and
+    could not navigate back: the single act that would have cleared the
+    condition was gated by the gate it had broken. Cleared by ending the
+    session, a fresh one starting at repository root. NO HARM, and the
+    direction is the whole point — the guard failed CLOSED. A hook that
+    cannot execute blocked the tool rather than waving it through, so at no
+    moment was an ungoverned write available; the deadlock was the control
+    working, not the control absent. That is the property credited at item
+    67, and the defect is the fragility of the invocation, never the policy.
+
+    The remediation then reproduced the outage twice more, which is the more
+    useful half of this entry. First, the absolute path was written with
+    escaped backslashes; these are unescaped twice — JSON decodes the pair to
+    one, then command parsing consumes the survivor as an escape character —
+    collapsing the path into a single mangled filename and deadlocking the
+    session again, this time inside the corrective itself. Forward slashes
+    carry no escaping layer and resolve correctly on Windows. Second, two
+    successive operator fixes were reported applied while the loaded
+    configuration stayed unchanged. The first account attributed this to a
+    shadowing `settings.local.json`; enumeration disproved that — exactly one
+    guard line existed anywhere in any settings file — and the cause was a
+    stale editor buffer writing old content over new, an edit reporting saved
+    while the buffer's stale content is what lands. Corrective: configuration
+    fixes are applied by shell string-replace with the read-back appended to
+    the same act, never through an editor whose buffer state is unverifiable.
+
+    A read-once-at-session-start hypothesis was raised and excluded on
+    evidence already in hand rather than by spending a restart: the first
+    mis-edit took effect on the very next tool call, so hook configuration is
+    re-read per invocation. The accidental experiment that caused the outage
+    supplied the evidence that bounded it.
+
+    A second instance of the original root cause was found in the same read:
+    `current_branch()` ran `git rev-parse --abbrev-ref HEAD` with no `cwd=`,
+    inheriting the same ambient directory. Outside a repository it returns
+    `None`, which the guard already treats as UNKNOWN and asks on —
+    fail-closed again — but inside a *different* repository it would report
+    that repository's branch and could clear the HEAD-is-main gate on
+    evidence from the wrong tree. Corrective is load-bearing rather than
+    promissory: the invocation now uses the exec form with
+    `${CLAUDE_PROJECT_DIR}`, a placeholder substituted by the harness itself
+    rather than by a shell and therefore immune to both the cwd dependence
+    and the re-parsing that produced the second deadlock; and the guard
+    derives its repository root from its own file location.
+
+    CLASS NOTE, two parts. An enforcement path must not depend on ambient
+    state that any ordinary act can change; a working directory is the most
+    easily changed ambient state there is, and this outage was self-inflicted
+    by one routine navigation command. And on probe shape: the guard was
+    certified restored only by a DENY-shaped probe returning the guard's own
+    refusal text verbatim, paired with an ALLOW-shaped probe that succeeded.
+    A dead hook and a working hook are indistinguishable from any command
+    that was going to be allowed anyway, so an allow-shaped probe alone would
+    have passed a dead guard silently three times over. Same family as items
+    64 and 67 — a check whose stated subject is not the subject it
+    interrogates — and this is the reported-done-not-done class at its fourth
+    appearance in two days.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a

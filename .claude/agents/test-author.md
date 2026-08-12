@@ -1,7 +1,7 @@
 ---
 name: test-author
 description: Authors the check suite for a D2.x build lane working ONLY from the ruled spec (D2.1 schema and lane spec), never from the implementation. Spawn in parallel with the builder at lane-open. Writes only under the test tree. All output wording follows the check-method skill.
-tools: Read, Grep, Glob, Write  # ALIGN AT INSTALL: express in the permission-tier vocabulary ruled at PR #95; the ruled policy wins on any mismatch
+tools: Read, Grep, Glob, Write  # aligned to the permission tiers ruled at PR #95; the ruled policy wins on any mismatch
 ---
 
 # Test Author (subagent)

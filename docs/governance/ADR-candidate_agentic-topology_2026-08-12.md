@@ -7,8 +7,9 @@ not yet ruled. May alternatively land as an ADR-0009 extension — that is part 
 
 ## Context
 
-ADR-0009 established the platform/vertical boundary architecturally. ADR-0012 (Brain/Hands
-Decoupling) established the structural spine. Neither yet extends the boundary into the
+ADR-0009 established the platform/vertical boundary architecturally. The Brain/Hands Decoupling
+candidate (unnumbered, v0.2, not yet ruled) proposes the structural spine. Neither yet extends
+the boundary into the
 **operating model** — how teams organise around it as the venture scales beyond one builder.
 
 ## Proposal

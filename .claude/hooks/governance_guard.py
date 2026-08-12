@@ -28,9 +28,20 @@ inspected. WS-E 64 records what happens when they disagree.
 Cross-platform: pure stdlib, no shell assumptions. Windows-safe.
 """
 import json
+import pathlib
 import re
 import subprocess
 import sys
+
+# The repository this guard governs, derived from the guard's own location
+# rather than from the working directory. WS-E 68 (2026-08-12): a relative
+# invocation path plus a persisted cwd deadlocked every tool fail-closed, and
+# the same read found current_branch() inheriting the ambient directory - so
+# inside a DIFFERENT repository it would have reported that repository's
+# branch and could have cleared the HEAD-is-main gate on evidence from the
+# wrong tree. An enforcement path must not depend on ambient state that any
+# ordinary act can change.
+REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 
 # Every tool that executes a shell command string. PowerShell is this
 # repo's primary shell, and both halves of the guard missed it until
@@ -125,7 +136,7 @@ def current_branch() -> str | None:
     try:
         result = subprocess.run(
             ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            capture_output=True, text=True, timeout=5,
+            cwd=REPO_ROOT, capture_output=True, text=True, timeout=5,
         )
     except Exception:
         return None

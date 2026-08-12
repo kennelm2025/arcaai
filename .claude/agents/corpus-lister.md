@@ -1,7 +1,7 @@
 ---
 name: corpus-lister
 description: Drafts a single corpus listing entry for one document in the ArcaAI fraud RAG corpus, to the DEC-0014 manifest standard. Spawn one instance per outstanding document to clear corpus listing debt in parallel. Read-only against the corpus source; writes only its own draft listing file for lead-agent collation.
-tools: Read, Grep, Glob, Write  # ALIGN AT INSTALL: express in the permission-tier vocabulary ruled at PR #95; the ruled policy wins on any mismatch
+tools: Read, Grep, Glob, Write  # aligned to the permission tiers ruled at PR #95; the ruled policy wins on any mismatch
 ---
 
 # Corpus Lister (subagent)

@@ -1,7 +1,14 @@
 # ruling-briefs/ — Tier 2 briefs for the Mobile Ruling Protocol
 
-**Status:** DRAFT — the Mobile Ruling Protocol is a candidate awaiting Mike's ruling.
-Nothing in this directory is a rule until that ruling is recorded.
+**Status: ADOPTED AS PILOT (ruled 2026-08-12) — not a permanent rule.** The
+Mobile Ruling Protocol runs in this form, with its issue template and the
+`ruling-requested` / `ruled` / `desk-only` labels, as a trial.
+
+**Review clause:** after the first **five** mobile rulings have been made and
+transcribed, the protocol is reviewed and its permanence decided. Until that
+review returns, nothing here is settled practice and no other document should
+cite it as established. The review is the operator's, and its outcome is
+recorded as a decision entry.
 
 <!-- FALLBACK COPY prepared claude.ai-side 12 Aug 2026. Pack version wins on conflict. -->
 

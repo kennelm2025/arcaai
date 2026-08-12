@@ -5,8 +5,12 @@ description: How to write and report checks, gates, verification steps, and succ
 
 # Check Method Family
 
-Standing rules (ruled by Mike; six recorded instances in the check-method
-family; provenance: WS-E register and D2.2a pre-flight root-cause finding).
+Standing rules (ruled by Mike). Provenance: the check-method defect family in
+`docs/governance/WS-E_INCIDENTS.md`, the standing queue item that tracks it in
+`CLAUDE.md`, and the D2.2a pre-flight root-cause finding. The family is cited
+by reference and never by count: a number in this file rots the moment the next
+instance lands, and instances have been arriving faster than this file is
+edited.
 
 ## Rule 1 — The success line states what it actually checked
 

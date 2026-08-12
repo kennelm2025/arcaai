@@ -232,8 +232,22 @@ ONNX cache traversal check, before other work.
   a substitution — renders clean-absence and check-never-ran identically, because `grep`
   exits non-zero on no match and the fallback swallows it into an empty string. A check
   whose green is indistinguishable from its not having run is the check-method family
-  (queue item 9), and it is worse here for appearing in the very command written to
+  (queue item 8), and it is worse here for appearing in the very command written to
   verify a house rule.
+- **The harness never bare-`cd`s in a persistent shell.** Commands address files by
+  absolute path, or wrap a directory change in `Push-Location` / `Pop-Location` with a
+  guaranteed restore. A persisted working directory is ambient state that outlives the
+  command that set it, and on 2026-08-12 a single `cd .claude` broke the governance
+  hook's relative invocation path and deadlocked every tool fail-closed (WS-E 68).
+- **A hook or permission change is verified by re-reading the loaded file AND a
+  deny-shaped probe** — never by the editor's word, and never by a command that would
+  have been allowed anyway. The probe must return the guard's own refusal text verbatim;
+  a refusal arising from a broken invocation is indistinguishable from a genuine denial
+  at the blocked level, and an allow-shaped probe cannot tell a live guard from a dead
+  one at all. Pair it with one allow-shaped call to prove the guard discriminates rather
+  than merely blocks. Apply config fixes by shell string-replace with the read-back
+  appended to the same act: an editor can report a save while a stale buffer is what
+  lands, which is what defeated two successive fixes (WS-E 68).
 - **Cite an unconsumed register number as "next N", never as a bare "N"** in any document
   under `docs/`. `scripts/repo_manifest.py` cannot distinguish a bare number from a claim
   that the item exists, and reports a spurious divergence. Established by the PR #85
