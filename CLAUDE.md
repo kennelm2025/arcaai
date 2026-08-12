@@ -359,8 +359,14 @@ this section is a working pointer, not the record.
    wholesale; (b) whether a deny is pre-empted the same way is untested
    and has no safe probe, so no command family carrying a deny may be
    allow-listed; (c) the rule strings themselves, and hook routing of
-   skill and subagent calls, remain unverified. Detail:
-   `docs/governance/HARNESS_PERMISSION_TIERS_2026-08-11.md`.
+   skill and subagent calls, remain unverified — NARROWED 2026-08-12:
+   hook routing for the PowerShell tool is now positively evidenced, a
+   deny-shaped probe having returned the guard's own refusal text and
+   an allow-shaped probe having succeeded, repeatedly and across
+   changes to both the invocation and the guard's own code. Skill and
+   subagent routing remain unprobed, as do the rule strings. Detail:
+   `docs/governance/HARNESS_PERMISSION_TIERS_2026-08-11.md` and
+   `docs/governance/WS-E_INCIDENTS.md` item 68.
 5. **Corpus listing owed for SG-07, SG-08 and SG-09** — OPEN;
    operator's decision whether it clears in one act or per document.
    Detail: `docs/governance/SESSION_HANDOVER_2026-08-11c.md` open
@@ -393,16 +399,38 @@ this section is a working pointer, not the record.
    clean-absence and check-never-ran identically. The last two were
    found in commands written to verify a house rule, and the trailer
    convention in "Conventions that will bite you" was amended twice on
-   2026-08-12 as a result. Detail:
-   `docs/governance/FINDINGS_2026-08-11_onnx-acl-root-cause.md` §5 and
-   `docs/governance/SESSION_HANDOVER_2026-08-11b.md` open verification 3.
+   2026-08-12 as a result. The pack-install arc of 2026-08-12 added two
+   further instances and one counter-example. Instances: the
+   reported-done-not-done class at its fourth and fifth appearances,
+   twice in one session, a configuration fix reported applied while the
+   loaded file was unchanged; and `.claude/` CI coverage, where two
+   passing checks may not have covered the changed files at all, now
+   carried separately at item 24. Counter-example worth keeping,
+   because this item has accumulated failures and no method: the guard
+   was certified only by a DENY-shaped probe returning its own refusal
+   text verbatim, paired with an ALLOW-shaped probe. A dead hook and a
+   working hook are indistinguishable from any command that was going
+   to be allowed anyway, so the allow-shaped probe alone would have
+   passed a dead guard silently three times over. That pairing is the
+   first positive discriminator this family has produced and is a
+   candidate for the pattern-level ruling. Detail:
+   `docs/governance/FINDINGS_2026-08-11_onnx-acl-root-cause.md` §5,
+   `docs/governance/SESSION_HANDOVER_2026-08-11b.md` open verification 3,
+   and `docs/governance/WS-E_INCIDENTS.md` item 68.
 9. **Batch-2 panel circulation** — UNBLOCKED; scope decision owed on
    whether SG-03..SG-06 sit inside it. Detail:
    `docs/governance/RULINGS_RECORD_2026-08-10_TOR-test-capability.md`.
 10. **Ceremony frontmatter harmonisation** — the residue of the
-    conventions item, which discharged at PR #94. All five skills under
-    `.claude/skills/` carry Bash-only `allowed-tools`, so Tier 1 grants
-    are not in force inside a ceremony. Narrows rather than widens, so
+    conventions item, which discharged at PR #94. The five ceremony
+    skills under `.claude/skills/` carry Bash-only `allowed-tools`, so
+    Tier 1 grants are not in force inside a ceremony. WIDENED
+    2026-08-12: PR #98 added three reference skills (`check-method`,
+    `commit-hygiene`, `harness-discipline`), taking the directory to
+    eight. The three new ones declare no `allowed-tools` at all, which
+    is a different shape from the five and unassessed — whether an
+    absent declaration inherits, denies or is simply inert has not been
+    established, and the count in this item should not be read as
+    covering them. Narrows rather than widens, so
     friction not exposure. Detail:
     `docs/governance/HARNESS_PERMISSION_TIERS_2026-08-11.md`,
     enforcement coverage.
@@ -452,6 +480,33 @@ this section is a working pointer, not the record.
     latent rather than breaking. Fixing it means the one-line addition
     plus a re-normalisation of two files. Detail: PR #96 body, "Known
     and not addressed here".
+22. **Mobile Ruling Protocol pilot review** — NEW 2026-08-12, ADOPTED
+    AS PILOT at PR #98, not a permanent rule. The review clause fires
+    after the first **five** mobile rulings have been made and
+    transcribed; until it returns, no document may cite the protocol
+    as settled practice. The review is the operator's and its outcome
+    is a decision entry. Counter starts at zero: no mobile ruling has
+    yet been made through the issue template. Detail:
+    `docs/governance/ruling-briefs/README.md`.
+23. **DEC-0017 build-first right of way is now STANDING and binds arc
+    selection** — NEW 2026-08-12. Every session merges, or materially
+    advances toward merge, at least one build-queue artefact before any
+    governance refinement item is taken up; the exception is narrow
+    (*directly blocks* a merge) and carries an evidential obligation,
+    the blocking relationship being stated in the session record. Binds
+    at the arc-selection step of `/session-open` and is discharged or
+    excepted at `/session-close`. Note against this queue: items 1, 2
+    and 3 are the near-term build lane; most of the remainder are
+    refinement and now yield to them. Detail: `DECISIONS.md` DEC-0017.
+24. **`.claude/` CI paths-filter coverage is UNVERIFIED** — NEW
+    2026-08-12, and it is a green-of-unknown-meaning rather than a
+    known gap. PR #98's largest surface was `.claude/`, both checks
+    reported pass, and no workflow's `paths` filter was confirmed to
+    name that directory — so the passes may not have covered the
+    changed files at all. Same family as item 6 and the fourth
+    appearance of the paths-filter class. Cheap to settle: read the
+    three filters against a `.claude/` path. Detail: PR #98 body,
+    "Not addressed here", and the closing report of this arc.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
