@@ -174,3 +174,35 @@ Rows: 52. Identity digest (sha256): `5184a6d098e65c6e8408688709bbdec61bba4ebdb5e
 019ff123-d18b-7049-bd2f-347f5b67e427
 019ff123-d1da-7f94-8f52-b31401b1a0c8
 ```
+
+## AFTER-CLEANUP
+
+Rows: 0. Identity digest (sha256): `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+
+
+### AFTER-CLEANUP — corpus_version (0 row(s))
+
+```
+(no rows)
+```
+
+
+### AFTER-CLEANUP — audit_run (0 row(s))
+
+```
+(no rows)
+```
+
+
+### AFTER-CLEANUP — audit_event (0 row(s))
+
+```
+(no rows)
+```
+
+
+### AFTER-CLEANUP — audit_run_terminal (0 row(s))
+
+```
+(no rows)
+```
