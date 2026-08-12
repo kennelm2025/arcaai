@@ -352,8 +352,19 @@ this section is a working pointer, not the record.
    carried at item 28. Detail: `DECISIONS.md` DEC-0016,
    `docs/governance/GOVERNANCE_REVIEW_CHANGELOG.md` CL-24, and
    `docs/governance/CL-24_governed-store-baseline_2026-08-12.md`.
-3. **D2.2a pre-flight implementing artefact** — sequenced after item 2,
-   not before it. Claims the next free CL number. Detail:
+3. **D2.2a pre-flight implementing artefact** — **UNBLOCKED 2026-08-12
+   and it is the next arc.** Its blocker, item 2, discharged at PR #102
+   (`545075b`); the governed store is empty and the sweep green with no
+   carve-out, so Commissioning Session Records can now be written into
+   `arcaai_audit` without the next battery erasing them — which was the
+   dependency that made item 2 owed before this spike. Holds right of
+   way under DEC-0017 as a build artefact. Claims the next free CL
+   number, read live at the arc that opens it and not before. **Not
+   opened 2026-08-12:** ruled deliberately unstarted with 40 minutes
+   left, on the grounds that the arc could not be opened and closed
+   cleanly in the time and a half-written ceremony is worse than an
+   unstarted one. A read-only session brief was prepared instead.
+   Detail:
    `docs/governance/SESSION_HANDOVER_2026-08-11c.md` open verification 4
    and `docs/governance/FINDINGS_2026-08-11_onnx-acl-root-cause.md`.
    Reporting rule inherited: the spike closes with a Commissioning
