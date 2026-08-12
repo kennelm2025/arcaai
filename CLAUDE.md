@@ -220,8 +220,11 @@ ONNX cache traversal check, before other work.
   rule rather than a habit. **Assert it against the full printed body, never against a
   recalled impression of it** (ruled 2026-08-12): print the complete message body with
   `git log -1 --format=%B`, and for a branch `git log main..HEAD --format=%B`, as
-  in-session evidence, then assert absence case-insensitively and *anywhere in the body*,
-  not only in the trailer block — and say in the success line which bodies were read.
+  in-session evidence, then assert against that full printed body that **no line asserts
+  co-authorship**. An attribution line is the token at line start, a colon, and a name or
+  address; prose mentioning the token — this bullet, or a commit message discussing the
+  rule — is not attribution. Case-insensitive, and anywhere in the body rather than only
+  in the trailer block. Say in the success line which bodies were read.
   Two methods are specifically excluded, both found during CL-24 commit verification.
   `%(trailers)` parses only the final paragraph, so a `Co-Authored-By` line sitting
   mid-message expands to nothing and the check reports zero while the line is plainly
