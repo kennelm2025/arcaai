@@ -57,7 +57,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/hooks/governance_guard.py",
+            "command": "python",
+            "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/governance_guard.py"],
             "timeout": 10,
             "statusMessage": "Governance guard..."
           }
