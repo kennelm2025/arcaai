@@ -610,6 +610,21 @@ this section is a working pointer, not the record.
     least as load-bearing. Evidence basis is stated honestly in the
     candidate: there is no literal prompt log, and inferred rows are
     marked as such.
+    **Extended 2026-08-12 with a merge-delegation clause**, for
+    ruling: `gh pr merge` moves from unconditional ask to CONDITIONAL,
+    permitted only when the PR carries the operator's own GitHub review
+    approval **against the current head SHA** and all checks are green,
+    both read by the guard from live GitHub state rather than from a
+    rule string. The approval is the ruling record; the merge is then
+    mechanics, and re-asking makes the operator rule twice for one
+    decision. Every other Class B row stays operator-only unchanged.
+    Three mechanics are specified because without them the clause does
+    not hold: approval pinned to head SHA, so approve-push-merge cannot
+    launder an unreviewed change; approval matched by operator
+    identity, so a future collaborator does not inherit the delegation;
+    and unreachable or unparseable GitHub is UNKNOWN, which asks — a
+    delegation that failed open would be the register's oldest failure
+    shape with merge rights attached.
     **Ruling condition, a condition and not a preference: the
     widening, the rule-string restatement and the `.claude/agents/`
     narrowing land TOGETHER, in ONE PR, each tested by probe.** They

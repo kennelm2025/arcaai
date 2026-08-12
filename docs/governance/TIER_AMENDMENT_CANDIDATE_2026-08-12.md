@@ -48,9 +48,65 @@ amendment.
 | `gh pr merge` | `ASK_COMMAND_RES` | Yes |
 | Any git write while HEAD is main | `GIT_WRITE_RE` + branch check | INFERRED — avoided all session by branching first |
 
-These are the acts the operator must keep. Merge, main, the registers, the corpus
-tree, the settings and ceremony system, and elevation stay operator-only under
-this candidate, without exception.
+These are the acts the operator must keep. Main, the registers, the corpus tree,
+the settings and ceremony system, and elevation stay operator-only under this
+candidate, without exception. **Merge is the single exception and is treated
+separately below** — it moves from unconditional ask to conditional, and every
+other Class B row is unchanged.
+
+### Class B exception — merge delegation (added 2026-08-12, for ruling)
+
+`gh pr merge` moves from **unconditional ASK** to **CONDITIONAL**. It is
+permitted only when both hold:
+
+- **(a)** the pull request carries the operator's own GitHub review approval, and
+- **(b)** all checks on it are green.
+
+**Both conditions are checked by the guard against live GitHub state, never by a
+rule string.** A rule string matches command text; it cannot read whether a
+review exists or whether checks passed. This is the same reason the
+HEAD-is-main condition already lives in the guard rather than in
+`permissions.allow`.
+
+The reasoning: the operator's approval **is** the ruling record. Once it exists
+on the PR, the merge command is mechanics — re-asking at the terminal makes the
+operator rule twice for one decision, and the second ask carries no information
+the first did not. Approval given at a session STOP and approval given from
+GitHub mobile are the same act and the same record.
+
+**Three mechanics that must be specified or the clause does not hold:**
+
+1. **The approval must be against the current head SHA.** A review approves a
+   state, not a branch. Approve, push a further commit, then merge, and the
+   merged content is content nobody approved — the delegation would launder an
+   unreviewed change through a stale approval. The guard therefore reads the
+   review's commit against the PR's current head and treats a stale approval as
+   no approval. GitHub's own dismissal behaviour is not relied on, because it is
+   a repository setting that may or may not be enabled.
+2. **The approval must be the operator's, by identity.** Any approving review is
+   not the condition; the named repository owner's is. A future second
+   collaborator must not inherit the delegation by side effect.
+3. **Unreachable GitHub is UNKNOWN, and UNKNOWN asks.** Both conditions require a
+   network call inside a PreToolUse hook bounded by a 10-second timeout. If the
+   call fails, times out, is rate-limited, or returns anything the guard cannot
+   parse, the condition is **not evaluated** — and an unevaluated condition is
+   never a pass. The guard falls back to ASK. This is the check-method rule the
+   whole register turns on: an UNKNOWN rendered as a green is the shape every
+   false green here has taken, and a delegation that fails open would be that
+   shape with merge rights attached.
+
+**Blocked behind the rule-string restatement, like every other widening in this
+document.** It lands in the same probe-tested PR as queue items 27 and 29, and
+is subject to the same ruling condition: widening, rule-string restatement and
+the `.claude/agents/` narrowing land together or not at all. Probe-tested here
+means specifically demonstrating the **refusals** — that an unapproved PR, a
+stale-approval PR, a red-check PR and an unreachable-GitHub condition each still
+ask — before demonstrating that the permitted case proceeds. A delegation whose
+only evidence is that the happy path worked has not been tested at all.
+
+**Sequencing under DEC-0017:** that PR is governance refinement, so it follows
+the next build arc — queue item 30, the D2.2a runner spike. Same session is
+acceptable; the spike goes first.
 
 ### Class C — prompted, and arguably arc mechanics. The amendment's subject.
 
