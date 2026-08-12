@@ -550,6 +550,45 @@ this section is a working pointer, not the record.
     unlisted — and that SG-03..06 stay excluded pending the item 9
     scope decision. Detail:
     `docs/governance/PILOT_2026-08-12_corpus-lister-fan-out.md`.
+27. **Permission-tier review — CANDIDATE DRAFTED, awaiting ruling; not
+    a change.** Occasion: tonight's pilot ran three subagents cleanly
+    and concurrently inside their own tool grants while the lead
+    needed operator approval for read-only inspection, scratchpad
+    writes and pull-request waiting mechanics. The candidate
+    classifies every prompting act of the session into deny (correct,
+    unchanged), operator-only ask (correct, unchanged) and arc
+    mechanics (proposed auto-allow while HEAD is not main). Merge,
+    main, the registers, the corpus tree, settings and elevation stay
+    operator-only without exception, and `gh pr merge` is explicitly
+    excluded from the widening. **Two findings outrank the widening.**
+    First, the Tier 1 rule strings are written for relative invocation
+    and tonight's own no-bare-`cd` convention broke them — an absolute
+    invocation does not match a relative rule, so the grants for the
+    mandatory batteries stopped matching the way those batteries must
+    now be invoked; lines 49-50 of `.claude/settings.json` already
+    carry absolute duplicates for two scripts, so the pattern was
+    evidenced in the tree before tonight. That closes the open half of
+    item 4(c): the rule strings are no longer unverified, they are
+    verified and wrong. Second, the review proposes a **narrowing** as
+    well — `.claude/agents/` is absent from the guard's protected
+    patterns, so agent definitions edit ungated while skills prompt,
+    though an agent definition states what a subagent may do and is at
+    least as load-bearing. Evidence basis is stated honestly in the
+    candidate: there is no literal prompt log, and inferred rows are
+    marked as such.
+    **Ruling condition, a condition and not a preference: the
+    widening, the rule-string restatement and the `.claude/agents/`
+    narrowing land TOGETHER, in ONE PR, each tested by probe.** They
+    cannot be separated. Widening while the rule strings still assume
+    relative invocation grants latitude that silently fails to apply
+    where it is needed and may apply where it is not; narrowing later
+    leaves agent definitions ungated through the very window in which
+    the widening makes agent work easier. Probe-tested means what it
+    meant tonight — a deny-shaped call returning the guard's own
+    refusal text, paired with an allow-shaped call that succeeds —
+    never a reading of the rule that finds it plausible. Detail:
+    `docs/governance/TIER_AMENDMENT_CANDIDATE_2026-08-12.md` and
+    `docs/governance/HARNESS_PERMISSION_TIERS_2026-08-11.md`.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
