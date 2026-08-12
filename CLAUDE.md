@@ -217,7 +217,20 @@ ONNX cache traversal check, before other work.
 - **No `Co-Authored-By` trailer on any commit in this repo**, and none in PR bodies.
   Ruled first for corpus authoring; practice then ran ahead of the rule across non-corpus
   commits, PR bodies and code for ten consecutive instances, which made it an unwritten
-  rule rather than a habit. Assert it by trailer count, never by eyeball.
+  rule rather than a habit. **Assert it against the full printed body, never against a
+  recalled impression of it** (ruled 2026-08-12): print the complete message body with
+  `git log -1 --format=%B`, and for a branch `git log main..HEAD --format=%B`, as
+  in-session evidence, then assert absence case-insensitively and *anywhere in the body*,
+  not only in the trailer block — and say in the success line which bodies were read.
+  Two methods are specifically excluded, both found during CL-24 commit verification.
+  `%(trailers)` parses only the final paragraph, so a `Co-Authored-By` line sitting
+  mid-message expands to nothing and the check reports zero while the line is plainly
+  visible in the text. And a count piped through a fallback — `grep -c … || true` inside
+  a substitution — renders clean-absence and check-never-ran identically, because `grep`
+  exits non-zero on no match and the fallback swallows it into an empty string. A check
+  whose green is indistinguishable from its not having run is the check-method family
+  (queue item 9), and it is worse here for appearing in the very command written to
+  verify a house rule.
 - **Cite an unconsumed register number as "next N", never as a bare "N"** in any document
   under `docs/`. `scripts/repo_manifest.py` cannot distinguish a bare number from a claim
   that the item exists, and reports a spurious divergence. Established by the PR #85
