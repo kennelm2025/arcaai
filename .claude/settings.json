@@ -57,7 +57,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/hooks/governance_guard.py",
+            "command": "python D:/ArcaAI-repo/arcaai/.claude/hooks/governance_guard.py",
             "timeout": 10,
             "statusMessage": "Governance guard..."
           }
