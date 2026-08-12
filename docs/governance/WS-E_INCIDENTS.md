@@ -687,10 +687,14 @@ regardless of surrounding prose).*
     failure was fail-closed. The suite errored at connect with no code
     path retrying against the governed database, so an absent test
     database could not silently redirect writes back into
-    `arcaai_audit`. CLASS NOTE: stdout success-reporting is not
-    existence evidence. A command printing CREATE DATABASE asserts that
-    a statement was submitted, not that the object exists; only a read
-    of the catalogue asserts that. Same family as item 64, the
+    `arcaai_audit`. CLASS NOTE: a report that a command was issued is
+    not existence evidence. What was conveyed here was the act, and no
+    output at all — the output went unread, which is precisely where
+    the failure was sitting. Only output actually read, or better a
+    read of the catalogue itself, establishes that an object exists.
+    The distinction is not pedantry about what psql prints: "I ran it"
+    and "it worked" are different claims, and only the second is
+    evidence. Same family as item 64, the
     `Measure-Object -Line` instance and the queue-block measurement — a
     check whose stated subject is not the subject it interrogates.
 
