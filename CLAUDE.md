@@ -301,46 +301,41 @@ this section is a working pointer, not the record.
 
 <!-- QUEUE-START -->
 1. **Boot ritual via /session-open** — STANDING. Divergences expect 0, a
-   plain stop with no carve-out. **The rehash sweep now expects RED**
-   until item 2 lands: exactly two `fixture-*` rows, replaced rather
-   than accumulated at every governance-suite run, classified 2026-08-11
-   as genuine mechanism and cause assigned to CL-24. A red sweep is no
-   longer a stop; a red sweep showing anything other than two
-   fixture-labelled rows is. Detail:
-   `docs/governance/SESSION_HANDOVER_2026-08-11c.md` boot line and the
-   2026-08-11d handover when authored.
+   plain stop with no carve-out. **The rehash sweep still expects RED**
+   until the residue cleanup at item 2 lands — the isolation landed at
+   PR #96 but the cleanup deliberately did not, so the two `fixture-*`
+   rows remain. They are no longer replaced at every run: since PR #96
+   the suite writes to `arcaai_audit_test`, so those two rows are now
+   static and the sweep names them under `category excluded-by-rule
+   (test) : 2` with `category irreproducible-pin : 0`. A red sweep of
+   that exact shape is not a stop; any other shape is. Detail:
+   `DECISIONS.md` DEC-0016 and `docs/governance/WS-E_INCIDENTS.md`
+   item 65.
    Sequencing note: where items encode a ruled sequence the numbering
    follows that sequence and not priority, and an in-place reduction of
    one item must not silently invert two —
    `docs/governance/SESSION_HANDOVER_2026-08-11b.md`, "Corrections
    landed this arc".
-2. **CL-24, test-database isolation — LIVE next arc**, promoted
-   2026-08-11 to owed-before-D2.2a. Scope as ruled: the separability
-   design decision (test writes and governed writes distinguishable on
-   sight, by database, schema or excluded-by-rule marker), the
-   write-path guard, the residue cleanup as an operator-commanded
-   owner-role act, and the sweep reporting excluded-by-rule state as a
-   named category rather than as silence. **Scope enlarged at the
-   2026-08-11d close by item 3, which is the same problem's sharper
-   face.** Detail: `docs/governance/WS-E_INCIDENTS.md` item 61.
-3. **The governance suite destroys the live audit store — NEW
-   2026-08-11d, WS-E entry owed, next 65.** `tests/governance/conftest.py`
-   runs `drop_all` then `create_all` against the dev `arcaai_audit`
-   database as `arcaai_owner` at the start of every session, so every
-   `scripts\test.cmd` run erases every audit event and corpus-version
-   row present. This corrects WS-E 61's recorded mechanism, which reads
-   as a failure to clean up afterwards: the suite destroys beforehand.
-   The append-only property holds for the app role and is defeated at
-   the owner role by the repository's own mandatory battery. Bears
-   directly on D2.2a, whose Commissioning Session Records would be
-   written into that store and erased by the next battery run.
-4. **D2.2a pre-flight implementing artefact** — sequenced after item 2,
+2. **CL-24 residue cleanup — the only part left, and it is the
+   operator's own act.** Parts (a) separability, (b) write-path guard
+   and (d) excluded-by-rule as a named sweep category DISCHARGED at
+   PR #96, ruled at DEC-0016: separation by database, the suite on
+   `arcaai_audit_test` and the governed `arcaai_audit` never a test
+   target. Part (c) remains: delete the governed store's test residue
+   as an owner-role act at the operator's terminal, in FK order
+   (`audit_event`, `audit_run_terminal`, `audit_run`, then
+   `corpus_version`) — 2 / 18 / 14 / 18 rows as at 2026-08-12. Now
+   unblocked, because the isolation is on `main` and the next battery
+   run will no longer repopulate what is cleaned. Item 1's carve-out
+   retires when this lands, and not before. Detail: `DECISIONS.md`
+   DEC-0016 and `docs/governance/CL-24_governed-store-baseline_2026-08-12.md`.
+3. **D2.2a pre-flight implementing artefact** — sequenced after item 2,
    not before it. Claims the next free CL number. Detail:
    `docs/governance/SESSION_HANDOVER_2026-08-11c.md` open verification 4
    and `docs/governance/FINDINGS_2026-08-11_onnx-acl-root-cause.md`.
    Reporting rule inherited: the spike closes with a Commissioning
    Session Record, not a report (operator ruling 2026-08-11).
-5. **Permission-tiering follow-through — precedence RESOLVED against
+4. **Permission-tiering follow-through — precedence RESOLVED against
    the design; three parts still open.** Tested 2026-08-11: a Tier 1
    allow rule pre-empts a Tier 2 guard ask, so the two are alternatives
    and not layers. Tier 1 narrowed the same day to read-only, batteries
@@ -352,72 +347,97 @@ this section is a working pointer, not the record.
    allow-listed; (c) the rule strings themselves, and hook routing of
    skill and subagent calls, remain unverified. Detail:
    `docs/governance/HARNESS_PERMISSION_TIERS_2026-08-11.md`.
-6. **Corpus listing owed for SG-07, SG-08 and SG-09** — OPEN;
+5. **Corpus listing owed for SG-07, SG-08 and SG-09** — OPEN;
    operator's decision whether it clears in one act or per document.
    Detail: `docs/governance/SESSION_HANDOVER_2026-08-11c.md` open
    verification 7 and
    `docs/governance/RULINGS_RECORD_2026-08-10_TOR-test-capability.md`
    amendment 9.
-7. **ci-docs paths-filter gap on corpus markdown** — DECISION OWED; the
+6. **ci-docs paths-filter gap on corpus markdown** — DECISION OWED; the
    fix is one line. Detail:
    `docs/governance/SESSION_HANDOVER_2026-08-11.md`. Push-event
    asymmetry closed as diagnosed at
    `docs/governance/SESSION_HANDOVER_2026-08-11c.md` open verification 5.
-8. **Lint invocation defects, two of opposite polarity** — CARRIED,
+   Note 2026-08-12: the sibling gap in `ci-devops` closed at PR #96,
+   which added a recursive `infra/` entry after the same family bit a
+   fourth time. This item is the corpus-markdown one and remains open.
+7. **Lint invocation defects, two of opposite polarity** — CARRIED,
    non-blocking. Detail:
    `docs/governance/SESSION_HANDOVER_2026-08-11.md`.
-9. **Check-method defect family — PATTERN-LEVEL RULING OWED**, and the
-   2026-08-11d arc added three instances: the guard whose stated
-   coverage was a claim about its patterns rather than its wiring
-   (WS-E 64); `Measure-Object -Line`, which counts non-blank lines while
-   reading as a line count and is the prescribed `wc -l` equivalent; and
-   the queue-block byte-versus-character measurement. Detail:
+8. **Check-method defect family — PATTERN-LEVEL RULING OWED**, now the
+   most-instanced open item in this queue. The 2026-08-11d arc added
+   three: the guard whose stated coverage was a claim about its patterns
+   rather than its wiring (WS-E 64); `Measure-Object -Line`, which
+   counts non-blank lines while reading as a line count and is the
+   prescribed `wc -l` equivalent; and the queue-block
+   byte-versus-character measurement. The 2026-08-12 arc added three
+   more: the `ci-devops` paths filter, whose coverage was a claim about
+   what was remembered as added rather than about what it names;
+   `%(trailers)`, which parses only the final paragraph so a
+   mid-message line counts as zero while plainly visible; and
+   `grep -c … || true` inside a substitution, which renders
+   clean-absence and check-never-ran identically. The last two were
+   found in commands written to verify a house rule, and the trailer
+   convention in "Conventions that will bite you" was amended twice on
+   2026-08-12 as a result. Detail:
    `docs/governance/FINDINGS_2026-08-11_onnx-acl-root-cause.md` §5 and
    `docs/governance/SESSION_HANDOVER_2026-08-11b.md` open verification 3.
-10. **Batch-2 panel circulation** — UNBLOCKED; scope decision owed on
-    whether SG-03..SG-06 sit inside it. Detail:
-    `docs/governance/RULINGS_RECORD_2026-08-10_TOR-test-capability.md`.
-11. **Ceremony frontmatter harmonisation** — the residue of the
+9. **Batch-2 panel circulation** — UNBLOCKED; scope decision owed on
+   whether SG-03..SG-06 sit inside it. Detail:
+   `docs/governance/RULINGS_RECORD_2026-08-10_TOR-test-capability.md`.
+10. **Ceremony frontmatter harmonisation** — the residue of the
     conventions item, which discharged at PR #94. All five skills under
     `.claude/skills/` carry Bash-only `allowed-tools`, so Tier 1 grants
     are not in force inside a ceremony. Narrows rather than widens, so
     friction not exposure. Detail:
     `docs/governance/HARNESS_PERMISSION_TIERS_2026-08-11.md`,
     enforcement coverage.
-12. **PRs #64/#65 standing tree verification** — PARTIALLY CHIPPED.
+11. **PRs #64/#65 standing tree verification** — PARTIALLY CHIPPED.
     Detail: `docs/governance/SESSION_HANDOVER_2026-08-08b.md`.
-13. **Operator inclusion decision for TY-03..09** — OPEN, when ready.
+12. **Operator inclusion decision for TY-03..09** — OPEN, when ready.
     Detail: `docs/governance/SESSION_HANDOVER_2026-08-11c.md` return
     queue 10.
-14. **CL-25 / inc4 pin writer** pending the agent module — OPEN. Detail:
+13. **CL-25 / inc4 pin writer** pending the agent module — OPEN, and
+    sharper since 2026-08-12: WS-E 65 recorded that no harm has yet come
+    of the audit store being destroyed only because nothing of record
+    has ever been in it, every row having been written by its own tests.
+    That is an accident of sequencing, not a control, and it expires the
+    moment this item lands. Detail:
     `docs/governance/WS-E_INCIDENTS.md` item 61.
-15. **Governance-guard deny path for history rewrites** — UNEXERCISED;
+14. **Governance-guard deny path for history rewrites** — UNEXERCISED;
     needs a throwaway clone. Detail:
     `docs/governance/SESSION_HANDOVER_2026-08-08.md`.
-16. **Consistency reads owed when their targets are drafted** — SG-07
+15. **Consistency reads owed when their targets are drafted** — SG-07
     §2.2 and §5.2, SG-08 §2.3 and §5.2 — CARRIED. Detail:
     `docs/governance/SESSION_HANDOVER_2026-08-08b.md`.
-17. **`corpus_edges_check.py` design-mode false green** — DECISION OWED;
-    wording, not logic, but see item 9 first. Detail:
+16. **`corpus_edges_check.py` design-mode false green** — DECISION OWED;
+    wording, not logic, but see item 8 first. Detail:
     `docs/governance/SESSION_HANDOVER_2026-08-10c.md`.
-18. **Statute-edge width** — CORPUS-DESIGN FACT for the circulation
+17. **Statute-edge width** — CORPUS-DESIGN FACT for the circulation
     pack. Detail: `docs/governance/SESSION_HANDOVER_2026-08-11b.md`
     return queue 16.
-19. **TOR errata** — CARRIED to the Test Plan (D1.1). Detail:
+18. **TOR errata** — CARRIED to the Test Plan (D1.1). Detail:
     `docs/governance/SESSION_HANDOVER_2026-08-10c.md` and the PR #83
     body.
     Reporting rule inherited: D1.1 specifies the Regime-2 Test Report
     (operator ruling 2026-08-11).
-20. **Gemini architecture-review return** — CONSOLIDATION OWED before
+19. **Gemini architecture-review return** — CONSOLIDATION OWED before
     the Agentic Topology ADR work opens. Detail:
     `docs/governance/RULINGS_RECORD_2026-08-10_TOR-test-capability.md`.
-21. **Stale local branches from past arcs** — HOUSEKEEPING,
-    non-blocking. Detail:
-    `docs/governance/SESSION_HANDOVER_2026-08-08.md`.
-22. **Packaging declarations are unasserted** — OPEN; three findings,
+20. **Packaging declarations are unasserted** — OPEN; three findings,
     one family. Detail:
     `docs/governance/SESSION_HANDOVER_2026-08-11c.md` open verifications
     2 and 3.
+21. **`.sql` is ungoverned in `.gitattributes`** — NEW 2026-08-12,
+    DECISION OWED, one line. The file sets `* text=auto` and then names
+    `.py .yaml .md .txt .sh`, the DVC metadata and the CRLF-keeping
+    Windows scripts; `.sql` appears nowhere, so
+    `infra/postgres-init/02-create-audit-databases.sql` and
+    `sql/governance_grants.sql` check out CRLF on Windows. `psql` treats
+    `\r` as whitespace and the `DO $$` blocks are unaffected, so this is
+    latent rather than breaking. Fixing it means the one-line addition
+    plus a re-normalisation of two files. Detail: PR #96 body, "Known
+    and not addressed here".
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
