@@ -193,12 +193,31 @@ principle mapping for the B8/B9 artefact set.
   in full text — the morning's withdrawn checker-bug draft never entered this
   register)*
 
-- [ ] **CL-24** *(new, 6 Aug)* Governance test suite must not default into the
-  dev database: isolate `conftest.py` DSN defaults to a scratch database or
-  schema, and/or roll back rather than commit fixture `corpus_version` rows.
-  Until then, running the governance tests locally recreates the WS-E 61
-  condition. *(Source: WS-E 61 — rehash_sweep first run, 6 Aug; fixture rows
-  found in the dev `corpus_version` table from the 30 Jul test run)*
+- [x] **CL-24** *(new, 6 Aug; CLOSED 2026-08-12)* Governance test suite must not
+  default into the dev database: isolate `conftest.py` DSN defaults to a scratch
+  database or schema, and/or roll back rather than commit fixture
+  `corpus_version` rows. Until then, running the governance tests locally
+  recreates the WS-E 61 condition. *(Source: WS-E 61 — rehash_sweep first run,
+  6 Aug; fixture rows found in the dev `corpus_version` table from the 30 Jul
+  test run)*
+  **CLOSURE.** Parts (a) separability, (b) write-path guard and (d)
+  excluded-by-rule as a named sweep category discharged at PR #96, ruled at
+  DEC-0016: separation by database, the suite on `arcaai_audit_test`, the
+  governed `arcaai_audit` never a test target. Part (c), residue cleanup,
+  discharged 2026-08-12 as an owner-role act at the operator's terminal —
+  identity-scoped deletes in FK order, each asserting its own row count inside
+  one transaction, no `TRUNCATE` and no unqualified `DELETE`. Evidence, all
+  taken non-elevated as `arcaai_app`: `rehash_sweep.py` GREEN at **exit 0**
+  with `irreproducible-pin : 0` and `excluded-by-rule (test) : 0`, reporting
+  "all pins verified"; five-table count **0/0/0/0/0**; and the AFTER-CLEANUP
+  section of `docs/governance/CL-24_governed-store-baseline_2026-08-12.md`
+  carrying identity digest
+  `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`, the
+  SHA256 of the empty string. **Scope was widened during the act on evidence:**
+  `audit_payload` held 3 test-written rows visible to neither the baseline
+  instrument nor the sweep, and was ruled in and cleared rather than left as
+  residue no monitored instrument could report. Instrument extension to five
+  tables is carried at `CLAUDE.md` queue item 28.
 - [ ] **CL-25** *(new, 6 Aug)* Operational ingest must write the
   `corpus_version` evidence row: wire `corpus.load_snapshot` into the ingest
   path so real loads produce real pins (DEC-0014 intent; the row is currently

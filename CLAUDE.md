@@ -315,34 +315,43 @@ this section is a working pointer, not the record.
 
 <!-- QUEUE-START -->
 1. **Boot ritual via /session-open** — STANDING. Divergences expect 0, a
-   plain stop with no carve-out. **The rehash sweep still expects RED**
-   until the residue cleanup at item 2 lands — the isolation landed at
-   PR #96 but the cleanup deliberately did not, so the two `fixture-*`
-   rows remain. They are no longer replaced at every run: since PR #96
-   the suite writes to `arcaai_audit_test`, so those two rows are now
-   static and the sweep names them under `category excluded-by-rule
-   (test) : 2` with `category irreproducible-pin : 0`. A red sweep of
-   that exact shape is not a stop; any other shape is. Detail:
-   `DECISIONS.md` DEC-0016 and `docs/governance/WS-E_INCIDENTS.md`
-   item 65.
+   plain stop with no carve-out. **The rehash sweep now expects GREEN,
+   exit 0, with no carve-out of any kind** — CARVE-OUT RETIRED
+   2026-08-12 when the residue cleanup at item 2 landed. Expect
+   `category irreproducible-pin : 0`, `category excluded-by-rule
+   (test) : 0` and "all pins verified". **Any red is a plain stop.**
+   The two `fixture-*` rows the previous carve-out tolerated are gone,
+   and there is no longer a shape of red that is acceptable. Detail:
+   `DECISIONS.md` DEC-0016, `docs/governance/WS-E_INCIDENTS.md` item 65
+   and `docs/governance/CL-24_governed-store-baseline_2026-08-12.md`.
    Sequencing note: where items encode a ruled sequence the numbering
    follows that sequence and not priority, and an in-place reduction of
    one item must not silently invert two —
    `docs/governance/SESSION_HANDOVER_2026-08-11b.md`, "Corrections
    landed this arc".
-2. **CL-24 residue cleanup — the only part left, and it is the
-   operator's own act.** Parts (a) separability, (b) write-path guard
-   and (d) excluded-by-rule as a named sweep category DISCHARGED at
-   PR #96, ruled at DEC-0016: separation by database, the suite on
-   `arcaai_audit_test` and the governed `arcaai_audit` never a test
-   target. Part (c) remains: delete the governed store's test residue
-   as an owner-role act at the operator's terminal, in FK order
-   (`audit_event`, `audit_run_terminal`, `audit_run`, then
-   `corpus_version`) — 2 / 18 / 14 / 18 rows as at 2026-08-12. Now
-   unblocked, because the isolation is on `main` and the next battery
-   run will no longer repopulate what is cleaned. Item 1's carve-out
-   retires when this lands, and not before. Detail: `DECISIONS.md`
-   DEC-0016 and `docs/governance/CL-24_governed-store-baseline_2026-08-12.md`.
+2. **CL-24 — DISCHARGED IN FULL 2026-08-12. CLOSED.** Parts (a), (b)
+   and (d) discharged at PR #96 under DEC-0016. Part (c), residue
+   cleanup, discharged as an owner-role act at the operator's terminal:
+   identity-scoped deletes in FK order (`audit_event`,
+   `audit_run_terminal`, `audit_run`, then `corpus_version`) — **14 /
+   18 / 18 / 2** rows, each delete asserting its own count inside one
+   transaction, no `TRUNCATE` and no unqualified `DELETE`.
+   **Figure correction:** this item previously read "2 / 18 / 14 / 18"
+   against that same table order, transposing the first and last
+   values; the baseline file and the live store both showed
+   `audit_event` 14 and `corpus_version` 2. Corrected here rather than
+   silently, because the wrong pair would have had a reader expect 18
+   `corpus_version` rows and find 2.
+   **Scope widened during the act, on evidence:** `audit_payload` held
+   3 test-written rows visible to neither the baseline instrument nor
+   the sweep; ruled in and cleared, so 5 tables were emptied, not 4.
+   Verification, non-elevated as `arcaai_app`: sweep GREEN at exit 0
+   with both categories 0; five-table count 0/0/0/0/0; AFTER-CLEANUP
+   identity digest `e3b0c442…`, the SHA256 of the empty string.
+   Item 1's carve-out retired in the same act. Instrument extension
+   carried at item 28. Detail: `DECISIONS.md` DEC-0016,
+   `docs/governance/GOVERNANCE_REVIEW_CHANGELOG.md` CL-24, and
+   `docs/governance/CL-24_governed-store-baseline_2026-08-12.md`.
 3. **D2.2a pre-flight implementing artefact** — sequenced after item 2,
    not before it. Claims the next free CL number. Detail:
    `docs/governance/SESSION_HANDOVER_2026-08-11c.md` open verification 4
@@ -589,6 +598,24 @@ this section is a working pointer, not the record.
     never a reading of the rule that finds it plausible. Detail:
     `docs/governance/TIER_AMENDMENT_CANDIDATE_2026-08-12.md` and
     `docs/governance/HARNESS_PERMISSION_TIERS_2026-08-11.md`.
+28. **Extend the governed-store instrument to five tables** — NEW
+    2026-08-12, FINDING RECORDED during the CL-24 closure.
+    `scripts/governed_store_identity.py` snapshots four tables
+    (`corpus_version`, `audit_run`, `audit_event`,
+    `audit_run_terminal`) and does not see `audit_payload`, which held
+    3 test-written rows throughout the CL-24 arc — invisible to the
+    baseline file, invisible to `rehash_sweep.py`, and absent from
+    every count the register carried. They were found only because the
+    delete draft required reading the schema rather than the baseline.
+    The rows are now cleared, so this is not outstanding residue; the
+    outstanding defect is the **instrument**, which reported a store
+    "empty" while a table it does not enumerate was not. Check-method
+    family: a check whose stated subject is narrower than the subject
+    it names. Fix is to enumerate tables from the metadata rather than
+    a hardcoded list, so a table added later is covered by
+    construction. Detail:
+    `docs/governance/GOVERNANCE_REVIEW_CHANGELOG.md` CL-24 closure and
+    `docs/governance/CL-24_governed-store-baseline_2026-08-12.md`.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
