@@ -26,7 +26,19 @@ BEGIN
 END
 $$;
 
-GRANT CONNECT ON DATABASE arcaai_audit TO arcaai_app;
+-- Database-level grant resolved at run time, not hardcoded (DEC-0016).
+-- This file is applied both to the governed database arcaai_audit and
+-- to the disposable arcaai_audit_test that the governance suite
+-- targets; a literal name grants CONNECT on the wrong database when the
+-- file is applied to the other, and the app role then survives only on
+-- PUBLIC's default CONNECT. One artefact serves both databases — a
+-- forked copy is the duplication failure DEC-0014's consequences
+-- already fixed once here.
+DO $$
+BEGIN
+    EXECUTE format('GRANT CONNECT ON DATABASE %I TO arcaai_app', current_database());
+END
+$$;
 GRANT USAGE ON SCHEMA public TO arcaai_app;
 
 -- The whole runtime grant. Nothing else.

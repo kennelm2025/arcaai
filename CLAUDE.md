@@ -57,8 +57,20 @@ python scripts/repo_manifest.py --out D:/Downloads   # session boot snapshot; wr
 
 `tests/governance/*` and `tests/retrieval/*` need the dev stack; the governance suite
 connects as two Postgres roles (`arcaai_owner` for DDL, `arcaai_app` for runtime) against
-the `arcaai_audit` database, overridable via `ARCAAI_AUDIT_OWNER_DSN` /
+the `arcaai_audit_test` database, overridable via `ARCAAI_AUDIT_OWNER_DSN` /
 `ARCAAI_AUDIT_APP_DSN`.
+
+**Two audit databases, and the suite may only ever touch one of them** (DEC-0016).
+`arcaai_audit` is the governed store — real audit events, real `corpus_version` pins, and
+from D2.2a the Commissioning Session Records. `arcaai_audit_test` is disposable: the suite
+drops and recreates its schema on every run, which is what made the previous single-database
+arrangement destroy the governed store at the start of every battery (WS-E 65). A fail-closed
+guard in `tests/governance/conftest.py` refuses the run unless the resolved DSN names the
+test database, so an override pointing back at the governed store stops rather than erases.
+Both databases are created by `infra/postgres-init/02-create-audit-databases.sql`, which
+Postgres runs **only on a fresh `pgdata` volume** — an existing volume needs the one-off
+`CREATE DATABASE` by hand, and that is an operator act at the operator's terminal, since the
+harness never assumes the owner role.
 
 Three CI workflows, each with `paths` filters — check that a new directory is covered by
 the right filter or PRs will report nothing and fail only after merge (this has happened):
@@ -205,7 +217,23 @@ ONNX cache traversal check, before other work.
 - **No `Co-Authored-By` trailer on any commit in this repo**, and none in PR bodies.
   Ruled first for corpus authoring; practice then ran ahead of the rule across non-corpus
   commits, PR bodies and code for ten consecutive instances, which made it an unwritten
-  rule rather than a habit. Assert it by trailer count, never by eyeball.
+  rule rather than a habit. **Assert it against the full printed body, never against a
+  recalled impression of it** (ruled 2026-08-12): print the complete message body with
+  `git log -1 --format=%B`, and for a branch `git log main..HEAD --format=%B`, as
+  in-session evidence, then assert against that full printed body that **no line asserts
+  co-authorship**. An attribution line is the token at line start, a colon, and a name or
+  address; prose mentioning the token — this bullet, or a commit message discussing the
+  rule — is not attribution. Case-insensitive, and anywhere in the body rather than only
+  in the trailer block. Say in the success line which bodies were read.
+  Two methods are specifically excluded, both found during CL-24 commit verification.
+  `%(trailers)` parses only the final paragraph, so a `Co-Authored-By` line sitting
+  mid-message expands to nothing and the check reports zero while the line is plainly
+  visible in the text. And a count piped through a fallback — `grep -c … || true` inside
+  a substitution — renders clean-absence and check-never-ran identically, because `grep`
+  exits non-zero on no match and the fallback swallows it into an empty string. A check
+  whose green is indistinguishable from its not having run is the check-method family
+  (queue item 9), and it is worse here for appearing in the very command written to
+  verify a house rule.
 - **Cite an unconsumed register number as "next N", never as a bare "N"** in any document
   under `docs/`. `scripts/repo_manifest.py` cannot distinguish a bare number from a claim
   that the item exists, and reports a spurious divergence. Established by the PR #85
