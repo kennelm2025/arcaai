@@ -224,6 +224,21 @@ principle mapping for the B8/B9 artefact set.
   written only by tests — the `.6` run of record was never row-recorded).
   Candidate home: inc4 governance wiring; rule scope at inc4 entry.
   *(Source: WS-E 61)*
+- [ ] **CL-26** *(new, 12 Aug)* D2.2a pre-flight implementing artefact:
+  `scripts/d22a_preflight.py`, asserting the four D2.0 entry-criteria
+  assertions as one standalone invocable script — non-elevation first and
+  gating, ONNX/chromadb cache traversal by read rather than existence, services
+  including the vector store's exists/readable/writable triple, and conda
+  environment identity. Three outcomes per assertion (GREEN/RED/UNKNOWN);
+  UNKNOWN and SKIPPED both exit non-zero and never collapse into green.
+  Discharges the authoring debt at which the traversal check existed only as
+  prose in `CLAUDE.md` and `.claude/skills/session-open/SKILL.md` with no
+  script behind it and no non-elevation assertion at all. **Open at authoring:**
+  the ceremony skills still describe the procedure rather than calling this
+  script, which is the remaining half of the debt and is an edit to ruled
+  ceremony artefacts, held for operator ruling. *(Source: DEC-0015 proof-first
+  sequencing; `docs/governance/D2.0_COMMISSIONING_FRAME_2026-08-11.md`;
+  `docs/governance/FINDINGS_2026-08-11_onnx-acl-root-cause.md` sections 4-6)*
 
 ## Workstream E — Engineering process & protocols
 - [ ] **CL-E1** (carried in) Record the force-push-to-main incident + add a guard
