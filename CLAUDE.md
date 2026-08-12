@@ -352,8 +352,22 @@ this section is a working pointer, not the record.
    carried at item 28. Detail: `DECISIONS.md` DEC-0016,
    `docs/governance/GOVERNANCE_REVIEW_CHANGELOG.md` CL-24, and
    `docs/governance/CL-24_governed-store-baseline_2026-08-12.md`.
-3. **D2.2a pre-flight implementing artefact** — **UNBLOCKED 2026-08-12
-   and it is the next arc.** Its blocker, item 2, discharged at PR #102
+3. **D2.2a pre-flight implementing artefact — DISCHARGED at PR #104
+   (`b1fc7f3`), CL-26. CLOSED.** `scripts/d22a_preflight.py` asserts the
+   four D2.0 entry-criteria assertions as one standalone invocable
+   script: non-elevation first and gating, cache traversal by read
+   rather than existence, services including the vector store's
+   exists/readable/writable triple, and conda environment identity.
+   Three outcomes throughout; UNKNOWN and SKIPPED both exit non-zero
+   and never collapse into green. Verified post-merge from `main` at
+   4/4 GREEN, exit 0. The prose-only authoring debt, which carried no
+   non-elevation assertion at all, is discharged. **Entry-criteria
+   note, because a green now exists to point at:** pre-flight green is
+   ONE of four D2.0 entry criteria; the other three are run-record
+   obligations — corpus snapshot pinned and stated, scenario spec
+   schema-valid against v0.1, working tree state recorded. A green
+   pre-flight alone does not satisfy entry. Residue at item 29.
+   Historical: its blocker, item 2, discharged at PR #102
    (`545075b`); the governed store is empty and the sweep green with no
    carve-out, so Commissioning Session Records can now be written into
    `arcaai_audit` without the next battery erasing them — which was the
@@ -627,6 +641,38 @@ this section is a working pointer, not the record.
     construction. Detail:
     `docs/governance/GOVERNANCE_REVIEW_CHANGELOG.md` CL-24 closure and
     `docs/governance/CL-24_governed-store-baseline_2026-08-12.md`.
+29. **Ceremony-skills rewiring: describe → call
+    `scripts/d22a_preflight.py`** — NEW 2026-08-12, **RULED IN** as
+    transcription-in-spirit, execution deferred. `CLAUDE.md` and
+    `.claude/skills/session-open/SKILL.md` still describe the ONNX
+    cache traversal procedure in prose; they should call the artefact
+    instead, which is the residue of the item 3 authoring debt. Not
+    done at authoring because it is a **Tier 2** edit to ruled ceremony
+    artefacts and build holds right of way under DEC-0017. Executes at
+    the next governance-eligible window, **ideally riding the same PR
+    as the item 27 tier-amendment work**, since both touch `.claude/`
+    and both want one probe-tested landing. **Until then the prose
+    descriptions stand** — and anyone who touches them carries a
+    known-superseded note pointing at the script rather than editing
+    the prose as though it were current. Detail:
+    `docs/governance/GOVERNANCE_REVIEW_CHANGELOG.md` CL-26.
+30. **D2.2a runner spike — the next arc under DEC-0017.** The spike
+    proper, of which the pre-flight at item 3 was one part: minimal
+    runner plus one retrieval scenario end-to-end — spec in, corpus
+    queried at a pinned snapshot, result JSON out. Runs under the D2.0
+    commissioning frame, pinned to the corpus snapshot **current at
+    spike time**, which does not wait on the listing act and need not
+    be a listed snapshot, so item 5's corpus debt does not block it.
+    **COMMISSIONING-labelled throughout**, results permanently
+    inadmissible as gate evidence, anomalies observed-not-raised.
+    Exit criteria are a result JSON reproducible from its triple; the
+    scenario's own pass/fail is **not** an exit criterion. **Closes
+    with a Commissioning Session Record, not a report** — no pass/fail
+    summary, because a report format invites promotion by osmosis.
+    Claims the next free CL number, read live at the arc that opens
+    it. Detail: `docs/governance/D2.0_COMMISSIONING_FRAME_2026-08-11.md`
+    and `docs/governance/TOR_test-capability_RevC_RULED_2026-08-10.md`
+    section 5A.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
