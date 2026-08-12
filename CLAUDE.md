@@ -57,8 +57,20 @@ python scripts/repo_manifest.py --out D:/Downloads   # session boot snapshot; wr
 
 `tests/governance/*` and `tests/retrieval/*` need the dev stack; the governance suite
 connects as two Postgres roles (`arcaai_owner` for DDL, `arcaai_app` for runtime) against
-the `arcaai_audit` database, overridable via `ARCAAI_AUDIT_OWNER_DSN` /
+the `arcaai_audit_test` database, overridable via `ARCAAI_AUDIT_OWNER_DSN` /
 `ARCAAI_AUDIT_APP_DSN`.
+
+**Two audit databases, and the suite may only ever touch one of them** (DEC-0016).
+`arcaai_audit` is the governed store — real audit events, real `corpus_version` pins, and
+from D2.2a the Commissioning Session Records. `arcaai_audit_test` is disposable: the suite
+drops and recreates its schema on every run, which is what made the previous single-database
+arrangement destroy the governed store at the start of every battery (WS-E 65). A fail-closed
+guard in `tests/governance/conftest.py` refuses the run unless the resolved DSN names the
+test database, so an override pointing back at the governed store stops rather than erases.
+Both databases are created by `infra/postgres-init/02-create-audit-databases.sql`, which
+Postgres runs **only on a fresh `pgdata` volume** — an existing volume needs the one-off
+`CREATE DATABASE` by hand, and that is an operator act at the operator's terminal, since the
+harness never assumes the owner role.
 
 Three CI workflows, each with `paths` filters — check that a new directory is covered by
 the right filter or PRs will report nothing and fail only after merge (this has happened):

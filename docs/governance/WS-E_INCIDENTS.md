@@ -646,6 +646,54 @@ regardless of surrounding prose).*
     every time; the expectation that caught it was "two rows, and
     these two". Identity, not count.
 
+66. **Harness assumed the Postgres superuser account for read-only
+    inspection (2026-08-12).** Early in the CL-24 arc, before the
+    isolation picture was established, three commands were issued
+    through `docker exec` as `psql -U arcaai`, the cluster superuser: a
+    database listing and two SELECTs against `arcaai_audit`. Read-only,
+    no DDL, no writes, nothing changed. The rule denies elevation
+    outright with no exception path, and it is written about which
+    account is assumed rather than about what is done once assumed —
+    precisely so that "it was only a read" never has to be adjudicated.
+    Self-disclosed in-session at the point the isolation work made the
+    account choice salient, not found by review. Corrective is
+    load-bearing rather than promissory:
+    `scripts/governed_store_identity.py` hardcodes the `arcaai_app`
+    role and refuses any database but the governed one, and every
+    equivalent fact was afterwards re-established non-elevated —
+    pg_database is world-readable, so the database listing that
+    prompted the breach never required the superuser at all. CLASS
+    NOTE: the non-elevated route existed and was not looked for. The
+    failure mode is reaching for the account that certainly works, and
+    checking first costs nothing.
+
+67. **A CREATE DATABASE reported done had not happened, and the
+    mandatory battery was what found it (2026-08-12).** The CL-24
+    isolation change requires `arcaai_audit_test` to exist on the
+    operator machine, because Postgres runs its `docker-entrypoint-initdb.d`
+    scripts only at cluster initialisation and this volume predates the
+    new init file. The create was issued at the operator terminal and
+    reported done; `scripts\test.cmd` then failed at fixture setup on
+    about 27 governance and retrieval tests with `FATAL: database
+    "arcaai_audit_test" does not exist`, and a non-elevated read of
+    pg_database confirmed six databases with no near-miss spelling —
+    nothing had been created under any name. Wrong-container and
+    wrong-instance were excluded: `docker ps` showed
+    arcaai-dev-postgres-1 as the sole listener on 5432. Cause recorded
+    as the command erroring unnoticed with its output unread. Re-issued
+    with a catalogue read appended to the same invocation so the act
+    carried its own verification, which returned one row; the battery
+    then ran green, 165 passed. NO HARM, and the reason matters: the
+    failure was fail-closed. The suite errored at connect with no code
+    path retrying against the governed database, so an absent test
+    database could not silently redirect writes back into
+    `arcaai_audit`. CLASS NOTE: stdout success-reporting is not
+    existence evidence. A command printing CREATE DATABASE asserts that
+    a statement was submitted, not that the object exists; only a read
+    of the catalogue asserts that. Same family as item 64, the
+    `Measure-Object -Line` instance and the queue-block measurement — a
+    check whose stated subject is not the subject it interrogates.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a

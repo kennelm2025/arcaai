@@ -29,6 +29,15 @@ Run: python scripts/rehash_sweep.py            (from repo root,
      the DB, so the Docker-before-DB rule applies)
 Exit: 0 all pins verified; 1 any pin whose manifest content cannot
      be located in git history, or any DB/git failure.
+
+Since DEC-0016 the governance suite writes to ``arcaai_audit_test`` and
+the governed store is never a test target, so the two categories of
+irreproducible pin are reported separately and both are named on every
+run even at zero — a sweep silent about a category cannot be told apart
+from one that never checked it (WS-E 64). A test-written row surviving
+in the governed store is a leak across that separation, so it is
+excluded by rule from the reproducibility question and emphatically not
+from the exit code.
 """
 
 from __future__ import annotations
@@ -38,10 +47,21 @@ import subprocess
 import sys
 
 from sqlalchemy import create_engine, text
+from sqlalchemy.engine import make_url
 
 from arcaai.platform.governance import corpus
 
 MANIFEST_PATH = "verticals/fraud/corpus/MANIFEST.yaml"
+
+# Test-written rows carry this label prefix — tests/governance/
+# test_corpus_manifest.py mints ``fixture-{uuid4}``. Their pinned hashes
+# are of throwaway manifests and were never in git, so they can never be
+# reproducible; that is a property of the fixture, not a corruption.
+TEST_LABEL_PREFIX = "fixture-"
+
+# The store this control exists to sweep. Sweeping the disposable test
+# database instead would produce a green that asserts nothing.
+GOVERNED_DB_NAME = "arcaai_audit"
 
 # Mirror of scripts/b7_run.py — runtime app role, never owner: this
 # sweep is a consumer of the grants, and needs (and must hold) no
@@ -92,28 +112,54 @@ def pinned_rows() -> list[tuple[str, str, str]]:
 
 
 def main() -> int:
+    database = make_url(APP_DSN).database or "<no database in URL>"
     print(f"rehash_sweep: audit DSN (host) : {APP_DSN.split('@')[-1]}")
+    if database != GOVERNED_DB_NAME:
+        print(
+            f"rehash_sweep: STOP — this control sweeps the governed store "
+            f"{GOVERNED_DB_NAME!r} and was pointed at {database!r}. A green "
+            f"result against any other database asserts nothing about the "
+            f"governed pins. Correct or unset ARCAAI_AUDIT_APP_DSN. See "
+            f"DEC-0016."
+        )
+        return 1
     history = manifest_hashes_in_history()
     print(f"rehash_sweep: manifest versions in git history: {len(history)}")
     pins = pinned_rows()
     print(f"rehash_sweep: pinned corpus_version rows: {len(pins)}")
-    failures = 0
+    irreproducible: list[str] = []
+    leaked: list[str] = []
     for version_id, label, msha in pins:
         commit = history.get(msha)
-        if commit is None:
-            failures += 1
+        if commit is not None:
+            print(
+                f"rehash_sweep: ok    {label} ({version_id}) — "
+                f"{msha[:12]}… reproduced at {commit[:7]}"
+            )
+        elif label.startswith(TEST_LABEL_PREFIX):
+            leaked.append(label)
+            print(
+                f"rehash_sweep: LEAK  {label} ({version_id}) — test-written "
+                f"row in the governed store; excluded by rule from the "
+                f"reproducibility question, not from the exit code"
+            )
+        else:
+            irreproducible.append(label)
             print(
                 f"rehash_sweep: FAIL  {label} ({version_id}) — pinned "
                 f"manifest_sha256 {msha} not reproducible from any "
                 f"historical {MANIFEST_PATH}"
             )
-        else:
-            print(
-                f"rehash_sweep: ok    {label} ({version_id}) — "
-                f"{msha[:12]}… reproduced at {commit[:7]}"
-            )
-    if failures:
-        print(f"rehash_sweep: {failures} pin(s) FAILED verification")
+    # Both categories are named on every run, including at zero. Silence
+    # was the defect being corrected: a sweep that says nothing about a
+    # category is indistinguishable from one that never checked it.
+    print(f"rehash_sweep: category irreproducible-pin       : {len(irreproducible)}")
+    print(f"rehash_sweep: category excluded-by-rule (test)  : {len(leaked)}")
+    if irreproducible or leaked:
+        print(
+            f"rehash_sweep: {len(irreproducible) + len(leaked)} pin(s) FAILED "
+            f"verification"
+        )
         return 1
     print("rehash_sweep: all pins verified")
     return 0

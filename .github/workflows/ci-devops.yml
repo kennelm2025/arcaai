@@ -5,6 +5,10 @@
 # not a PR trigger); postgres:16 service + role bootstrap added so the
 # governance suite's grant-denial and NULL-discipline tests run pre-merge -
 # the append-only property is CI-checked, not claimed (CF-1/B7-c evidence).
+# 2026-08-12: paths gain infra/** (fourth exhibit of the same family, found
+# while adding infra/postgres-init/02-create-audit-databases.sql under
+# DEC-0016 - provisioning this job mirrors, in a directory this filter never
+# named; an infra-only PR reported nothing).
 # 2026-08-08: paths gain .claude/** (WS-E 62, third exhibit - the harness
 # PR #70 touched only CLAUDE.md and .claude/**, matched ci-docs alone, and
 # the repo-wide `ruff check .` first ran on the unfiltered push-to-main
@@ -24,6 +28,7 @@ on:
       - "scripts/**"
       - "sql/**"
       - "tests/**"
+      - "infra/**"
       - "pyproject.toml"
       - ".claude/**"
       - ".github/workflows/ci-devops.yml"
@@ -54,12 +59,19 @@ jobs:
         run: pip install -e ".[dev]"
       - name: Lint (ruff)
         run: ruff check .
-      - name: Bootstrap audit roles and database (governance suite; mirrors local dev setup)
+      # Mirrors infra/postgres-init/02-create-audit-databases.sql, which does the
+      # same job for the local dev stack. Both databases are created here even
+      # though this service container is ephemeral and only the test database is
+      # written: the two provisioning paths are kept identical so a divergence
+      # cannot hide, which is how the governed database came to exist locally
+      # with no artefact creating it (DEC-0016).
+      - name: Bootstrap audit roles and databases (governance suite; mirrors local dev setup)
         env:
           PGPASSWORD: arcaai-dev-only
         run: |
           psql -h localhost -U arcaai -c "CREATE ROLE arcaai_owner LOGIN PASSWORD 'owner_dev';"
           psql -h localhost -U arcaai -c "CREATE ROLE arcaai_app LOGIN PASSWORD 'app_dev';"
           psql -h localhost -U arcaai -c "CREATE DATABASE arcaai_audit OWNER arcaai_owner;"
+          psql -h localhost -U arcaai -c "CREATE DATABASE arcaai_audit_test OWNER arcaai_owner;"
       - name: Tests + coverage gate (60% ratchet, B1)
         run: pytest --cov --cov-report=term-missing
