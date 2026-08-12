@@ -202,32 +202,32 @@ def assert_cache_traversal() -> Result:
     presence alone reported green on a cache that failed at first query.
     """
     name = "cache_traversal"
-    try:
-        from chromadb.utils import embedding_functions
-    except Exception as exc:  # import failure is UNKNOWN, not RED
+
+    # This module deliberately does NOT import chromadb. CF-1/B7-a allows
+    # exactly one importer, arcaai/platform/retrieval/chroma_store.py, and
+    # a pre-flight is not a retrieval adapter — asserting on the cache is
+    # a filesystem question, not a reason to widen the allowlist. Nothing
+    # joins that allowlist without a recorded CF-1 deviation, and this
+    # artefact does not need to.
+    cache_root = pathlib.Path.home() / ".cache" / "chroma" / "onnx_models"
+    if not cache_root.is_dir():
+        # UNKNOWN, not RED: the cache layout is chromadb's to define, and
+        # an absent root may mean the layout moved rather than that the
+        # model is missing. Claiming RED here would assert a fact about
+        # the model from evidence that is only about a path convention.
         return Result(name, UNKNOWN,
-                      f"chromadb could not be imported, so the cache location "
-                      f"could not be derived ({type(exc).__name__})")
+                      f"chroma model cache root not found at {cache_root}; "
+                      f"the cache layout could not be located, so the "
+                      f"model's readability was NOT evaluated")
 
-    cls = getattr(embedding_functions, "ONNXMiniLM_L6_V2", None)
-    if cls is None:
-        return Result(name, UNKNOWN,
-                      "chromadb.utils.embedding_functions has no "
-                      "ONNXMiniLM_L6_V2; cache location underivable")
-
-    # Derive rather than hardcode: a hardcoded path that has moved reports
-    # a confident RED about a cache that is actually fine.
-    download_path = getattr(cls, "DOWNLOAD_PATH", None)
-    extracted = getattr(cls, "EXTRACTED_FOLDER_NAME", "onnx")
-    if download_path is None:
-        home = pathlib.Path.home()
-        download_path = (home / ".cache" / "chroma" / "onnx_models"
-                         / PINNED_MODEL_NAME)
-    cache_dir = pathlib.Path(download_path) / extracted
-
+    cache_dir = cache_root / PINNED_MODEL_NAME / "onnx"
     if not cache_dir.is_dir():
+        # The root exists, so the layout is as expected and this model is
+        # genuinely not cached. That is a RED.
         return Result(name, RED,
-                      f"extracted model directory absent at {cache_dir}")
+                      f"extracted model directory absent at {cache_dir} "
+                      f"(cache root {cache_root} exists, so the layout is "
+                      f"as expected and {PINNED_MODEL_NAME} is not cached)")
 
     try:
         entries = sorted(p for p in cache_dir.rglob("*") if p.is_file())
