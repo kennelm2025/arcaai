@@ -805,6 +805,61 @@ this section is a working pointer, not the record.
     same brief's preamble and the 2026-08-13 ruling, both of which state it
     explicitly. **If further feeder notes were intended they are missing**;
     confirm before treating this list as complete.
+34. **Audit-readiness: SDLC control framework + evidence map** — NEW
+    2026-08-13, RULED IN as an item. **Rationale:** ArcaAI's proposition
+    makes the development lifecycle itself part of the product — internal
+    engineering discipline IS the customer's regulatory evidence pack. A
+    prospect bank's skilled person will audit the build process and the
+    governance around it, and **that audit cannot be failed**. This item
+    converts existing practice into a named, testable control set;
+    practice that is real but unnamed is not a control an auditor can
+    test.
+    **Deliverable:** one document, the SDLC control framework,
+    enumerating the controls already in force — register discipline; the
+    two-regime model; hash-pinned custody including review documents;
+    the panel-round convention with recorded dissent; deny-probe
+    verification; the Option B merge gate; three-outcome checks — and
+    mapping each to SS1/23 model-risk expectations. Item 33's P3
+    disposition table is its seed.
+    **Mechanisms to build under this item, each its own arc:**
+    **M1 — Intelligent CI reviewer.** An agent in CI reading every PR
+    diff against the standing rules — attribution, regime labels,
+    protected paths, register discipline — and commenting before human
+    review. Converts the written rulebook into a control an auditor can
+    test rather than a document an auditor must take on trust.
+    **M2 — Coordination-layer session records.** The judgment layer's
+    numbered prompts and operator rulings committed per session as
+    governed artefacts, closing the gap where the deliberative trail
+    lives outside the evidence perimeter. Evidence that the gap is real
+    and not theoretical: the 2026-08-10 rulings record survived only on
+    the operator's Downloads folder, was searched for exhaustively
+    in-repo and found nowhere, and entered the tree on 2026-08-13 at
+    `docs/governance/ADR-candidate-input_rulings-record_2026-08-13.md`
+    only because it was supplied from disk.
+    **Known findings the framework must STATE HONESTLY rather than
+    hide** — a framework that omits its own weaknesses fails the audit
+    it was written for:
+    (a) **Single-operator segregation-of-duties limit.** Mitigations:
+    the panel convention as independent challenge, with sustained
+    dissents as the evidence it is real; a future customer-bank SMF in
+    the loop; and any external attestation via an INDEPENDENT third
+    party only.
+    (b) **Process-versus-outcome evidence gap.** The Test Plan and lane
+    one are the answer, and are sequenced already.
+    **External-party boundary — RULED 2026-08-13.** PwC is
+    **channel-only and build-excluded**: no PwC personnel, systems,
+    credentials or engagement materials touch the repository,
+    governance, infrastructure or evidence pack, and there is no
+    cross-contamination of work product in either direction. A
+    cross-reference scan in the `scripts/check_docs.py` style, asserting
+    zero PwC engagement references in the repo, is a **candidate
+    mechanical control** — candidate, because the ruling is the control
+    and the scan would only evidence it. Channel use, if ever, flows
+    only through an explicit conflict-management arrangement with PwC
+    compliance — the ethical-wall conversation, owner Mike, before any
+    live sales activity.
+    **Sequencing:** after item 33's ruling pack, since P3 feeds the map;
+    and **before any live sales conversation**.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
