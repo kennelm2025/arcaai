@@ -836,6 +836,58 @@ this section is a working pointer, not the record.
     in-repo and found nowhere, and entered the tree on 2026-08-13 at
     `docs/governance/ADR-candidate-input_rulings-record_2026-08-13.md`
     only because it was supplied from disk.
+    **M3 — Server-side enforcement.** Client-side guards under
+    `.claude/` bind only the executor's tool calls; **any other git client
+    bypasses them entirely.** Enable GitHub branch protection on `main`:
+    required checks, required review, force-push and branch-deletion
+    disabled at platform level. The client guards then become defence in
+    depth over an environment-independent control, rather than the
+    control itself. *Near-term candidate: high evidence per hour.*
+    **M4 — Cryptographic signing and external anchoring.** SSH-signed
+    commits, and signed tags per gate or record, convert **asserted**
+    attribution into **key-bound** attribution and give tamper-evident
+    anchors. Pushing signed tags to GitHub anchors `main`'s history
+    outside the operator's machine. *Near-term candidate.*
+    **M5 — AI-authorship policy, stated.** The no-`Co-Authored-By` rule
+    strips per-line provenance **by design**, and the policy that makes
+    that defensible has never been written down. It must be: all code is
+    executor-drafted and operator-reviewed under the two-regime model;
+    review is evidenced by the PR trail; authorship provenance is **by
+    process, not by per-line labels**. Without the written policy, the
+    attribution-stripping reads as concealment — which is precisely how a
+    skilled person would read it.
+    **M6 — Evidence-store custody split.** CL-24 demonstrated that the
+    owner role can empty the audit store. That was correct under
+    commissioning and would be fatal in production. Production requires
+    WORM-class retention, or writer/deleter role separation with deletion
+    as an alarmed event. Named now so the CL-24 precedent is **explained
+    rather than discovered** by whoever reads the register next.
+    **M7 — Traceability matrix.** One artefact walking requirement →
+    decision (DEC/ADR) → code (PR) → test (probe or record) → evidence
+    (pack), navigable in **both** directions. Candidate: generated from
+    the registers by script rather than maintained by hand. This is the
+    document an audit starts from.
+    **M8 — Gate evidence packs and retention policy.** Each gate emits a
+    standard pack — hashes, probe tables, run records, approvals — to a
+    defined retention location, under a stated policy: what is kept,
+    where, for how long, and immutable by what mechanism. The 2026-08-13
+    manual scratchpad preservation (42 files copied to a durable
+    location, 6 of 6 custody hashes verified against the committed
+    record) is the manual instance proving the need.
+    **M9 — Restore evidence and recovery guide in-repo.** The recovery
+    guide currently lives in a Gmail draft, which is itself a finding of
+    the same shape as M2; commit it. Add a periodic **evidenced restore
+    drill**, answering the auditor's question "when did you last test
+    restore?" — for which the current honest answer is **never**.
+    **M10 — Actor identity, independent validation, dependency
+    provenance.** (a) Distinguish **operator-decided** from
+    **executor-performed** acts, by commit trailer or session record —
+    applying the Brain/Hands who-decided-versus-who-executed doctrine to
+    the build process itself. (b) Name lane one's spec-blind test-author
+    explicitly as the **SS1/23 independent-validation function** in the
+    control framework: one paragraph converting an architecture choice
+    into a named regulatory control. (c) Full dependency lockfile with
+    hashes, plus a basic SBOM stance, for the supply-chain question.
     **Known findings the framework must STATE HONESTLY rather than
     hide** — a framework that omits its own weaknesses fails the audit
     it was written for:
@@ -859,7 +911,11 @@ this section is a working pointer, not the record.
     compliance — the ethical-wall conversation, owner Mike, before any
     live sales activity.
     **Sequencing:** after item 33's ruling pack, since P3 feeds the map;
-    and **before any live sales conversation**.
+    and **before any live sales conversation**. Within the mechanisms:
+    **M3 and M4 are immediately buildable** and are candidate filler for
+    the next sessions; **M6 is production-phase**, named early so the
+    CL-24 precedent carries its explanation; the rest ride the
+    control-framework deliverable.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
