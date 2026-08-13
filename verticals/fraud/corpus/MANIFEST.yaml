@@ -68,7 +68,24 @@
 # Appended entries and transitions only; nothing above is modified
 # (DEC-0014 item 5).
 
-manifest_version: 2026-08-06.7
+# Version note (2026-08-13.8): sector-guidance listing act — the seven
+# authored but unlisted documents SYN-SG-03..09 are listed. LISTING ONLY:
+# every entry enters at pending_review and inclusion remains a separate
+# governed act, per the .4 precedent. These documents are NOT panel
+# reviewed — batch-2 circulation is open with its scope owed at CLAUDE.md
+# queue item 9 — and each reason string says so positively rather than by
+# omission, at operator ruling 2026-08-13. This is the first listing act
+# in which the authoring date and the listing date differ; earlier
+# versions coincided, so precedent was silent rather than contrary. The
+# date carried is the LISTING act, matching the act each reason string
+# names, ruled 2026-08-13 (CLAUDE.md queue item 26(c)). Hashes computed by
+# scripts/corpus_manifest_entries.py this date and independently
+# reconciled against the files (drift check clean). Corpus-design findings
+# raised during this act are ROUTED, not folded in: see
+# docs/governance/FINDINGS_2026-08-13_sg-listing-corpus-findings.md.
+# Appended entries only; nothing above is modified (DEC-0014 item 5).
+
+manifest_version: 2026-08-13.8
 
 documents:
 
@@ -459,6 +476,111 @@ documents:
       - state: pending_review
         date: 2026-08-06
         reason: "authored; batch-1 panel review accepted 2026-08-06 (three reviewers); operator rulings RULINGS_RECORD_2026-08-06_batch1; awaiting operator inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-SG-03
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Sector Guidance series · SG-03"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "4cf0fb2d16dd0dac856c1b8480c1d9d46cae7187c590577f0b5310d2ca610931"
+    eligibility:
+      - state: pending_review
+        date: 2026-08-13
+        reason: "not yet panel-reviewed (batch-2 open); listed 2026-08-13; awaiting operator inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-SG-04
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Sector Guidance series · SG-04"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "efa71c76b0ee362fb01b02f1c8fd87a8ddb61140a73af65e7e7a7a745d0d6ba3"
+    eligibility:
+      - state: pending_review
+        date: 2026-08-13
+        reason: "not yet panel-reviewed (batch-2 open); listed 2026-08-13; awaiting operator inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-SG-05
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Sector Guidance series · SG-05"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "86f3df6d9a1f6222c339c0a7b9e3c305ceae175ca1de3f86b727dbfca09cf8ee"
+    eligibility:
+      - state: pending_review
+        date: 2026-08-13
+        reason: "not yet panel-reviewed (batch-2 open); listed 2026-08-13; awaiting operator inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-SG-06
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Sector Guidance series · SG-06"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "023b9927eb66171342b8c22e1d498f011656855ba9063028becfcf1004592da9"
+    eligibility:
+      - state: pending_review
+        date: 2026-08-13
+        reason: "not yet panel-reviewed (batch-2 open); listed 2026-08-13; awaiting operator inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-SG-07
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Sector Guidance series · SG-07"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "053815054e6178c01384bda4571e5261d9dc010b42dc97f4d99537bf7e00f8f0"
+    eligibility:
+      - state: pending_review
+        date: 2026-08-13
+        reason: "not yet panel-reviewed (batch-2 open); listed 2026-08-13; awaiting operator inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-SG-08
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Sector Guidance series · SG-08"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "3ade667f196a0213d3d27c880c2c46116f8d02f4b0f155e80f01857f01522ad2"
+    eligibility:
+      - state: pending_review
+        date: 2026-08-13
+        reason: "not yet panel-reviewed (batch-2 open); listed 2026-08-13; awaiting operator inclusion decision"
+    processing:
+      chunker_version: null
+      embedding_model: null
+      chunk_count: null
+      ingest_timestamp: null
+
+  - id: SYN-SG-09
+    source: "SYNTHETIC — arcaai test corpus. Not issued by any real authority. Licence: synthetic-arcaai. The Authority · Sector Guidance series · SG-09"
+    licence: synthetic-arcaai
+    sa5_classification: internal-sensitive
+    content_sha256: "56adb90ef5513212432a6e43b312d3eda16410693dc9a701f7f3e92f748b901d"
+    eligibility:
+      - state: pending_review
+        date: 2026-08-13
+        reason: "not yet panel-reviewed (batch-2 open); listed 2026-08-13; awaiting operator inclusion decision"
     processing:
       chunker_version: null
       embedding_model: null
