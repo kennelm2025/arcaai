@@ -71,6 +71,12 @@ PROTECTED_PATTERNS = [
     r"\.claude[/\\]settings\.json",
     r"\.claude[/\\]hooks[/\\]",
     r"\.claude[/\\]skills[/\\]",
+    # NARROWING, 2026-08-13 (CL-27 arc, queue item 27). Agent definitions
+    # were absent here while skills were gated, so a subagent's tool grants
+    # and instructions could be rewritten ungated. An agent definition
+    # states what a subagent MAY DO and is at least as load-bearing as a
+    # skill: the gap was latitude nobody ruled, not a decision anybody took.
+    r"\.claude[/\\]agents[/\\]",
     # decisions/ is the ADR register AND its filesystem: repo_manifest
     # reads the leading four digits off each filename, so writing a
     # file here consumes register numbers silently. Register-consuming
