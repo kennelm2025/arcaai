@@ -867,6 +867,16 @@ this section is a working pointer, not the record.
     (pack), navigable in **both** directions. Candidate: generated from
     the registers by script rather than maintained by hand. This is the
     document an audit starts from.
+    **AMENDED 2026-08-13.** The control framework and the traceability
+    matrix map **primarily to SS1/23 principles and the ISO/IEC 42001
+    clause structure**, with **ISO 27001 and SOC 2 trust criteria as
+    secondary maps**. External attestation is named as a **STAGED**
+    target, not a present claim: **SOC 2 Type II at the first serious
+    prospect** — its observation period means the clock starts early, so
+    the decision to begin is itself time-sensitive — and **ISO 42001 when
+    revenue justifies it**. Any interim external review is by a
+    **specialist independent firm, non-channel** per the external-party
+    boundary recorded below.
     **M8 — Gate evidence packs and retention policy.** Each gate emits a
     standard pack — hashes, probe tables, run records, approvals — to a
     defined retention location, under a stated policy: what is kept,
@@ -888,6 +898,27 @@ this section is a working pointer, not the record.
     control framework: one paragraph converting an architecture choice
     into a named regulatory control. (c) Full dependency lockfile with
     hashes, plus a basic SBOM stance, for the supply-chain question.
+    **M11 — Standards-mapping convention for governed artefacts.** Every
+    governed artefact of the classes below carries a standards-mapping
+    line in its header or footer, in one controlled form:
+    `Control mapping: <framework> <ref>[; <framework> <ref>...]`
+    Controlled vocabulary, closed: SS1/23, ISO42001, ISO27001, SOC2,
+    NIST-AI-RMF, EU-AI-Act.
+    (a) **The line is a MAPPING, never a compliance claim.** The words
+    *compliant*, *certified* and *conformant* are **FORBIDDEN** in the
+    line absent an actual certificate. `scripts/check_docs.py` gains an
+    assertion enforcing both the line format AND the forbidden-words
+    rule — a mechanism, not a convention, because a convention against
+    overclaiming is exactly the kind that erodes under sales pressure.
+    (b) **Prospective** for new artefacts in these classes: DEC and ADR
+    entries, rulings records, session and gate records, the TOR and Test
+    Plan, evidence packs, and the control framework itself.
+    (c) **Retrofit is selective** — key existing artefacts gain the line
+    at their next legitimate touch, **never as a history rewrite**.
+    (d) **Per-class mapping content is defined once in the control
+    framework**, so authors copy rather than compose and two artefacts of
+    a class cannot map the same obligation differently. First exercised
+    on the control framework itself.
     **Known findings the framework must STATE HONESTLY rather than
     hide** — a framework that omits its own weaknesses fails the audit
     it was written for:
