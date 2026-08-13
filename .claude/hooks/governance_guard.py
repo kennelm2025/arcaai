@@ -98,8 +98,6 @@ GIT_WRITE_RE = re.compile(
     r"|apply|tag)\b"
 )
 ASK_COMMAND_RES = [
-    (re.compile(r"\bgh\s+pr\s+merge\b"),
-     "Merging a PR is an operator act (Tier 3). Confirm before it runs."),
     (re.compile(r"\bgit\s+branch\s+-[dD]\b"),
      "Branch deletion is gated (Tier 2). Deleting the just-merged branch "
      "is routine, but this guard cannot tell which branch that is - "
@@ -129,6 +127,169 @@ WRITEY_RE = re.compile(
     r"\bCopy-Item\b|\bSet-Content\b|\bAdd-Content\b|\bOut-File\b)",
     re.IGNORECASE,
 )
+
+
+# ---------------------------------------------------------------- merge gate
+#
+# Merge delegation, Option B (operator ruling 2026-08-13, CL-27 arc, queue
+# item 27). The candidate clause proposed that `gh pr merge` become an ALLOW
+# when the operator's approval and green checks are both present. It is
+# deliberately NOT built that way.
+#
+# The invariant stated above at "Tier 2, state-dependent" is load-bearing and
+# is preserved here verbatim in effect: this guard returns deny or ask and
+# NEVER allow, so it can narrow a Tier 1 grant but can never widen one. A
+# guard that could allow would be a GRANTING mechanism, and every future
+# defect in it would confer merge rights rather than merely fail to block.
+# Option B keeps the live reads the candidate wanted and spends them on
+# refusing early rather than on proceeding automatically:
+#
+#   approval missing / not APPROVED ............ DENY
+#   approval not pinned to current head SHA .... DENY  (approve-push-merge)
+#   any check not green ........................ DENY
+#   state unreadable or UNKNOWN ................ DENY  (fail closed)
+#   approval on current head AND checks green .. ASK   (never allow)
+#
+# This is strictly stronger than the unconditional ASK it replaces, which
+# asked identically on every PR regardless of its state. The operator still
+# confirms; what changes is that the confirmation can now only be reached by
+# a PR that genuinely carries approval and green checks.
+#
+# Decision logic is a PURE FUNCTION over a state dict, separate from the IO
+# that fetches it. That is not tidiness: it is what makes the refusal paths
+# probeable. A stale-approval or checks-failing state can be injected
+# directly, where manufacturing a real one would mean creating a genuinely
+# broken pull request to test with.
+
+GH_PR_MERGE_RE = re.compile(r"\bgh\s+pr\s+merge\b")
+_PR_NUM_RE = re.compile(r"\bgh\s+pr\s+merge\s+(?:[^\s]+\s+)*?(\d+)\b")
+
+MERGE_DENY_PREFIX = "MERGE DENIED"
+
+
+def _gh_json(args: list[str], timeout: int = 4):
+    """Run a gh command expecting JSON on stdout.
+
+    Returns the parsed object, or None for ANY failure — non-zero exit,
+    timeout, gh absent, unparseable output. None is UNKNOWN and the caller
+    must treat it as a refusal, never as an absence of problems.
+    """
+    try:
+        result = subprocess.run(
+            ["gh"] + args, cwd=REPO_ROOT, capture_output=True,
+            text=True, timeout=timeout,
+        )
+    except Exception:
+        return None
+    if result.returncode != 0:
+        return None
+    try:
+        return json.loads(result.stdout)
+    except Exception:
+        return None
+
+
+def read_merge_state(command: str) -> dict:
+    """Fetch live merge-relevant state for the PR named in ``command``.
+
+    Every field defaults to the UNKNOWN-ish value that denies. Reviews are
+    read through the REST API rather than ``gh pr view --json reviews``
+    because the latter does not carry the commit each review was submitted
+    against, and without that the approval cannot be pinned to the head SHA
+    — which is the whole point of the pin.
+    """
+    state: dict = {"readable": False, "head_oid": None,
+                   "approvals_on_head": [], "failing_checks": [],
+                   "pending_checks": [], "pr": None}
+
+    match = _PR_NUM_RE.search(command)
+    pr = match.group(1) if match else None
+    if pr is None:
+        view = _gh_json(["pr", "view", "--json", "number"])
+        if not isinstance(view, dict) or "number" not in view:
+            return state
+        pr = str(view["number"])
+    state["pr"] = pr
+
+    view = _gh_json(["pr", "view", pr, "--json", "headRefOid,statusCheckRollup"])
+    if not isinstance(view, dict) or not view.get("headRefOid"):
+        return state
+    head = view["headRefOid"]
+    state["head_oid"] = head
+
+    for check in view.get("statusCheckRollup") or []:
+        name = check.get("name") or check.get("context") or "<unnamed>"
+        verdict = (check.get("conclusion") or check.get("state") or "").upper()
+        if verdict in ("SUCCESS", "NEUTRAL", "SKIPPED"):
+            continue
+        if verdict in ("", "PENDING", "QUEUED", "IN_PROGRESS", "EXPECTED"):
+            state["pending_checks"].append(name)
+        else:
+            state["failing_checks"].append(f"{name}={verdict.lower()}")
+
+    reviews = _gh_json(["api", f"repos/{{owner}}/{{repo}}/pulls/{pr}/reviews"])
+    if not isinstance(reviews, list):
+        return state
+    for review in reviews:
+        if (review.get("state") or "").upper() != "APPROVED":
+            continue
+        who = (review.get("user") or {}).get("login") or "<unknown>"
+        state["approvals_on_head"].append(
+            {"login": who, "commit_id": review.get("commit_id"),
+             "on_head": review.get("commit_id") == head}
+        )
+
+    state["readable"] = True
+    return state
+
+
+def evaluate_merge_delegation(state: dict) -> tuple[str, str]:
+    """Pure decision over merge state. Returns (decision, reason).
+
+    Returns only "deny" or "ask". There is no branch that returns allow, and
+    adding one would reverse this module's invariant — see the block comment
+    above before considering it.
+    """
+    if not state.get("readable"):
+        return ("deny", (
+            f"{MERGE_DENY_PREFIX} (state unreadable): live GitHub state for this "
+            "PR could not be read, so approval and checks cannot be shown to "
+            "hold. UNKNOWN is not a green and never collapses into proceed. "
+            "Merge at the GitHub UI, or re-run once gh can reach the API."))
+
+    approvals = state.get("approvals_on_head") or []
+    if not approvals:
+        return ("deny", (
+            f"{MERGE_DENY_PREFIX} (no approval): the PR carries no APPROVED "
+            "review. The operator's approval IS the ruling record; without it "
+            "there is nothing for a merge to execute."))
+
+    on_head = [a for a in approvals if a.get("on_head")]
+    if not on_head:
+        stale = ", ".join(
+            f"{a.get('login')}@{str(a.get('commit_id'))[:7]}" for a in approvals)
+        return ("deny", (
+            f"{MERGE_DENY_PREFIX} (stale approval): approval(s) {stale} were "
+            f"submitted against a commit other than the current head "
+            f"{str(state.get('head_oid'))[:7]}. Approve-push-merge must not "
+            "launder an unreviewed change through an older approval."))
+
+    failing = state.get("failing_checks") or []
+    pending = state.get("pending_checks") or []
+    if failing or pending:
+        detail = "; ".join(filter(None, [
+            ("failing: " + ", ".join(failing)) if failing else "",
+            ("not yet green: " + ", ".join(pending)) if pending else "",
+        ]))
+        return ("deny", (
+            f"{MERGE_DENY_PREFIX} (checks not green): {detail}."))
+
+    who = ", ".join(a.get("login") or "<unknown>" for a in on_head)
+    return ("ask", (
+        f"Merge gate satisfied: approved by {who} against the current head "
+        f"{str(state.get('head_oid'))[:7]}, all checks green. This guard "
+        "never returns allow, so merging remains an operator act (Tier 3) - "
+        "confirm before it runs."))
 
 
 def current_branch() -> str | None:
@@ -184,6 +345,10 @@ def main() -> None:
                 "and ceremony system). Confirm the governed act this "
                 "serves before it runs.",
             )
+        if GH_PR_MERGE_RE.search(command):
+            decision, reason = evaluate_merge_delegation(
+                read_merge_state(command))
+            respond(decision, reason)
         for pattern, message in ASK_COMMAND_RES:
             if pattern.search(command):
                 respond("ask", message)
