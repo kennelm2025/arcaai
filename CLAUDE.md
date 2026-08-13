@@ -661,6 +661,33 @@ this section is a working pointer, not the record.
     construction. Detail:
     `docs/governance/GOVERNANCE_REVIEW_CHANGELOG.md` CL-24 closure and
     `docs/governance/CL-24_governed-store-baseline_2026-08-12.md`.
+    **COORDINATOR EXPANSION (2026-08-13, ruled).** The item above states
+    the defect; this states how it is discharged.
+    *Verify-first obligations, which the implementing session performs and
+    this item does not:* (1) enumerate the five tables from the LIVE schema
+    as `arcaai_app`, non-elevated, noting that `information_schema` is
+    privilege-filtered and can return false-complete listings (item 8
+    dossier) — corroborate by a second method, the in-tree migrations or
+    DDL, before treating the list as the coverage target; (2) read the
+    instrument and the sweep and enumerate their ACTUAL table coverage from
+    the code, not from this item's claim about it.
+    *Required change:* identity reporting extended to `audit_payload` and to
+    any divergence the read reveals — row counts plus identity-scoped counts
+    per table, in the existing output discipline. **The sweep's GREEN names
+    all five tables explicitly**, because a scope-naming output is checkable
+    and "all tables" is not. Three-outcome discipline per table; an
+    unreadable table is UNKNOWN and exits non-zero. No elevation and no
+    owner-role assumption (WS-E 66): owner-only readability is a named
+    UNKNOWN, never an elevation prompt.
+    *Verification:* D-1, a revoked or absent grant resolves to UNKNOWN at
+    non-zero exit, so a false-complete listing cannot recur silently; D-2, a
+    four-table GREEN must be impossible to emit — probe by scope-list
+    injection if the design permits it, and state the limit plainly if it
+    does not; A-1, a full run as `arcaai_app` reports five named tables,
+    GREEN.
+    *Out of scope:* schema changes, data acts, and the definition of
+    "identity-scoped". *Open at implementation:* whether the extended sweep
+    supersedes the ceremony's or runs alongside it until parity is shown.
 29. **Ceremony-skills rewiring: describe → call
     `scripts/d22a_preflight.py`** — NEW 2026-08-12, **RULED IN** as
     transcription-in-spirit, execution deferred. `CLAUDE.md` and
@@ -716,6 +743,68 @@ this section is a working pointer, not the record.
     Fix is to force UTF-8 at harness entry. Affects transcript
     fidelity, not artefact content. Source: CL-27 record F7,
     `docs/governance/COMMISSIONING_SESSION_RECORD_2026-08-13_d22a-runner-spike.md`.
+33. **Pre-B7-exit ruling pack** — NEW 2026-08-13, RULED IN as an item.
+    B7 exit (plan step 10) opens B8/B9, and three architecture decisions
+    recorded in the operator's drafts of 28 Jul, 9 Aug and 10 Aug 2026 are
+    owed BEFORE that door opens. Those drafts live in Gmail, **outside this
+    repository**, which is itself the reason the item exists: if the door
+    opens first, code decides these implicitly and the record is written
+    backwards. **Premise to verify at implementation, not now:** check the
+    SME panel's 21 ruled items before treating any amendment below as
+    homeless.
+    **P1 — Integration-modes ADR.** *Panel: ADVISABLE.* Three decision
+    classes — inline authorisation with explicit fail-open or fail-closed on
+    timeout; post-event pre-settlement; retrospective batch. The
+    feature-availability fork (platform-owned pre-computed store versus
+    enrich-at-call) is named the binding constraint. The audit-write fork
+    (durable-write-before-response on the authorisation path, async
+    elsewhere) is decided explicitly under SM&CR reasoning. The integration
+    surface is adapter-shaped to protect ADR-0009, with the B9.5 consequence
+    noted. Commercial sequencing — build real-time, pilot deferred — is
+    recorded as context only.
+    **P2 — Mandate/admission-check design note.** *Panel: ADVISABLE,
+    strongly.* Panel-convergent finding: the mandate artefact does not exist
+    and is the most important new control surface. The note covers schema;
+    versioning; the revocation path and its failure semantics, including a
+    running component holding a revoked mandate and an unavailable mandate
+    store; three-way hash reconciliation across artefact, mandate and
+    promotion record; and platform-level enforcement with a negative CI test
+    in which an unmandated artefact hard-fails. **No consolidation or memory
+    code before this note is ruled.**
+    **P3 — Panel amendment disposition table.** *Panel: COURTESY
+    re-circulation.* Enumerate the four reviews' required amendments against
+    the 21 ruled items as ADOPTED (cite), REJECTED (cite), or HOMELESS
+    (owner plus vehicle). Check-set at minimum: tenant isolation as a named
+    gate criterion pre-AWS; per-tier context budgets with summarisation
+    discipline; Policy Fast Lane as a release class with bounds, validators
+    and re-review; two-zone Domain 1 with a redaction pipeline as a mandated
+    artefact; a memory-pattern DEC generalising DEC-0014; transactional
+    hash-pinned rollback; canary isolation with independent verification;
+    statistical parity for promotion gates; attestation signing, carrying
+    the DeepSeek dissent verbatim; a single audited loader with
+    least-privilege egress; a consolidation cost cap; a minimum-viable ops
+    manual plus mock-bank trial; and the S16 Domain-1 pilot rulings as
+    production-critical-path.
+    **PANEL-ROUND CONVENTION — CANDIDATE.** Documents circulate only as
+    committed, hash-pinned drafts, with the hash stated in the circulation
+    pack. Every panel response returns verbatim as a committed file pinned
+    to the reviewed hash, and dissents are never summarised. The chair's
+    ruling closes each round with a per-finding disposition table: adopted /
+    rejected-with-reason / deferred-with-owner. Marked CANDIDATE
+    deliberately — whether it earns a DEC number is ruled when it is first
+    exercised, not before.
+    **Feeder notes.** The Brain/Hands Decoupling seed enters ADR-0011's
+    input set. Its "ADR 0012" numbering lives in the operator's Gmail draft
+    outside this repository and no repo file carries it — verified by a
+    repo-wide search on 2026-08-13, where `0012` resolves only to DEC-0012.
+    The correction is therefore scoped to the **seed's commit header at ADR
+    input assembly**, against the register anchor live at that moment, and
+    to no existing file.
+    *Transmission note:* the brief conveying this item truncated at the
+    feeder-notes line. The Brain/Hands note above is reconstructed from the
+    same brief's preamble and the 2026-08-13 ruling, both of which state it
+    explicitly. **If further feeder notes were intended they are missing**;
+    confirm before treating this list as complete.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
