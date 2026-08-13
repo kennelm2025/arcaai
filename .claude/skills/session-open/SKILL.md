@@ -7,6 +7,34 @@ allowed-tools: Bash(python:*), Bash(git status:*), Bash(git log:*), Bash(git dif
 
 # Session open — boot ritual
 
+## Authority split (operator ruling 2026-08-13)
+
+> "session-open split — mechanical boot delegable, arc-naming remains operator
+> ask"
+
+**Tasks 1–6 are the MECHANICAL BOOT and are delegable to the executor.** Render
+scan, tree and pull state, environment identity, the manifest anchor readback,
+the rehash sweep, and the pre-flight call. Every one of them reads state and
+reports it. A failure in any of them is a stop-and-report at that step, which
+is the existing discipline and is unchanged by this split.
+
+**Task 7 — naming the arc — is OPERATOR-ONLY and is never delegated.** The
+executor runs the boot, presents the queue readback, and then STOPS and asks
+the operator to name the arc in one line.
+
+Why, stated because the reason is the whole point: **arc-naming is a ruling.**
+It selects what the session is for, and it discharges the DEC-0017
+build-first arc-selection step. An executor that names its own arc has
+manufactured a ruling and then recorded it as though the operator made it —
+which is the WS-E 51 / 53 / 55 shape, where a value was stated as fact without
+the act behind it having happened. A self-named arc is worse than those,
+because the fabricated thing is an operator decision rather than a number.
+
+The boot may therefore complete unattended. The session may not begin
+unattended. If the operator is not available to name the arc, the correct
+outcome is a completed boot and a stopped session, not a plausible guess at
+what the arc probably is.
+
 Live state, captured now (not from any static file).
 
 Every render below is failure-tolerant, and that is the point: a `!`
@@ -74,6 +102,11 @@ proceeding past a load-bearing one.
    step. Do not substitute a hand-run traversal check: the prose form
    carried no non-elevation assertion and returned green under an
    elevated shell, which is the false green this script exists to close.
-7. Read back the Current Queue section of CLAUDE.md and ask the operator
-   which single queue item this session's arc is. Do not start work
-   until the arc is named. One arc per session.
+7. **OPERATOR-ONLY — the boot ends here.** Read back the Current Queue
+   section of CLAUDE.md and ask the operator which single queue item
+   this session's arc is. Do not start work until the arc is named.
+   One arc per session. Naming it is a ruling and is not delegable: see
+   the authority split at the top of this file. Present the queue, ask
+   the question, and stop. An arc inferred from the queue, from the
+   newest handover, or from what the session "obviously" is next is a
+   manufactured ruling — record no arc that the operator did not say.
