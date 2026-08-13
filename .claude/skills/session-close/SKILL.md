@@ -73,7 +73,20 @@ treats as proof an act did not happen:
    handover document. Do NOT write the handover file yourself unless
    the operator explicitly commands it — handover authoring is a
    governed act in its own right.
-5. Ask the operator explicitly for the handover command, and do not
+5. **Session cost — at the operator stop.** The operator pastes the
+   `/cost` readout: total cost, API duration, lines changed, and the
+   usage-pattern notes. The executor appends the row to
+   `docs/governance/SESSION_COSTS.md`, which is append-only.
+   **A close without a cost row records `NOT SUPPLIED` explicitly** —
+   the absence is written, never silent. An empty cell and a cell
+   nobody filled are different facts, and only one of them is
+   checkable.
+   The figures are the operator's and are approximate and machine-local
+   by the tool's own caveat; the executor transcribes them and does not
+   verify them, and the row records its source accordingly. Purpose is
+   cost-per-arc telemetry feeding item 34 M8 and the consolidation
+   cost-cap discipline.
+6. Ask the operator explicitly for the handover command, and do not
    report this ceremony as complete until the handover is either
    commanded, or deferred on the record in the operator's own words.
    Silence is not deferral. The queue update at step 2 lands by
@@ -88,7 +101,7 @@ treats as proof an act did not happen:
    authoring itself stays a governed act on operator command —
    unchanged by this step, which asks for the command and never
    substitutes for it.
-6. State the **rolling five-step plan**: the next five steps as a plan of
+7. State the **rolling five-step plan**: the next five steps as a plan of
    record, each tagged with what kind of step it is. Three kinds, and the
    tag is the point — an untagged list flattens work that cannot be
    parallelised into work that can:
@@ -106,4 +119,4 @@ treats as proof an act did not happen:
    genuinely known, and never pad the list to reach it. The plan is a
    projection and is not itself a ruling — the operator may reorder it
    without that being a deviation from anything.
-7. Remind the operator: `/clear` before starting the next arc.
+8. Remind the operator: `/clear` before starting the next arc.
