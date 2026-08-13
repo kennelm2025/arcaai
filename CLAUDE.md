@@ -666,10 +666,12 @@ this section is a working pointer, not the record.
     artefacts and build holds right of way under DEC-0017. Executes at
     the next governance-eligible window, **ideally riding the same PR
     as the item 27 tier-amendment work**, since both touch `.claude/`
-    and both want one probe-tested landing. **Until then the prose
-    descriptions stand** — and anyone who touches them carries a
-    known-superseded note pointing at the script rather than editing
-    the prose as though it were current. Detail:
+    and both want one probe-tested landing. **+ F6 candidate rider:
+    align session-open manifest invocation with documented `--out`
+    (CL-27 record F6).** **Until then the prose descriptions stand** —
+    and anyone who touches them carries a known-superseded note
+    pointing at the script rather than editing the prose as though it
+    were current. Detail:
     `docs/governance/GOVERNANCE_REVIEW_CHANGELOG.md` CL-26.
 30. **D2.2a runner spike — the next arc under DEC-0017.** The spike
     proper, of which the pre-flight at item 3 was one part: minimal
@@ -688,6 +690,27 @@ this section is a working pointer, not the record.
     it. Detail: `docs/governance/D2.0_COMMISSIONING_FRAME_2026-08-11.md`
     and `docs/governance/TOR_test-capability_RevC_RULED_2026-08-10.md`
     section 5A.
+31. **`retrieval_snapshot_sha256` mandatory for retrieval-class at
+    spec schema v0.2** — NEW 2026-08-13, OPEN. The field is optional at
+    v0.1 and the schema's own comment defers the question to the D2.2a
+    spike; the spike pinned it, ruled in as spike-scoped only, and did
+    not settle it. Substance: the manifest hash excludes the processing
+    facts — chunker version, embedding model, chunk counts — that
+    decide what the retriever actually sees, so a retrieval scenario
+    pinning only the manifest pair records a reproducibility claim
+    narrower than it appears. A change is a **new versioned file**;
+    v0.1 is immutable once merged and is never edited. Source: CL-27
+    record F2,
+    `docs/governance/COMMISSIONING_SESSION_RECORD_2026-08-13_d22a-runner-spike.md`.
+32. **Harness shell cp1252 encoding corrupts transcript rendering** —
+    NEW 2026-08-13, OPEN, LOW PRIORITY. The shell resolves to the
+    Windows ANSI code page, so printing any repository artefact
+    containing an em-dash or arrow raises a Unicode encode error until
+    UTF-8 is forced, and the runner's own stdout rendered its regime
+    banner's em-dash as a replacement character in every captured run.
+    Fix is to force UTF-8 at harness entry. Affects transcript
+    fidelity, not artefact content. Source: CL-27 record F7,
+    `docs/governance/COMMISSIONING_SESSION_RECORD_2026-08-13_d22a-runner-spike.md`.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session

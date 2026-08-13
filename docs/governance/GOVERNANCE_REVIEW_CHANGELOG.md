@@ -239,6 +239,34 @@ principle mapping for the B8/B9 artefact set.
   ceremony artefacts, held for operator ruling. *(Source: DEC-0015 proof-first
   sequencing; `docs/governance/D2.0_COMMISSIONING_FRAME_2026-08-11.md`;
   `docs/governance/FINDINGS_2026-08-11_onnx-acl-root-cause.md` sections 4-6)*
+- [x] **CL-27** *(new, 13 Aug; CLOSED 2026-08-13)* D2.2a runner spike: the
+  minimal scenario runner at `arcaai/harness/runner.py` — spec in, corpus queried
+  at a pinned snapshot, result JSON out — built from nothing, the harness package
+  having held only its `arcaai/harness/__init__.py` and the v0.1 schema. Runs
+  under the D2.0 commissioning frame, COMMISSIONING-labelled throughout, results
+  permanently inadmissible as gate evidence. *(Source: `CLAUDE.md` queue item 30;
+  `docs/governance/D2.0_COMMISSIONING_FRAME_2026-08-11.md`;
+  `docs/governance/TOR_test-capability_RevC_RULED_2026-08-10.md` section 5A)*
+  **CLOSURE.** Discharged 2026-08-13 on branch `commissioning/d22a-spike-cl27`,
+  runner commit `7bad3b7`. Exit criterion met: **REPRODUCIBLE: YES** — two runs of
+  scenario RQA-001 at the same triple produced comparable-content sha256
+  `4124f3359b584be1ba92397526e74828af79becd64302f0b437bdd3cc881b1a3` on both,
+  verified by a recompute external to the runner, with the generated timestamp the
+  only differing key across the two complete artefacts. The scenario's own
+  pass/fail is **not** an exit criterion and none is recorded: RQA-001 scored
+  recall_at_k 0.0, carried as finding F1 and routed to the Test Plan (D1.1), not
+  chased in-spike and nothing tuned to produce a match. Refusals proved rather
+  than assumed: four deny-shaped probes refused at **exit 2, 3, 3 and 4**, each
+  naming what failed, the two pin probes isolated to one wrong pin each so they
+  evidence that the runner names the correct pin; result-artefact count 2 before
+  and 2 after, so refusals write nothing. Boundaries held: chromadb reaches the
+  runner only through ChromaStore (CF-1/B7-a), and nothing imports from the
+  verticals tree with no vertical-shaped default anywhere (ADR-0009). Full record:
+  `docs/governance/COMMISSIONING_SESSION_RECORD_2026-08-13_d22a-runner-spike.md`,
+  the first instance of the Commissioning Session Record form. F2 and F7 opened as
+  queue items, F6 attached to the Arc 2 combined pull request, and F8 — where a
+  Commissioning Session Record lives is ruled only in part — raised for a future
+  ruling.
 
 ## Workstream E — Engineering process & protocols
 - [ ] **CL-E1** (carried in) Record the force-push-to-main incident + add a guard
