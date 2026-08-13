@@ -189,8 +189,13 @@ attended, single-arc. Do not suggest detached (`/bg`) sessions on this repo.
   invoke unprompted).
 - `/pr-prep` — pre-PR battery (diff-stat first) and house-style PR body draft.
 
-Any session touching retrieval starts with the standing first act: the normal-shell
-ONNX cache traversal check, before other work.
+Any session touching retrieval starts with the standing first act, and the act is to
+**call `python scripts/d22a_preflight.py`**, not to re-perform the check from prose.
+Exit 0 with 4/4 GREEN is the only pass; UNKNOWN and SKIPPED both exit non-zero. The
+prose ONNX-cache-traversal description this line used to carry asserted no
+non-elevation and returned green under an elevated shell — the artefact supersedes it
+(CL-26), and describing a procedure the repository already implements is how the two
+drift apart.
 
 ## Conventions that will bite you
 

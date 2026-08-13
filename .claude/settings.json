@@ -24,6 +24,9 @@
       "Bash(python scripts/check_docs.py:*)",
       "Bash(python scripts/repo_manifest.py:*)",
       "Bash(python scripts/rehash_sweep.py:*)",
+      "Bash(python D:/ArcaAI-repo/arcaai/scripts/check_docs.py:*)",
+      "Bash(python D:/ArcaAI-repo/arcaai/scripts/repo_manifest.py:*)",
+      "Bash(python D:/ArcaAI-repo/arcaai/scripts/rehash_sweep.py:*)",
       "PowerShell(git status:*)",
       "PowerShell(git diff:*)",
       "PowerShell(git log:*)",
@@ -44,8 +47,13 @@
       "PowerShell(python scripts/check_docs.py:*)",
       "PowerShell(python scripts/repo_manifest.py:*)",
       "PowerShell(python scripts/rehash_sweep.py:*)",
+      "PowerShell(python D:\\ArcaAI-repo\\arcaai\\scripts\\check_docs.py:*)",
+      "PowerShell(python D:\\ArcaAI-repo\\arcaai\\scripts\\repo_manifest.py:*)",
+      "PowerShell(python D:\\ArcaAI-repo\\arcaai\\scripts\\rehash_sweep.py:*)",
       "PowerShell(scripts\\lint.cmd:*)",
       "PowerShell(scripts\\test.cmd:*)",
+      "PowerShell(D:\\ArcaAI-repo\\arcaai\\scripts\\lint.cmd:*)",
+      "PowerShell(D:\\ArcaAI-repo\\arcaai\\scripts\\test.cmd:*)",
       "PowerShell(D:\\arcaai-repo\\arcaai\\scripts\\lint.cmd:*)",
       "PowerShell(D:\\arcaai-repo\\arcaai\\scripts\\test.cmd:*)"
     ]

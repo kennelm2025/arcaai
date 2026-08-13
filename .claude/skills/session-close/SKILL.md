@@ -58,4 +58,22 @@ treats as proof an act did not happen:
    authoring itself stays a governed act on operator command —
    unchanged by this step, which asks for the command and never
    substitutes for it.
-6. Remind the operator: `/clear` before starting the next arc.
+6. State the **rolling five-step plan**: the next five steps as a plan of
+   record, each tagged with what kind of step it is. Three kinds, and the
+   tag is the point — an untagged list flattens work that cannot be
+   parallelised into work that can:
+   - **spine** — serial, blocking, and in order. A spine step cannot start
+     before its predecessor lands. Merges are almost always spine.
+   - **shadow** — work that can run alongside the spine because it touches
+     a disjoint set of files. Name the files it touches, so the disjointness
+     is checkable rather than asserted; a shadow step that collides with the
+     spine is a spine step wearing the wrong label.
+   - **ruling** — needs the operator and nothing else, so it is costed in
+     the operator's minutes rather than in session time. State roughly how
+     long it should take, because a 60-second ruling blocking an hour of
+     shadow work is the thing this tagging exists to surface.
+   Five is a working horizon, not a target: state fewer if fewer are
+   genuinely known, and never pad the list to reach it. The plan is a
+   projection and is not itself a ruling — the operator may reorder it
+   without that being a deviation from anything.
+7. Remind the operator: `/clear` before starting the next arc.
