@@ -105,6 +105,34 @@ ASK_COMMAND_RES = [
 ]
 
 DENY_COMMAND_RES = [
+    # H-11 hardening, operator ruling 2026-08-13: "H-11 hardening in by
+    # mechanism". Force-deleting a branch is denied outright; the lowercase
+    # -d stays permitted and Tier 1 grants it (PR #109).
+    #
+    # WHY A DENY AND NOT AN ASK. -d refuses to delete an unmerged branch, and
+    # that refusal is the guard the cleandown grant relies on. -D removes the
+    # refusal, which is precisely the property that made -d safe to grant. An
+    # ask would leave the two forms one keystroke apart with the same prompt
+    # behind them; a deny makes the difference mechanical.
+    #
+    # CASE-SENSITIVE ON PURPOSE. re is case-sensitive by default and this
+    # pattern must never gain re.IGNORECASE: folding case here would deny the
+    # lowercase form too and silently revoke the ruled cleandown grant.
+    #
+    # Recovery is not lost. A branch deleted with -d is reachable by reflog,
+    # and a genuinely unmerged branch that must go is an operator act at the
+    # operator's own terminal - the same route as every other denied verb.
+    # Both spellings: -D, and the long form --delete --force (in either
+    # order, and --force pairs with nothing else here that this should miss).
+    # Caught during probe design: a pattern matching only -D would have left
+    # the long form open, which is the same verb reached by a different
+    # keystroke - exactly the gap a one-spelling rule string always leaves.
+    (re.compile(r"\bgit\s+branch\b(?:[^\n]*\s-D\b|[^\n]*\s--force\b)"),
+     "Force branch delete is blocked (-D, or --delete --force). It deletes an "
+     "unmerged branch without the refusal that makes -d safe. Use -d, which "
+     "declines rather than destroys on surprising state; if the branch is "
+     "genuinely unmerged and must go, that is an operator act at your own "
+     "terminal."),
     (re.compile(r"git\s+push\b[^\n]*(\s--force\b|\s-f\b|--force-with-lease)"),
      "Force push is prohibited (CL-E1). No exception path exists; "
      "if you believe one is needed, stop and raise it with the operator "
