@@ -884,6 +884,23 @@ this section is a working pointer, not the record.
     manual scratchpad preservation (42 files copied to a durable
     location, 6 of 6 custody hashes verified against the committed
     record) is the manual instance proving the need.
+    **Telemetry notes appended 2026-08-13**, from the first session-cost
+    row at `docs/governance/SESSION_COSTS.md`. Both are candidate acts,
+    not rulings.
+    (i) **Context hygiene.** Use `/clear` at arc boundaries once M2
+    session records make reconstruction cheap. **93% of 2026-08-13 usage
+    ran above 150k context**, and that was the day's dominant cost
+    driver. The dependency runs the right way round and matters: clearing
+    is only safe once the deliberative trail is recoverable from the
+    repository, which is precisely what M2 builds — so this note waits on
+    M2 rather than racing it.
+    (ii) **Subagent model tiering.** Trial a cheaper-model
+    `corpus-lister` on the next fan-out. The evidence is from the same
+    day: the lead **recomputed every hash regardless**, and all seven
+    agents reported failure mode 2 on `content_sha256` because they hold
+    no execution tool. The verification burden therefore already sits
+    above the subagent tier, so a cheaper tier loses nothing that was
+    being relied on.
     **M9 — Restore evidence and recovery guide in-repo.** The recovery
     guide currently lives in a Gmail draft, which is itself a finding of
     the same shape as M2; commit it. Add a periodic **evidenced restore
