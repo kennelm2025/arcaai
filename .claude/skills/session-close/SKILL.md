@@ -7,6 +7,36 @@ allowed-tools: Bash(python:*), Bash(git status:*), Bash(git diff:*), Bash(git lo
 
 # Session close — closing ceremony
 
+## Authority split (operator ruling 2026-08-13)
+
+> "session-close checks autonomous, register writes still STOP"
+
+Written here rather than remembered, because an authority boundary that lives
+only in a transcript is not a boundary. Two classes, and the executor must know
+which class each step is in before starting it:
+
+**AUTONOMOUS — the check phases.** Evidence assembly, the verification battery,
+regenerating the manifest, reading state back, and stating the rolling
+five-step plan. These read and report. None of them changes governed state, and
+none of them is improved by asking first: the operator gains nothing from
+confirming a `git diff --stat`.
+
+**STOP FOR THE OPERATOR — anything that writes or leaves the machine.** In
+particular:
+
+- **Register writes.** Any append to DECISIONS.md, the ADR register, the CL
+  changelog or the WS-E ledger. Consuming a register number is a governed act
+  and stays one.
+- **The queue block update at step 2** — it edits a committed file.
+- **Record and handover commits**, and any pull request.
+- **Gmail or any outbound dispatch.** Content leaves the machine; it is
+  confirmed with its recipient and body shown, every time, with no standing
+  grant.
+
+The split is asymmetric on purpose. Checks are cheap to run and cheap to
+re-run, so the cost of doing them unasked is near zero. Register writes and
+outbound sends are the two things this repository cannot take back.
+
 Live state, captured now. Each render falls back to a marker line
 rather than exiting non-zero: a hard-failing `!` render aborts the
 ceremony before the task text is read, losing the arc summary over a
