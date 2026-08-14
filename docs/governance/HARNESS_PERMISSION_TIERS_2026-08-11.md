@@ -39,6 +39,25 @@ enumeration is deliberately not attempted here. Until it exists, Tier 1
 is read-only operations, the batteries, and git navigation. Edits and
 git writes prompt as they did before the tiering.
 
+**READ-CLASS WIDENING: LANDED AND ROLLED BACK, 2026-08-14. DEFERRED
+AGAIN, and this time with a named reason rather than an open question.**
+The families deferred when precedence was unproven — git-family reads
+beyond those present, filesystem reads, text search, text slicing — were
+restored once deny-precedence was proven at the operator's terminal, then
+removed the same day when the gating probe failed. Their activation had
+been made conditional on that probe, and the probe found that skill
+renders run ungoverned; see the soft-enforced section below and
+`docs/governance/GROUP1_FAILURE_route-a-bypass_2026-08-14.md`.
+Allow entries returned from 122 to 67, the pre-widening count.
+**The list was not found wrong. The gate failed.** Nothing in the
+enumeration is withdrawn on its merits, and it stands ready for the day
+the render route is fixed or proven governed — which is the condition of
+its return, and the only one.
+**Why removed rather than annotated as inactive:** "inactive" was a note
+in a commit body and a JSON comment, and no mechanism enforced it. A
+grant that is live in every fresh process is granted, whatever the
+surrounding prose says.
+
 ## Tier 2 — gated, every touch
 
 The six governed stores, unchanged: `verticals/fraud/corpus/MANIFEST.yaml`,
@@ -176,10 +195,30 @@ false-green shape this repository catalogues.
   textual. Three registers are gated by path and `decisions/` is now
   gated by mechanism, but no mechanism can recognise a number being
   claimed in prose.
-- **Whether skill renders and subagent tool calls route through
-  PreToolUse is UNVERIFIED.** Not observed from inside a session and
-  therefore not claimed in either direction. Moot in practice today,
-  since background subagents are disabled repository-wide.
+- **Skill renders: TESTED 2026-08-14, and they are UNGOVERNED.** A skill
+  whose render line attempted the force-push discriminator, aimed at a
+  nonexistent remote, **executed it** — returning git's own error rather
+  than the guard's refusal, with no prompt and no deny at the operator's
+  terminal. The guard was never invoked on that path. Full record at
+  `docs/governance/GROUP1_FAILURE_route-a-bypass_2026-08-14.md`.
+  **This is not hypothetical and it is not new.** The boot ceremony
+  carries five render lines that fire before a word of its task text is
+  read, so every session this repository has ever opened has opened
+  through this path. The commands themselves are benign; the path is
+  ungoverned.
+  **One ambiguity is unresolved and is owed a probe:** whether renders
+  bypass the hook entirely, or whether the probe skill's own
+  `allowed-tools` grant pre-empted the deny inside a ceremony. Both fit
+  the evidence and both are governance failures — the second would mean
+  any skill can self-grant past the deny layer.
+  **This bullet previously said the question was moot because background
+  subagents are disabled. That mootness covered subagents only.** Skill
+  renders were never moot, and the reassurance did not apply to them.
+- **Whether subagent tool calls route through PreToolUse is still
+  UNVERIFIED.** Not observed, and not claimed in either direction. It
+  now matters more than it did: `.claude/agents/` was added to Tier 2 on
+  the premise that the subagent path is governed. If it is not, that gate
+  is decorative.
 - **The permission rule strings themselves are unverified.** Rules
   governing a session cannot be tested from inside that session, and
   declaring them working on merge would be exactly the false green
