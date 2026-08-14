@@ -395,3 +395,63 @@ def test_known_limitation_redirect_away_from_a_protected_path_is_denied(decide):
     """Same shape: the read is of .claude/, the write is elsewhere."""
     result = decide("Bash", {"command": "grep -rn respond .claude/hooks/ > notes.txt"})
     assert result is not None and result["permissionDecision"] == "deny"
+
+
+# --------------------------------------------- per-surface loading accuracy
+# Operator ruling 2026-08-14 (prompt 56, ruling 4). The refusal tells the
+# reader when an installed change takes effect, and that differs by surface.
+# The first cut said "restart to load it" for all four paths, which is true
+# of settings.json and false of hooks/*.py - the harness re-executes a hook
+# script per tool call. The error was demonstrated the same day it was
+# written, when this deny caught a diagnostic command moments after the file
+# was saved, no restart having occurred.
+
+
+def test_settings_surface_says_restart(decide):
+    reason = decide("Write", {"file_path": ".claude/settings.json"})[
+        "permissionDecisionReason"
+    ]
+    assert "restart" in reason.lower(), (
+        "settings.json is read at session start; the refusal must say so."
+    )
+
+
+def test_hooks_surface_says_live_on_save_not_restart(decide):
+    reason = decide(
+        "Write", {"file_path": ".claude/hooks/governance_guard.py"}
+    )["permissionDecisionReason"]
+    assert "live on save" in reason.lower(), (
+        "a hook script is re-executed per tool call and is live on save."
+    )
+    assert "restart to load it" not in reason, (
+        "the superseded blanket wording must not survive on this surface."
+    )
+
+
+@pytest.mark.parametrize(
+    "path",
+    [".claude/skills/session-open/SKILL.md", ".claude/agents/corpus-lister.md"],
+)
+def test_unprobed_surfaces_are_named_unknown(decide, path):
+    """Skills and agents are UNKNOWN, and must say UNKNOWN.
+
+    Whether an installed change to those trees is picked up live has never
+    been probed. WS-E 69 records a skill registering mid-process where a
+    registry wall was believed to stand - so the one established fact about
+    that surface is that the confident answer was wrong. An unprobed loading
+    semantic asserted as fact is this register's most repeated shape, and a
+    named UNKNOWN is the three-outcome discipline applied to a message.
+    """
+    reason = decide("Write", {"file_path": path})["permissionDecisionReason"]
+    assert "UNKNOWN" in reason
+
+
+def test_load_note_helper_returns_three_distinct_outcomes():
+    """The helper itself, so the three branches are asserted independently."""
+    settings = guard.never_silent_load_note(".claude/settings.json")
+    hooks = guard.never_silent_load_note(".claude/hooks/governance_guard.py")
+    unknown = guard.never_silent_load_note(".claude/skills/x/SKILL.md")
+    assert "restart" in settings.lower()
+    assert "live on save" in hooks.lower()
+    assert "UNKNOWN" in unknown
+    assert len({settings, hooks, unknown}) == 3, "the three notes must differ"

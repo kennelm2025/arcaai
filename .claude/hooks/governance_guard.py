@@ -134,8 +134,51 @@ NEVER_SILENT_ROUTE = (
     "that is the ruled posture (WS-E 69 fix item 1, 2026-08-14), not an "
     "oversight to work around. Draft the change outside the tree, have the "
     "operator install it at the operator's own terminal, then branch -> PR "
-    "-> merge -> restart to load it. Reading these paths is unaffected."
+    "-> merge. Reading these paths is unaffected."
 )
+
+# WHEN AN INSTALLED CHANGE TAKES EFFECT DIFFERS BY SURFACE, and the first
+# cut of the message above said "restart to load it" for all four paths.
+# True of settings.json, false of this file: the harness re-executes a
+# hook script per tool call, so a saved change is live immediately. The
+# imprecision was demonstrated on the day it was written, when this very
+# deny caught a diagnostic command moments after the file was saved and
+# no restart had occurred. Tightened by operator ruling 2026-08-14.
+#
+# SKILLS AND AGENTS ARE NAMED UNKNOWN RATHER THAN ASSUMED. Whether an
+# installed change under those trees is picked up live has never been
+# probed. WS-E 69 records a skill registering mid-process where a registry
+# wall was believed to stand, corrected only once process identity was
+# checked - so the one thing known about that surface is that the
+# confident answer was wrong. An unprobed loading semantic asserted as
+# fact is the shape this register carries most.
+NEVER_SILENT_LOAD_NOTES = [
+    (re.compile(r"\.claude[/\\]settings\.json", re.IGNORECASE),
+     "settings.json is read at session start, so an installed change "
+     "loads on restart."),
+    (re.compile(r"\.claude[/\\]hooks[/\\]", re.IGNORECASE),
+     "a hook script is re-executed per tool call, so an installed change "
+     "is live on save - no restart involved."),
+]
+NEVER_SILENT_LOAD_UNKNOWN = (
+    "when an installed change under skills/ or agents/ takes effect has "
+    "never been probed - treat it as UNKNOWN and verify rather than "
+    "assume it matches either of the other two surfaces."
+)
+
+
+def never_silent_load_note(subject: str) -> str:
+    """Per-surface loading note appended to the deny message.
+
+    A subject naming more than one surface takes the first match. That is
+    stated rather than resolved: a single act touching two surfaces of the
+    permission system is already a stop, and the message is not the place
+    to adjudicate it.
+    """
+    for pattern, note in NEVER_SILENT_LOAD_NOTES:
+        if pattern.search(subject):
+            return note
+    return NEVER_SILENT_LOAD_UNKNOWN
 
 PROTECTED_PATTERNS = [
     r"MANIFEST\.ya?ml",
@@ -500,7 +543,8 @@ def main() -> None:
             respond("deny", (
                 f"{NEVER_SILENT_DENY_PREFIX}: this command writes into the "
                 "permission and ceremony system - settings.json, hooks/, "
-                f"skills/ or agents/ under .claude/. {NEVER_SILENT_ROUTE}"
+                f"skills/ or agents/ under .claude/. {NEVER_SILENT_ROUTE} "
+                f"When it loads: {never_silent_load_note(command)}"
             ))
         if PROTECTED_RE.search(command) and WRITEY_RE.search(command):
             respond(
@@ -547,7 +591,8 @@ def main() -> None:
             respond("deny", (
                 f"{NEVER_SILENT_DENY_PREFIX}: '{path}' is part of the "
                 "permission and ceremony system, which no in-session edit "
-                f"may touch. {NEVER_SILENT_ROUTE}"
+                f"may touch. {NEVER_SILENT_ROUTE} "
+                f"When it loads: {never_silent_load_note(path)}"
             ))
         if PROTECTED_RE.search(path):
             respond(

@@ -141,8 +141,7 @@ precedence test failed; see the tiers doc.
 **Tier 2 — gated on every touch.** The six governed stores — `MANIFEST.yaml`,
 `EDGES.yaml`, `docs/governance/WS-E_INCIDENTS.md`, `DECISIONS.md`,
 `docs/governance/RULINGS_RECORD*.md`, `docs/governance/document-register.yaml` — plus
-`pyproject.toml`, `.github/workflows/`, the permission and ceremony system itself
-(`.claude/settings.json`, `.claude/hooks/`, `.claude/skills/`), and `decisions/`, which
+`pyproject.toml`, `.github/workflows/`, and `decisions/`, which
 is gated because `scripts/repo_manifest.py` reads register numbers off filenames there,
 making any write to it register-consuming by mechanism. Gated by repository state rather
 than by path: PR merge, branch deletion, and any git write while HEAD is main. Legitimate
@@ -153,10 +152,25 @@ When the prompt fires, restate which governed act the edit serves before proceed
 decisions. Not tool gates, and no mechanism grants them.
 
 **Denied outright (no exception path — do not ask):** force push in any form (the CL-E1
-incident guard), git history rewrites, recursive force deletes, and elevation — the
-harness never elevates, and never assumes the database owner role. Any fix requiring
-either is the operator's, at their own terminal, re-verified afterwards from a
-non-elevated shell.
+incident guard), git history rewrites, recursive force deletes, force branch deletion
+(`git branch -D` and the long form), the write forms of the read-class grants (`find`
+with its delete or exec flags, `sort` with its output flag), **writes to the permission
+and ceremony system — `.claude/settings.json`, `.claude/hooks/`, `.claude/skills/`,
+`.claude/agents/`** — and elevation; the harness never elevates, and never assumes the
+database owner role. Any fix requiring one of these is the operator's, at their own
+terminal, re-verified afterwards from a non-elevated shell.
+
+**The never-silent set, ruled 2026-08-14 (WS-E 69 fix item 1).** Those four `.claude/`
+paths drew a Tier 2 ask until that date. An ask is a gate only while it reaches a
+person, and it does not: a bypassing permission mode auto-approves asks without
+surfacing them, so the absence of a prompt evidences nothing. Deny is the only response
+no mode and no approval overrides. **The cost is accepted rather than overlooked: there
+is no in-session write to those paths again — including the write that would repair the
+guard or roll back this deny.** Harness changes are drafted outside the tree, installed
+by the operator at their own terminal, then branch → PR → merge. Reads are untouched,
+so every ceremony that inspects `.claude/` is unaffected. The deny covers the
+file-writing tools by path alone; it covers shell commands only through the same verb
+list the ask used, which is narrower, and widening that list is a separate act.
 
 `.claude/hooks/governance_guard.py` enforces the denies and the Tier 2 asks, routed by
 the PreToolUse matcher in `.claude/settings.json`. **Coverage is two-part and both parts
