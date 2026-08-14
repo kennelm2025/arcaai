@@ -146,6 +146,58 @@ DENY_COMMAND_RES = [
                 r"Remove-Item\b[^\n]*-Force\b[^\n]*-Recurse\b"),
      "Recursive force delete is blocked (PowerShell). Delete specific "
      "files explicitly with operator confirmation."),
+    # Option B pairing, operator ruling 2026-08-14 (queue item 27 arc).
+    #
+    # WHY THESE EXIST. Amendment 3 restored the read-class families deferred
+    # at amendment 2, and two of them are not reads. `find` is deferred as a
+    # filesystem read but reaches arbitrary deletion and arbitrary execution;
+    # `sort` reaches file creation. The ruling was to grant them as deferred
+    # and PAIR each with a deny on its write forms, rather than to narrow the
+    # grant - so the read use stays frictionless and the write use is blocked
+    # by mechanism.
+    #
+    # WHY IN THE GUARD AND NOT IN settings.json. Permission rules match
+    # command text by prefix; they cannot express a flag appearing anywhere
+    # after the command, and they have no alternation. This repository has
+    # never carried a `deny` key at all - every deny is here. The decisive
+    # precedent is H-11 above: it needed a deny on a FLAG (`git branch -D`)
+    # and it went here, using alternation to catch both spellings.
+    #
+    # THE H-11 LONG-FORM LESSON APPLIED FORWARD. A pattern matching one
+    # spelling leaves the other open, which is the same verb reached by a
+    # different keystroke. `-exec` is therefore paired with `-execdir`, and
+    # `sort -o` with `--output` in both its spaced and `=` forms.
+    #
+    # BOUNDARIES ARE LOAD-BEARING IN BOTH DIRECTIONS. Each flag must be
+    # preceded by whitespace and closed by a word boundary, so that a
+    # filename embedding the flag text - `file-delete.txt`, `report-o.txt`,
+    # `-name "*-delete*"` - does NOT match. A deny firing on innocent
+    # filenames is a false red, and a deny missing a mid-line flag is the
+    # false green H-11 exists to prevent. Both are tested.
+    #
+    # KNOWN AND NOT COVERED, stated rather than left to be discovered.
+    # (1) Combined short flags: `sort -ro out.txt` reaches the output flag
+    # without a bare `-o` token, and is not matched. Covering it means
+    # matching any short-flag cluster ending in `o`, which false-reds on a
+    # leading-dash filename; the ruled spec is short form plus long form, and
+    # widening it is a decision, not a patch. (2) Flag text inside a quoted
+    # argument matches, because a regex cannot see quoting. That is the false
+    # red direction, which is the safe one for a deny, and the message names
+    # the operator route.
+    (re.compile(r"\bfind\b[^\n]*\s-delete\b"),
+     "`find` with its delete flag is blocked. The read-class grant covers "
+     "searching, not deletion, and a bare `rm` reached this way does not "
+     "match the recursive-force deny. Delete specific paths explicitly, one "
+     "at a time, with operator confirmation."),
+    (re.compile(r"\bfind\b[^\n]*\s-exec(?:dir)?\b"),
+     "`find` with an exec flag is blocked (-exec and -execdir both). It runs "
+     "an arbitrary command over every match, so the grant on `find` as a "
+     "read would otherwise extend to whatever that command does. Run the "
+     "search first, read the results, then act on specific paths."),
+    (re.compile(r"\bsort\b[^\n]*(?:\s-o\b|\s--output\b)"),
+     "`sort` with its output flag is blocked (-o, --output, and --output=). "
+     "It writes a file, and the grant on `sort` is a read-class grant. Write "
+     "through an explicit, reviewable act instead."),
 ]
 
 # Bash constructs that can write into a file: redirection, tee, sed -i,

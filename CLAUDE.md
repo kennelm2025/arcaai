@@ -168,9 +168,14 @@ shell, went unguarded. Adding a shell tool means adding it in both places.
 **A Tier 1 allow rule pre-empts a Tier 2 guard ask** — tested 2026-08-11, and the guard
 loses. The two mechanisms are alternatives, not layers, so: **never grant in Tier 1
 anything Tier 2 is relied on to gate.** An allow rule covering the same ground as a guard
-ask is not belt-and-braces; it is the gate switched off silently. Whether a deny is
-pre-empted the same way is untested and untestable safely, so never allow-list a command
-family that carries a deny. Ceremony skills carry their own `allowed-tools` frontmatter,
+ask is not belt-and-braces; it is the gate switched off silently. **Whether a deny is
+pre-empted the same way was tested 2026-08-14, and the guard HELD** — a matching allow rule
+for the force-push family produced no prompt and the guard's own refusal, in a restarted
+session, so deny beats allow
+(`docs/governance/PRECEDENCE_DISCRIMINATOR_OUTCOME_2026-08-14.md`). That is one family and
+deny only; it leaves the allow-pre-empts-ask finding above untouched. **Never allow-list a
+command family that carries a deny** stands regardless, on the narrower ground that such an
+overlap buys nothing. Ceremony skills carry their own `allowed-tools` frontmatter,
 which governs inside that ceremony — Tier 1 grants are not in force there.
 
 Background subagent tasks are disabled project-wide
