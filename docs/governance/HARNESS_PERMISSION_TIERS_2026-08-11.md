@@ -194,8 +194,50 @@ carries approval and green checks. This is strictly stronger than the
 unconditional ask it replaced, which asked identically on every PR
 regardless of its state.
 
+### First live exercise of the Option B gate — 2026-08-14, refusal direction
+
+Exercised deliberately on PR #123, the pull request that hardens the
+guard itself. With no review on the PR, `gh pr merge 123` returned the
+gate's own refusal verbatim: **"MERGE DENIED (no approval): the PR
+carries no APPROVED review. The operator's approval IS the ruling
+record; without it there is nothing for a merge to execute."** The gate
+reads live GitHub state, finds no approval, and refuses. That path is
+now evidenced rather than reasoned about.
+
+**The satisfied path is structurally unreachable on this topology, and
+that is the more important finding.** Reaching **ask** requires an
+APPROVED review pinned to the current head SHA. GitHub does not permit
+the author of a pull request to approve it, and this repository has one
+operator who authors every commit and opens every pull request. There is
+therefore no state this repository can currently produce in which the
+gate returns ask. The delegation clause is sound; the topology cannot
+supply its precondition.
+
+**Consequences, recorded so the gate is not later read as broken.**
+(1) **Browser merge is the designed route for this repository**, not a
+fallback — the operator merges at GitHub, where the author-approval bar
+does not apply because no approval is being claimed. (2) **The gate
+retains its whole value in the refusing direction**: it is the
+executor-self-merge guard, and it refuses every merge the executor could
+attempt through the harness, on every PR, unconditionally, for as long
+as this topology holds. It was never the operator's gate; it is the
+executor's. (3) The satisfied path becomes reachable the moment a second
+reviewer exists, and needs no change to the guard when that happens.
+
+**Evidence for the single-operator segregation-of-duties limit** named
+at `CLAUDE.md` current-queue item 34, finding (a). That limit has until
+now been stated as a policy caveat. This is the first instance of it
+appearing as a **mechanical** fact: a control that is correctly built,
+correctly wired, and unreachable in one direction because one person
+cannot be two parties. The SDLC control framework must state it in that
+form — an auditor who reads the gate's specification and then finds it
+has never returned ask is owed the reason in the document rather than in
+a reconstruction.
+
 **Absolute denies, unchanged and with no exception path:** force push
-in any form, git history rewrites, recursive force deletes, and the
+in any form, git history rewrites, recursive force deletes, force branch
+deletion, the write forms of the read-class grants, **writes to the four
+never-silent `.claude/` paths (2026-08-14, amendment above)**, and the
 standing rule that the harness never elevates — extended 2026-08-11 to
 database roles: the harness runs as the application role and never
 assumes owner.
