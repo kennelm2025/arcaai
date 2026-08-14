@@ -63,11 +63,18 @@ surrounding prose says.
 The six governed stores, unchanged: `verticals/fraud/corpus/MANIFEST.yaml`,
 the corpus edges file, `docs/governance/WS-E_INCIDENTS.md`,
 `DECISIONS.md`, the rulings records, and the document register. Added
-2026-08-11: `pyproject.toml`; `.github/workflows/`;
-`.claude/settings.json`, `.claude/hooks/` and `.claude/skills/`; and
-`decisions/`. Added 2026-08-13 at `678f46a`: `.claude/agents/`. Plus, by
+2026-08-11: `pyproject.toml`; `.github/workflows/`; and `decisions/`. Plus, by
 repository state rather than by path: PR merge, branch deletion, and any
 git write while HEAD is main.
+
+**REMOVED FROM THIS TIER ON 2026-08-14 — the four `.claude/` paths are
+now DENIED, not asked.** `.claude/settings.json`, `.claude/hooks/` and
+`.claude/skills/` were added here on 2026-08-11, and `.claude/agents/`
+on 2026-08-13 at `678f46a`. All four left Tier 2 on 2026-08-14 under
+WS-E 69 fix item 1; the amendment is below. The narrowing paragraph that
+follows is retained rather than deleted, because it is the record of why
+`.claude/agents/` was gated at all, and that reasoning is what the deny
+now carries forward.
 
 **The `.claude/agents/` addition is a NARROWING**, and is recorded here
 because a review commissioned to reduce friction returned it. Agent
@@ -81,8 +88,10 @@ ruled rather than a decision anybody took.
 every future run means, so a silent edit rewrites the meaning of every
 later green. The permission and ceremony system is gated against
 itself because the harness must never widen its own latitude
-unprompted — `.claude/settings.json` now guards the file these tiers
-live in, which is the point rather than an accident. `decisions/` is
+unprompted — `.claude/settings.json` guards the file these tiers
+live in, which is the point rather than an accident. **That reasoning is
+retained; its RESPONSE is superseded by the 2026-08-14 amendment below,
+where the gate becomes a deny rather than an ask.** `decisions/` is
 gated on a mechanism, not a convention: `scripts/repo_manifest.py`
 reads the leading four digits off each filename there, so that
 filesystem **is** the ADR register and any write to it consumes
@@ -90,6 +99,83 @@ register numbers silently. It is register-consuming by mechanism and
 therefore gated by consequence. WS-E 64 records that the one near miss
 of this kind was caught by the working protocol and not by any gate;
 this is the gate that was missing.
+
+### AMENDMENT 2026-08-14 — the never-silent set: ask becomes deny
+
+**Ruled by the operator on 2026-08-14, discharging WS-E 69 fix item 1.**
+`.claude/settings.json`, `.claude/hooks/`, `.claude/skills/` and
+`.claude/agents/` no longer draw a Tier 2 ask. They draw a **deny**, on
+both the file-writing-tool branch and the shell branch of
+`.claude/hooks/governance_guard.py`.
+
+**Why the ask was not a gate.** The reasoning above — gate the system
+against itself, make each touch deliberate rather than impossible — held
+only while an ask was guaranteed to reach a person. It was not. A
+bypassing permission mode auto-approves asks without ever surfacing
+them, which WS-E 69 records for a session's full duration, so the
+absence of a prompt evidenced nothing. An ask that a MODE can satisfy is
+a gate whose green is indistinguishable from its never having been put.
+The deny/ask asymmetry recorded at WS-E 69 is the whole argument: denies
+survive bypass, asks vanish into silent approval.
+
+**Why deny, and why there is no middle.** There is no stronger ask. Deny
+is the only response this guard returns that no mode and no approval
+overrides.
+
+**What it costs, stated rather than discovered.** There is no in-session
+write to these four paths again, with or without live operator approval,
+**including the write that would repair the guard or roll back this very
+deny**. That is the same route every other denied verb already takes.
+Harness changes are drafted outside the tree — the scratchpad is
+unmatched by these patterns — installed by the operator at the
+operator's own terminal, then branch, PR, merge. Drafting is unaffected;
+only installing is denied, and installing is the act that changes what
+every future run means. The cost was demonstrated within the hour: the
+message-wording refinement ruled in the same package could not be
+applied by the executor and was installed by the operator — this
+posture's first live exercise.
+
+**Installer-design note from that first exercise.** The install script's
+final assertion — that the superseded wording no longer appears in the
+file — reported a STOP while the change was in fact correct. The sole
+surviving occurrence was the patch's own new comment, quoting the old
+wording as history. A phrase search cannot separate **use** from
+**mention**, so the check failed the file for explaining itself. False
+red, in the safe direction, resolved by reading the surviving line. The
+design correction for the next installer is one line: **assert absence
+in the message strings, not across the whole file** — comments quoting
+superseded text are evidence the change was understood, not evidence it
+was missed.
+
+**What is NOT changed: reads.** Every ceremony in this repository reads
+`.claude/` and none of them prompts. The deny covers the file-writing
+tools by path alone, and shell commands only through the same verb list
+the ask used — so the shell branch remains exactly as porous as that
+list, and widening it is a separate act with its own ruling.
+
+**The other eight protected paths keep their ask**, deliberately. They
+are stores the executor must be able to append to as ordinary governed
+acts; denying them would stop the register discipline rather than
+protect it.
+
+**Fail-degraded by construction.** The four patterns remain spliced into
+the guard's protected-path list as well as into their own, so that if
+the never-silent check were ever reordered behind the ask or lost, these
+paths degrade to the ask they drew before this amendment rather than to
+a silent allow. That duplication is asserted by a test and must not be
+tidied away as redundancy.
+
+**Evidence.** Landed at `c406932`, verified by a paired probe: a
+deny-shaped call returned the guard's own refusal text verbatim through
+the PowerShell tool, and an allow-shaped read of the same path
+succeeded, which is what shows the guard discriminates rather than
+merely blocks. Unit coverage is
+`tests/governance/test_guard_protected_paths.py`, which drives the hook
+end to end rather than asserting its patterns, because the failure mode
+of this change is ordering rather than matching. **Not closed by this
+amendment:** the session that ran those probes could not confirm its own
+permission mode from inside itself, so the default-mode deny-precedence
+probe owed at WS-E 69 stands untouched.
 
 **"PR merge" above understates what is now built, and is corrected
 here.** As of `25d71b3` the merge gate is Option B: the guard reads live
@@ -108,8 +194,50 @@ carries approval and green checks. This is strictly stronger than the
 unconditional ask it replaced, which asked identically on every PR
 regardless of its state.
 
+### First live exercise of the Option B gate — 2026-08-14, refusal direction
+
+Exercised deliberately on PR #123, the pull request that hardens the
+guard itself. With no review on the PR, `gh pr merge 123` returned the
+gate's own refusal verbatim: **"MERGE DENIED (no approval): the PR
+carries no APPROVED review. The operator's approval IS the ruling
+record; without it there is nothing for a merge to execute."** The gate
+reads live GitHub state, finds no approval, and refuses. That path is
+now evidenced rather than reasoned about.
+
+**The satisfied path is structurally unreachable on this topology, and
+that is the more important finding.** Reaching **ask** requires an
+APPROVED review pinned to the current head SHA. GitHub does not permit
+the author of a pull request to approve it, and this repository has one
+operator who authors every commit and opens every pull request. There is
+therefore no state this repository can currently produce in which the
+gate returns ask. The delegation clause is sound; the topology cannot
+supply its precondition.
+
+**Consequences, recorded so the gate is not later read as broken.**
+(1) **Browser merge is the designed route for this repository**, not a
+fallback — the operator merges at GitHub, where the author-approval bar
+does not apply because no approval is being claimed. (2) **The gate
+retains its whole value in the refusing direction**: it is the
+executor-self-merge guard, and it refuses every merge the executor could
+attempt through the harness, on every PR, unconditionally, for as long
+as this topology holds. It was never the operator's gate; it is the
+executor's. (3) The satisfied path becomes reachable the moment a second
+reviewer exists, and needs no change to the guard when that happens.
+
+**Evidence for the single-operator segregation-of-duties limit** named
+at `CLAUDE.md` current-queue item 34, finding (a). That limit has until
+now been stated as a policy caveat. This is the first instance of it
+appearing as a **mechanical** fact: a control that is correctly built,
+correctly wired, and unreachable in one direction because one person
+cannot be two parties. The SDLC control framework must state it in that
+form — an auditor who reads the gate's specification and then finds it
+has never returned ask is owed the reason in the document rather than in
+a reconstruction.
+
 **Absolute denies, unchanged and with no exception path:** force push
-in any form, git history rewrites, recursive force deletes, and the
+in any form, git history rewrites, recursive force deletes, force branch
+deletion, the write forms of the read-class grants, **writes to the four
+never-silent `.claude/` paths (2026-08-14, amendment above)**, and the
 standing rule that the harness never elevates — extended 2026-08-11 to
 database roles: the harness runs as the application role and never
 assumes owner.

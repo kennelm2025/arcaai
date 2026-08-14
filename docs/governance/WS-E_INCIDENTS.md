@@ -848,6 +848,86 @@ regardless of surrounding prose).*
     (6) **Rule-string prefix and invocation-form friction**, the queue
     item 27 family — noted here, unruled.
 
+70. **Two protected-path patterns are anchored for a path and applied to
+    a command string as well, so a governed register takes a shell write
+    with no gate at all (2026-08-14).** Found by the test suite written
+    for the never-silent deny upgrade — specifically by the case
+    asserting that the eight paths OUTSIDE that upgrade still draw their
+    ask. The upgrade itself is unaffected; this is a pre-existing
+    condition the new suite surfaced.
+
+    **Expected.** A shell command whose write verb names `DECISIONS.md`
+    draws the Tier 2 protected-path ask, exactly as a command naming any
+    other governed store does.
+
+    **Observed.** No decision is returned at all. Not an ask, not a
+    deny — the guard falls through and the write would proceed silently.
+    The same holds for a shell write addressing a file inside the
+    `decisions/` tree, which is the ADR register whose filenames consume
+    register numbers by mechanism.
+
+    **Distinguishing evidence.** Of the twelve entries in the guard's
+    protected-path list, exactly two are anchored to start-of-string or
+    a path separator: the `DECISIONS.md` entry and the `decisions/`
+    entry. The other ten match anywhere in the subject string. Read back
+    live from the loaded module rather than from the source listing, and
+    confirmed by fragment: the same filename matches when it is the
+    whole string and does not match when a space precedes it.
+
+    **Root condition, which is the transferable part.** One pattern list
+    serves two different SHAPES of subject. On the file-writing-tool
+    branch the subject is a path, and the path IS the whole string, so
+    the start-of-string alternative is satisfied and the anchor is
+    correct. On the shell branch the subject is a command line, where a
+    filename is preceded by a space and reaches neither alternative. The
+    anchor is not a typo — it prevents a false red on names like a
+    longer filename ending in the same characters — it is a
+    path-shaped pattern applied to a command-shaped string. Check-method
+    family: a check whose stated subject is narrower than the subject it
+    names.
+
+    **Scope of the exposure, stated precisely rather than alarmingly.**
+    The executor's primary write path is the file-writing tools, and
+    that branch is unaffected — a governed-store edit through `Edit` or
+    `Write` still draws its ask. The exposure is the shell route, and it
+    is silent there rather than merely weaker.
+
+    **Not fixed here, deliberately.** The arc that found it was ruled to
+    upgrade the RESPONSE for what already matches and not to widen WHAT
+    matches. Anchoring the shell branch correctly is a separate queued
+    act, because it widens matching for two paths outside the
+    never-silent set and wants its own probe.
+
+    **In-suite marker.** Asserted as a known-gap test in
+    `tests/governance/test_guard_protected_paths.py` rather than
+    described in a comment, so the gap is visible in a run and so that
+    fixing it later turns that test red — which is the signal the fix
+    worked, not a regression.
+
+    **Related candidate finding, recorded verbatim and NOT consumed as
+    its own item** (operator ruling 2026-08-14; formal disposition —
+    own entry versus M3-family evidence — deferred to a later ruled
+    stop). It is recorded here rather than only in the pull request,
+    because a deliberative trail that lives outside the repository is
+    the M2 gap this register already carries:
+
+    > **The "don't ask again" affordance is an ungoverned
+    > permission-write path.** Selecting it adds a permission rule
+    > through the harness's own settings mechanism rather than through a
+    > tool call, so `governance_guard.py` never sees it — including now,
+    > with the never-silent deny live on `.claude/settings.json` writes.
+    > The deny binds the executor's tool calls; it does not bind the
+    > operator's approval UI. Same shape as M3 (client-side guards bind
+    > only the executor; any other client bypasses them), and it sits
+    > one keystroke from the prompt that fires on every mandatory
+    > battery command. The specific offer on screen, `git *`, would have
+    > covered three denied families and three Tier 2 asks at once.
+
+    Deliberately NOT folded into queue item 27: the rule-string work
+    fixes **why the prompt fires**, and this finding is **what the
+    affordance can write**. Different defects that happen to meet at the
+    same prompt.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a

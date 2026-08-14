@@ -10,15 +10,24 @@ DENY (no exception path):
   - git push --force / -f / force-with-lease (CL-E1 incident guard)
   - git history rewrites reaching the remote (filter-branch, filter-repo)
   - rm -rf / recursive force deletes and PowerShell equivalents
+  - git branch -D, and --delete --force (H-11 hardening)
+  - find -delete / -exec / -execdir, and sort -o / --output (Option B)
+  - writes to the permission and ceremony system itself:
+    .claude/settings.json, .claude/hooks/, .claude/skills/,
+    .claude/agents/ — the never-silent set, upgraded from ask to deny
+    on 2026-08-14 (WS-E 69 fix item 1). See NEVER_SILENT_PATTERNS.
 
 ASK (operator confirmation required — Tier 2):
   - Edit/Write touching MANIFEST.yaml, EDGES.yaml, WS-E_INCIDENTS.md,
     DECISIONS.md, RULINGS_RECORD*.md, document-register.yaml,
-    pyproject.toml, .github/workflows/, .claude/settings.json,
-    .claude/hooks/, .claude/skills/, decisions/
+    pyproject.toml, .github/workflows/, decisions/
   - Bash/PowerShell commands that redirect or stream into those files
   - PR merge; branch deletion; any git write while HEAD is main, or
     while the branch cannot be established at all
+
+READS ARE UNTOUCHED throughout. The path checks below govern the
+file-writing tools and shell write verbs only, so every ceremony that
+reads .claude/ - which is all of them - is unaffected by the deny.
 
 Coverage is two-part and both parts must name a tool for it to be
 guarded: the PreToolUse matcher in .claude/settings.json routes the
@@ -54,6 +63,123 @@ REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 # a silent no-op, which is how the original gap read as green.
 SHELL_TOOLS = ("Bash", "PowerShell")
 
+# ----------------------------------------------------------- never-silent set
+#
+# The permission and ceremony system itself. WS-E 69 fix item 1, operator
+# ruling 2026-08-14: these four paths move from ASK to DENY, on both the
+# shell branch and the file-writing-tool branch.
+#
+# WHY THE ASK WAS NOT ENOUGH. The harness never widens its own latitude
+# unprompted, and until now that was expressed as an ask - a governed touch
+# made deliberate rather than impossible. That reasoning held only while an
+# ask was guaranteed to reach a person, and it is not: the 2026-08-14
+# discriminator session auto-approved asks without surfacing them, so the
+# absence of a prompt evidenced nothing. An ask that a MODE can satisfy is a
+# gate whose green is indistinguishable from its never having been put -
+# the check-method family - and here it had the harness's own latitude
+# behind it.
+#
+# WHY DENY, AND WHY THERE IS NO MIDDLE. There is no stronger ask. Deny is
+# the only response this hook returns that no mode and no approval
+# overrides. Unconditional is the property being bought, not a side effect.
+#
+# WHAT IT COSTS, STATED RATHER THAN DISCOVERED. There is no in-session route
+# to these paths again, with or without live operator approval - INCLUDING
+# the route that would repair a defect in this guard, or roll back this very
+# deny. That is accepted: it is the same route every other denied verb
+# already takes. Harness changes are drafted outside the tree (the
+# scratchpad is unmatched by these patterns), installed by the operator at
+# the operator's own terminal, then branch -> PR -> merge -> restart to
+# load. Drafting is unaffected; only installing is denied, and installing is
+# the act that changes what every future run means.
+#
+# WHY THESE FOUR AND NOT THE OTHER EIGHT PROTECTED PATHS. Each of these
+# grants latitude. settings.json carries the tiers, and a Tier 1 allow rule
+# there pre-empts a Tier 2 guard ask (tested 2026-08-11) - a write here can
+# switch a gate off silently. hooks/ is this file. skills/ carry
+# allowed-tools frontmatter that governs inside a ceremony, and may carry an
+# executing render. agents/ declare what a subagent MAY DO. The other eight
+# protected paths are stores the executor must be able to append to as
+# ordinary governed acts; denying those would stop the register discipline
+# rather than protect it, so they keep their ask.
+#
+# KNOWN LIMITATION, ASSERTED AS A TEST rather than left in prose. On the
+# shell branch a regex cannot tell a source from a destination, so copying
+# OUT of these paths - a read - draws the deny too. The route is the Read
+# tool, which no path check here touches. This is the false-red direction,
+# which is the safe one for a deny.
+#
+# THESE STAY IN PROTECTED_PATTERNS TOO, spliced in below rather than moved
+# out. The duplication is deliberate and must not be tidied away: if the
+# never-silent check were ever reordered behind the ask or lost outright,
+# these paths degrade to the ASK they drew yesterday rather than to a silent
+# allow. Carrying both is safe precisely because this module returns deny or
+# ask and never allow, so the two overlapping responses are both
+# restrictions - unlike the Tier 1 allow versus Tier 2 ask pairing, where
+# the overlap switches the gate off.
+NEVER_SILENT_PATTERNS = [
+    r"\.claude[/\\]settings\.json",
+    r"\.claude[/\\]hooks[/\\]",
+    r"\.claude[/\\]skills[/\\]",
+    r"\.claude[/\\]agents[/\\]",
+]
+NEVER_SILENT_RE = re.compile("|".join(NEVER_SILENT_PATTERNS), re.IGNORECASE)
+
+NEVER_SILENT_DENY_PREFIX = "HARNESS WRITE DENIED"
+
+# Named once and shared by both branches, so the two refusals cannot drift
+# into describing different routes out of the same deny.
+NEVER_SILENT_ROUTE = (
+    "There is no in-session route to this path under any mode or approval - "
+    "that is the ruled posture (WS-E 69 fix item 1, 2026-08-14), not an "
+    "oversight to work around. Draft the change outside the tree, have the "
+    "operator install it at the operator's own terminal, then branch -> PR "
+    "-> merge. Reading these paths is unaffected."
+)
+
+# WHEN AN INSTALLED CHANGE TAKES EFFECT DIFFERS BY SURFACE, and the first
+# cut of the message above said "restart to load it" for all four paths.
+# True of settings.json, false of this file: the harness re-executes a
+# hook script per tool call, so a saved change is live immediately. The
+# imprecision was demonstrated on the day it was written, when this very
+# deny caught a diagnostic command moments after the file was saved and
+# no restart had occurred. Tightened by operator ruling 2026-08-14.
+#
+# SKILLS AND AGENTS ARE NAMED UNKNOWN RATHER THAN ASSUMED. Whether an
+# installed change under those trees is picked up live has never been
+# probed. WS-E 69 records a skill registering mid-process where a registry
+# wall was believed to stand, corrected only once process identity was
+# checked - so the one thing known about that surface is that the
+# confident answer was wrong. An unprobed loading semantic asserted as
+# fact is the shape this register carries most.
+NEVER_SILENT_LOAD_NOTES = [
+    (re.compile(r"\.claude[/\\]settings\.json", re.IGNORECASE),
+     "settings.json is read at session start, so an installed change "
+     "loads on restart."),
+    (re.compile(r"\.claude[/\\]hooks[/\\]", re.IGNORECASE),
+     "a hook script is re-executed per tool call, so an installed change "
+     "is live on save - no restart involved."),
+]
+NEVER_SILENT_LOAD_UNKNOWN = (
+    "when an installed change under skills/ or agents/ takes effect has "
+    "never been probed - treat it as UNKNOWN and verify rather than "
+    "assume it matches either of the other two surfaces."
+)
+
+
+def never_silent_load_note(subject: str) -> str:
+    """Per-surface loading note appended to the deny message.
+
+    A subject naming more than one surface takes the first match. That is
+    stated rather than resolved: a single act touching two surfaces of the
+    permission system is already a stop, and the message is not the place
+    to adjudicate it.
+    """
+    for pattern, note in NEVER_SILENT_LOAD_NOTES:
+        if pattern.search(subject):
+            return note
+    return NEVER_SILENT_LOAD_UNKNOWN
+
 PROTECTED_PATTERNS = [
     r"MANIFEST\.ya?ml",
     r"EDGES\.ya?ml",
@@ -65,18 +191,6 @@ PROTECTED_PATTERNS = [
     # what every future run means, so each is gated on every touch.
     r"pyproject\.toml",
     r"\.github[/\\]workflows[/\\]",
-    # The permission and ceremony system gates itself: the harness
-    # never widens its own latitude unprompted, and settings.json is
-    # the file the tiers themselves live in.
-    r"\.claude[/\\]settings\.json",
-    r"\.claude[/\\]hooks[/\\]",
-    r"\.claude[/\\]skills[/\\]",
-    # NARROWING, 2026-08-13 (CL-27 arc, queue item 27). Agent definitions
-    # were absent here while skills were gated, so a subagent's tool grants
-    # and instructions could be rewritten ungated. An agent definition
-    # states what a subagent MAY DO and is at least as load-bearing as a
-    # skill: the gap was latitude nobody ruled, not a decision anybody took.
-    r"\.claude[/\\]agents[/\\]",
     # decisions/ is the ADR register AND its filesystem: repo_manifest
     # reads the leading four digits off each filename, so writing a
     # file here consumes register numbers silently. Register-consuming
@@ -84,7 +198,7 @@ PROTECTED_PATTERNS = [
     # trap of the 2026-08-11 arc was caught by protocol, not by a gate
     # (WS-E 64) - this is that gate.
     r"(?:^|[/\\])decisions[/\\]",
-]
+] + NEVER_SILENT_PATTERNS
 PROTECTED_RE = re.compile("|".join(PROTECTED_PATTERNS), re.IGNORECASE)
 
 # Tier 2, state-dependent. These cannot be expressed as permission
@@ -417,6 +531,21 @@ def main() -> None:
         for pattern, message in DENY_COMMAND_RES:
             if pattern.search(command):
                 respond("deny", message)
+        # Never-silent set, checked BEFORE the protected-path ask below.
+        # respond() exits on the first match, so an ask sitting ahead of
+        # this deny would answer for these paths and the upgrade would be
+        # inert - a reordering here is a silent revocation, not a tidy-up.
+        # The conjunction with WRITEY_RE is deliberate and unchanged: this
+        # arc upgrades the RESPONSE for what already matches and does not
+        # widen WHAT matches, so the shell branch stays exactly as porous
+        # as WRITEY_RE's verb list. Widening that list is its own act.
+        if NEVER_SILENT_RE.search(command) and WRITEY_RE.search(command):
+            respond("deny", (
+                f"{NEVER_SILENT_DENY_PREFIX}: this command writes into the "
+                "permission and ceremony system - settings.json, hooks/, "
+                f"skills/ or agents/ under .claude/. {NEVER_SILENT_ROUTE} "
+                f"When it loads: {never_silent_load_note(command)}"
+            ))
         if PROTECTED_RE.search(command) and WRITEY_RE.search(command):
             respond(
                 "ask",
@@ -452,6 +581,19 @@ def main() -> None:
     if tool in ("Edit", "Write", "MultiEdit", "NotebookEdit"):
         path = (tool_input.get("file_path", "")
                 or tool_input.get("path", "") or "")
+        # Ahead of the protected-path ask, for the reason given on the
+        # shell branch above. No verb condition here: this branch is the
+        # executor's primary write path and every tool reaching it writes,
+        # so a path match alone is the whole condition. Read is absent
+        # from the tool tuple above and stays absent - ceremonies read
+        # these paths constantly and must keep doing so.
+        if NEVER_SILENT_RE.search(path):
+            respond("deny", (
+                f"{NEVER_SILENT_DENY_PREFIX}: '{path}' is part of the "
+                "permission and ceremony system, which no in-session edit "
+                f"may touch. {NEVER_SILENT_ROUTE} "
+                f"When it loads: {never_silent_load_note(path)}"
+            ))
         if PROTECTED_RE.search(path):
             respond(
                 "ask",
