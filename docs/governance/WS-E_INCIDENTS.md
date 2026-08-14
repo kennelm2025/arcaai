@@ -763,6 +763,91 @@ regardless of surrounding prose).*
     interrogates — and this is the reported-done-not-done class at its fourth
     appearance in two days.
 
+69. **A chained exposure, every link proven inside one process
+    (2026-08-14): a skill written into `.claude/skills/` registered live
+    mid-process, and its render executed a guard-denied command with no
+    guard invocation.** The chain is three links and each was
+    demonstrated on the day. A file authored into the skills tree is
+    gated only by the protected-path **ask**; that session ran in
+    `bypassPermissions`, where an ask is auto-approved without ever
+    surfacing, so the gate passed silently. The skill then became
+    invokable **without a process restart** — believed impossible at the
+    time and recorded as a registry wall, corrected to a registration
+    delay once process identity was checked. Its render line then
+    executed a command carrying an absolute deny, returning the tool's
+    own error rather than the guard's refusal: route A, classified
+    **BYPASS**. Author, register, execute outside the guard, with no
+    operator interaction available at any step. Stated as the
+    configuration's reach and not as an allegation about what occurred —
+    every skill authored that session was authored to order and is
+    accounted for.
+
+    **The mode mechanism, and the part of it that is not known.** The
+    session ran in `bypassPermissions`. What set it was **NOT LOCATED**
+    on any disk surface searched: it was carried by the process and died
+    with PID 27792. The mode is confirmed retrospectively, and only by
+    **behavioural attestation in the successor session** — a write in
+    that session raised a confirmation prompt at the operator's terminal,
+    which the predecessor's writes had not. A harness cannot read its own
+    permission mode, so this is the only instrument there is, and it is
+    the operator's observation rather than the harness's claim.
+
+    **The deny/ask asymmetry, which both hid the condition and eventually
+    revealed it.** Denies survive bypass; asks vanish into silent
+    approval. That asymmetry is why the session looked normal from inside
+    — denied commands were still being refused in the guard's own words,
+    which reads as a live guard — while every Tier 2 ask was being
+    auto-approved. It is also what made the condition detectable at all:
+    the deny probes kept returning refusal text, so when the asks were
+    finally noticed to be absent, the two halves could be separated.
+
+    **Tier 2 asks were inoperative for the predecessor session's full
+    duration.** No protected-path touch prompted, for its whole length.
+    What carried the work in the meantime was the **evidence layer, not
+    the permission layer**: strict re-reads, diffs against the branch
+    point, hashes, and checks whose greens name what they checked. That
+    distinction is the entry's most transferable part — the permission
+    layer was off, the artefact-verification layer held, and the second
+    is why nothing was lost. A repository that relied on prompts alone
+    would have no account of that session at all.
+
+    **The restart-not-self-evidencing pattern, three instances in one
+    day.** Three separate acts were performed in the belief that a
+    process restart had occurred; PID and start time showed it had not. A
+    restart is not observable from inside the process, the harness cannot
+    tell that it has been reborn, and in each case the evidence that
+    would have settled it was one command away and not run. **A claim
+    resting on a restart requires process-identity evidence** — PID and
+    start time — and the check is cheap enough that there is no excuse
+    for asserting the restart without it. Corrections landed at
+    `docs/governance/CORRECTIONS_restart-claims_2026-08-14.md`.
+
+    **Design fact, recorded because two of the above reduce to it.**
+    Permission mode and process identity are **operator-side facts**. The
+    harness can neither prove its own rebirth nor read its own mode, so
+    both must be attested from outside and neither may be assumed from
+    inside. Same family as items 64 and 68 — a check whose stated subject
+    is not the subject it interrogates — with the twist that here the
+    instrument does not exist in-process at all.
+
+    **OWED, each its own ruled act; none is fixed by this entry.**
+    (1) **Guard ask to deny upgrade for never-silent paths**, writes
+    under `.claude/` at minimum. A deny is the one decision no mode
+    swallows, which is the whole lesson of the asymmetry above.
+    (2) **`/session-open` gains operator mode attestation and a
+    PID/start-time record as boot steps**, stopping on a non-default
+    mode.
+    (3) **`.claude/settings.local.json` cleanup** — two stale entries the
+    tiers document already disposed of on paper and which were never
+    cleared.
+    (4) **The two dispatch probes** — frontmatter disambiguation, and
+    route B subagent dispatch — re-run against repaired config in a
+    default-mode session.
+    (5) **Default-mode discriminator re-run**, per the amendment at
+    `docs/governance/PRECEDENCE_DISCRIMINATOR_OUTCOME_2026-08-14.md`.
+    (6) **Rule-string prefix and invocation-form friction**, the queue
+    item 27 family — noted here, unruled.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a

@@ -171,3 +171,61 @@ fail-closed on the main-loop path — and records the one it cannot.**
 3. **Groups (ii), (iii) and (iv): NOT STARTED**, blocked on this gate by ruling
    R2, which declined to carve an exception for exactly this blind spot. The
    widened families were never exercised, for any purpose, at any point.
+
+## Amendment, 2026-08-14 — section 5's registry-wall finding is WITHDRAWN
+
+**What was believed.** Section 5 records that the first route A probe did not
+fire, returning `Unknown skill: probe-route-a`, and explains it as a registry
+populated at process start — concluding that "load-at-start surfaces cannot be
+introduced into the running process that needs them, so they are testable only
+across a restart boundary", and generalising from settings to skills.
+
+**What the evidence now shows.** The `claude` process (PID 27792) started at
+08:55:58Z and ran continuously through the entire session. The route A sequence
+— authoring the probe skill, the `Unknown skill` result, the retry, and the
+successful firing — all falls between roughly 10:10Z and 10:27Z, bracketed by
+the design readback written at 10:10:14Z and this entry's own draft at
+10:27:33Z. **All of it inside one process.** No restart separated the failed
+invocation from the successful one.
+
+**The corrected finding.** The skill became invokable **without a process
+restart**. What section 5 recorded as a wall was a **delay** in registration.
+The believed restart between the two attempts did not occur; only the passage
+of one or more turns did.
+
+**The generalisation is withdrawn.** "Load-at-start surfaces" was too broad on
+two counts: agent definitions register live, and skills — on this evidence —
+register mid-process too. What triggers the refresh is **not established** by
+anything here, and is not claimed. Whether `settings.json` reloads mid-process
+remains **open**; it was never tested, because the widened families were
+deliberately never exercised.
+
+**The governance edge, which is the part worth keeping.** The corrected
+mechanism is not merely less inconvenient than the wall — it is a larger
+exposure. **The invokable surface of this repository can change mid-process,
+without a restart.** That cuts both ways and the benign direction is the less
+important one: a corrected skill or agent propagates live, which is convenient;
+but a skill authored mid-session becomes invokable in the same session, which is
+not.
+
+Combine that with this document's primary finding and the chain is complete, and
+was open today end to end: **write a skill file → it registers live → its render
+executes ungoverned.** The only gate on the first link is the protected-path ask
+on `.claude/skills/`, and this session ran in `bypassPermissions`, where that ask
+was auto-approved without surfacing. So on 2026-08-14 the entire chain — author,
+register, execute outside the guard — was reachable with no operator interaction
+at any step. That is stated as the configuration's reach, not as an allegation
+about what occurred; every skill authored this session was authored to order and
+is accounted for.
+
+**What survives untouched, and it is the substance of this document.** Route A's
+**BYPASS** classification does not depend on restart semantics in any way. The
+render executed a command carrying an absolute deny and returned no guard text,
+in a process where Bash denies were demonstrably firing — the force-push probe
+had returned the guard's refusal verbatim. Sections 1 through 4, and 6 through
+9, stand as written.
+
+**Why this correction is recorded rather than edited in.** The original section
+is left intact because what was believed, and on what basis, is part of the
+record. A quiet edit would leave a document that had never been wrong, which is
+not the document this was.

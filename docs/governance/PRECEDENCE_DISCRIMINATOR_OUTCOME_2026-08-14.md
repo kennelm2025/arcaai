@@ -206,3 +206,82 @@ Each item below is a separate governed act. None of them is performed by this en
 6. **Custody.** The working draft lived in the session scratchpad, which is not durable.
    Landing it here supersedes that copy; the scratchpad version is no longer the record and
    should not be read as one.
+
+---
+
+## Amendment, 2026-08-14 — precondition 1 holds; its stated mechanism is weaker
+
+**The restart was real, and precondition 1 stands.** The `claude` process
+running the probe started at **08:55:58Z** on 2026-08-14. Phase 1's in-session
+series ran on 2026-08-13, and a further boot is recorded at approximately
+08:47Z, both before that start. So a genuine process restart did separate Phase
+1 from Phase 2, and the temporary allow rule — written to disk in the earlier
+session — was on disk before this process began. **The branch A outcome is not
+disturbed.**
+
+**What is weaker is the reasoning, not the result.** Section 2's "Precision on
+precondition 1" argues that the restart replaces the earlier probe's unevidenced
+assumption (that `settings.json` reloads mid-session) with "the documented
+mechanism (that it loads at session start)". Later evidence in the same session
+shows that at least one configuration surface — the skill registry — **does**
+refresh mid-process without a restart. Load-at-start can therefore no longer be
+assumed as a general property, and whether `settings.json` specifically reloads
+mid-process is **untested and open**.
+
+**Why this changes nothing about the outcome.** The rule was present on disk
+before this process started, so it was loaded under either mechanism. The
+restart was sufficient; it is only its stated rationale that was broader than
+the evidence supports.
+
+**Scope note on settings-reload semantics, stated because the temptation is to
+resolve it and the evidence does not.** It was suggested that a later read
+proved `settings.json` is re-read live. It does not. That read used the file-read
+tool and a JSON parse — **both read the file on disk**. A disk read shows what
+the file contains and can say nothing whatever about what the process had loaded
+or what it would enforce. The instrument cannot distinguish the two states, so
+the question is **INDETERMINATE**: whether `settings.json` reloads mid-process
+is untested in either direction.
+
+The one experiment that would have settled it — exercising a newly granted
+family and observing whether it was permitted — was **deliberately not run**,
+because the widening's activation was ruled conditional on a gate that failed.
+That was the right call and it left this question open as a side effect. It
+should be settled by design, not by accident, whenever the widening is next
+attempted.
+
+**A standing caveat, recorded here because it belongs with this document and is
+not resolved by this amendment.** The session ran in `bypassPermissions` mode,
+under which an ask is auto-approved without surfacing. The "no prompt" half of
+the branch A observation is therefore **uninformative on its own** — no prompt
+would have appeared regardless. The deny half is unaffected: denies are not
+auto-approved, and the guard's refusal was returned verbatim. What the probe
+establishes without qualification is that **the deny fired while a matching
+allow rule was in force**. Whether an ask would have preceded it cannot be read
+from this run.
+
+### The live route — added at landing, 2026-08-14
+
+The caveat above was drafted as a permanent gap. It is not one, and the
+difference matters enough to state separately rather than leave a later reader
+to notice it.
+
+The successor session of the same day **attested ask-tier by behaviour**: a
+write to an unprotected path in the repository root raised a confirmation prompt
+at the operator's terminal, observed by the operator and reported back. Mode is
+not readable from inside the harness, so behavioural attestation is the only
+instrument available, and it is the operator's observation rather than the
+harness's claim.
+
+That makes this an **OPEN QUESTION WITH A LIVE ROUTE**, not a closed gap. A
+default-mode re-run of this discriminator is now possible: the same allow rule
+over the same deny-carrying family, in a session attested at ask-tier, with both
+halves of the observation informative because asks surface. It would settle
+whether deny-precedence holds in default mode, which this run establishes only
+under bypass.
+
+**It does not run today**, and it is not a condition on anything landing in this
+commit. It joins the owed-probes list at the incident record for this failure
+family. The deny half needs no re-running; the re-run is for the ask half and
+for the mode qualifier, and until it happens the finding this document carries is
+**tested under bypass**, which is narrower than the tiers document's summary of
+it has so far said.

@@ -230,7 +230,8 @@ false-green shape this repository catalogues.
   See the narrowing note under Tier 1 and the amended coverage rule
   above.
 - **Whether an allow rule also pre-empts a guard DENY: TESTED
-  2026-08-14, and the guard HELD.** A matching Tier 1 allow rule for the
+  2026-08-14 UNDER `bypassPermissions`, and the deny FIRED. Default-mode
+  precedence is UNPROVEN.** A matching Tier 1 allow rule for the
   force-push family was applied, the session restarted so the settings
   provably loaded, and the probe issued: **no prompt fired and the
   command was denied**, returning the guard's own refusal text. Branch A
@@ -258,6 +259,33 @@ false-green shape this repository catalogues.
   recorded rather than papered over: it began when the tiering merged and
   ended with the same-day narrowing. On this evidence the guard was
   probably in force throughout it, which is reassurance and not proof.
+  **Mode qualifier, added 2026-08-14, and it narrows this bullet.** The
+  probe ran in a session later established to have been in
+  `bypassPermissions` mode, under which an ask is auto-approved without
+  ever surfacing at the operator's terminal. **The "no prompt fired" half
+  of the observation is therefore uninformative**: no prompt would have
+  appeared whatever the rules said, so that half evidences nothing and
+  must not be cited as though it did. The deny half is untouched — denies
+  are not auto-approved, the command was refused, and the refusal came
+  back in the guard's own words. What survives without qualification is
+  that **the deny fired while a matching allow rule was in force, in
+  bypass mode**. What does not survive is the unqualified claim that deny
+  beats allow, because the ask layer that would compete with the deny in
+  default mode was inert throughout.
+  **This bullet previously read "TESTED 2026-08-14, and the guard HELD"
+  and cited the absent prompt as part of the result.** The change is
+  recorded rather than made quietly: the mode was not known when the
+  bullet was written, and a reader should be able to see that the
+  qualifier arrived afterwards.
+  **OPEN QUESTION WITH A LIVE ROUTE, not a permanent gap.** The successor
+  session of the same day attested ask-tier by behaviour, so a
+  default-mode re-run of the discriminator is available: same rule, same
+  deny-carrying family, in a session where asks surface and both halves of
+  the observation therefore carry information. Owed at WS-E 69 fix item 5,
+  not run. Until it runs, the practical rule **never allow-list a command
+  family that carries a deny** stands on ground narrower still than the
+  paragraph above already concedes. Full record and the live-route reframe
+  at `docs/governance/PRECEDENCE_DISCRIMINATOR_OUTCOME_2026-08-14.md`.
 
 ## Post-merge verification — required
 
