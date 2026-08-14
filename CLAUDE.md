@@ -169,11 +169,14 @@ shell, went unguarded. Adding a shell tool means adding it in both places.
 loses. The two mechanisms are alternatives, not layers, so: **never grant in Tier 1
 anything Tier 2 is relied on to gate.** An allow rule covering the same ground as a guard
 ask is not belt-and-braces; it is the gate switched off silently. **Whether a deny is
-pre-empted the same way was tested 2026-08-14, and the guard HELD** — a matching allow rule
-for the force-push family produced no prompt and the guard's own refusal, in a restarted
-session, so deny beats allow
-(`docs/governance/PRECEDENCE_DISCRIMINATOR_OUTCOME_2026-08-14.md`). That is one family and
-deny only; it leaves the allow-pre-empts-ask finding above untouched. **Never allow-list a
+pre-empted the same way was tested 2026-08-14 under `bypassPermissions`, and the deny
+FIRED** — a matching allow rule for the force-push family did not stop the guard's own
+refusal coming back verbatim
+(`docs/governance/PRECEDENCE_DISCRIMINATOR_OUTCOME_2026-08-14.md`). **Read the mode
+qualifier before relying on it:** that session auto-approved asks without surfacing them,
+so the absence of a prompt evidences nothing, and **deny-precedence in default mode is
+UNPROVEN** — a re-run in an ask-tier session is owed at WS-E 69. That is one family, deny
+only, under one mode; it leaves the allow-pre-empts-ask finding above untouched. **Never allow-list a
 command family that carries a deny** stands regardless, on the narrower ground that such an
 overlap buys nothing. Ceremony skills carry their own `allowed-tools` frontmatter,
 which governs inside that ceremony — Tier 1 grants are not in force there.
