@@ -1,0 +1,44 @@
+# TEST FIXTURE — not a reference document and not a real scenario.
+# The schema at arcaai/harness/schema/scenario_spec_v0.2.schema.json is the
+# sole authority on what a valid v0.2 spec is. This file is exercise material.
+#
+# The v0.2 negative case, and the whole point of the version: a retrieval-class
+# scenario pinning ONLY the manifest pair. Valid at v0.1, rejected at v0.2.
+# It is identical to the positive fixture but for the missing line, so a
+# reviewer can see the requirement rather than infer it.
+schema_version: "0.2"
+scenario_id: RGD-003
+title: Fixture — retrieval scenario pinning only the manifest pair
+description: >
+  Must be rejected at v0.2. The manifest hash excludes chunker version,
+  embedding model and chunk counts, so this spec records a reproducibility
+  claim narrower than it appears.
+scenario_class: retrieval
+vertical: fraud
+typology: disclosure_regime
+corpus_snapshot:
+  manifest_version: "0.0-fixture"
+  manifest_sha256: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+retrieval:
+  retrieval_kind: gap_detection
+  query: What obligation applies where the disclosure provision is not held in the corpus?
+  top_k: 5
+  distractor_document_ids:
+    - FIXTURE-0001
+    - FIXTURE-0002
+    - FIXTURE-0003
+  ground_truth_ref: D1
+  scoring_method: gap_detection
+  gap_detection_scoring:
+    abstention_weight: 0.6
+    distractor_avoidance_weight: 0.4
+migration_diff:
+  comparison: tolerance
+  tolerance:
+    metric: gap_detection_score
+    max_abs_delta: 0.02
+    nondeterminism_source: approximate nearest-neighbour ordering in the vector store
+acceptance:
+  metric: gap_detection_score
+  operator: ">="
+  value: 0.8

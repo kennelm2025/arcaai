@@ -1,7 +1,7 @@
-"""D2.1 — scenario spec schema v0.1 conformance.
+"""D2.1 — scenario spec schema conformance, v0.1 and v0.2.
 
-The schema at ``arcaai/harness/schema/scenario_spec_v0.1.schema.json``
-is the SOLE authority on what a valid spec is. The YAML files under
+Each schema file is the SOLE authority on what a valid spec of ITS
+version is. The YAML files under
 ``fixtures/`` carry no normative weight whatever: they are exercise
 material, and they are safe to keep beside the schema only because CI
 validates them on every run, so they cannot drift into a second,
@@ -14,6 +14,17 @@ available — it would report "spec schema-valid" while asserting almost
 nothing, which is exactly the failure shape the check-method defect
 family exists to name. So each rejection test asserts WHICH rule fired
 and WHERE, not merely that validation raised.
+
+v0.2 ADDS ONE REQUIREMENT and must add no others. It makes
+``retrieval_snapshot_sha256`` mandatory for retrieval-class scenarios.
+Two guards below matter more than the positive case and are the reason
+this file grew rather than a second file appearing. First, v0.1 must be
+UNCHANGED — a retrieval spec without the pin still validates there, and
+if that test ever fails an immutable schema has been edited. Second, the
+new requirement must not reach scoring-class scenarios, which may pin a
+corpus snapshot without ever querying an index; a schema that bound them
+too would import the exact defect v0.1 forbids at ``generator_seed``.
+Over-reach is invisible to a positive test, so it has its own fixture.
 """
 from __future__ import annotations
 
@@ -26,27 +37,38 @@ import yaml
 from jsonschema import Draft202012Validator
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
-_SCHEMA_PATH = (
-    _REPO_ROOT / "arcaai" / "harness" / "schema" / "scenario_spec_v0.1.schema.json"
-)
+_SCHEMA_DIR = _REPO_ROOT / "arcaai" / "harness" / "schema"
+_SCHEMA_PATHS = {
+    "0.1": _SCHEMA_DIR / "scenario_spec_v0.1.schema.json",
+    "0.2": _SCHEMA_DIR / "scenario_spec_v0.2.schema.json",
+}
+_VERSIONS = sorted(_SCHEMA_PATHS)
 _FIXTURES = Path(__file__).resolve().parent / "fixtures"
 
 
-def _load_schema() -> dict:
-    return json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
+def _load_schema(version: str = "0.1") -> dict:
+    return json.loads(_SCHEMA_PATHS[version].read_text(encoding="utf-8"))
 
 
 def _load_fixture(name: str) -> dict:
     return yaml.safe_load((_FIXTURES / name).read_text(encoding="utf-8"))
 
 
-def _errors(instance: dict) -> list:
-    """All validation errors, deepest-first, for substance assertions."""
-    validator = Draft202012Validator(_load_schema())
+def _errors(instance: dict, version: str | None = None) -> list:
+    """All validation errors, deepest-first, for substance assertions.
+
+    The schema is chosen from the instance's OWN declared version, which
+    is what the runner does. A helper that validated every fixture against
+    one hardcoded schema would put a v0.2 spec through v0.1's rules and
+    then report the verdict confidently — the schema equivalent of
+    checking the wrong subject and calling the answer green.
+    """
+    chosen = version or instance.get("schema_version", "0.1")
+    validator = Draft202012Validator(_load_schema(chosen))
     return sorted(validator.iter_errors(instance), key=lambda e: str(e.json_path))
 
 
-def _rules(instance: dict) -> set[str]:
+def _rules(instance: dict, version: str | None = None) -> set[str]:
     """The set of validation keywords that fired, including nested
     context from if/then and oneOf branches — a top-level allOf failure
     reports the branch generically, so the specific rule often lives in
@@ -59,12 +81,12 @@ def _rules(instance: dict) -> set[str]:
         for sub in err.context or []:
             walk(sub)
 
-    for err in _errors(instance):
+    for err in _errors(instance, version):
         walk(err)
     return found
 
 
-def _messages(instance: dict) -> str:
+def _messages(instance: dict, version: str | None = None) -> str:
     parts: list[str] = []
 
     def walk(err) -> None:
@@ -72,7 +94,7 @@ def _messages(instance: dict) -> str:
         for sub in err.context or []:
             walk(sub)
 
-    for err in _errors(instance):
+    for err in _errors(instance, version):
         walk(err)
     return " | ".join(parts)
 
@@ -80,15 +102,28 @@ def _messages(instance: dict) -> str:
 # --------------------------------------------------------------- schema itself
 
 
-def test_schema_is_itself_a_valid_2020_12_schema():
-    """Before the schema can judge anything, it must be well-formed."""
-    Draft202012Validator.check_schema(_load_schema())
+@pytest.mark.parametrize("version", _VERSIONS)
+def test_schema_is_itself_a_valid_2020_12_schema(version):
+    """Before a schema can judge anything, it must be well-formed."""
+    Draft202012Validator.check_schema(_load_schema(version))
 
 
-def test_schema_is_closed_at_top_level():
+@pytest.mark.parametrize("version", _VERSIONS)
+def test_schema_is_closed_at_top_level(version):
     """additionalProperties false is load-bearing: an unknown field that
     validates is a spec whose hash does not describe what ran."""
-    assert _load_schema()["additionalProperties"] is False
+    assert _load_schema(version)["additionalProperties"] is False
+
+
+@pytest.mark.parametrize("version", _VERSIONS)
+def test_schema_pins_its_own_version(version):
+    """Each file declares the one version it judges, as a const.
+
+    This is what makes cross-version validation impossible by accident
+    rather than by convention: a spec routed to the wrong schema fails on
+    this const before any other rule is reached.
+    """
+    assert _load_schema(version)["properties"]["schema_version"]["const"] == version
 
 
 # ------------------------------------------------------------- accepts valid
@@ -181,3 +216,87 @@ def test_bit_identical_comparison_carrying_tolerance_is_rejected():
         "tolerance": {"metric": "roc_auc", "max_abs_delta": 0.01},
     }
     assert _errors(spec), "schema accepted bit_identical with a tolerance block"
+
+
+# ----------------------------------------- v0.2: the retrieval snapshot pin
+
+
+def test_v0_1_still_accepts_a_retrieval_spec_without_the_pin():
+    """THE IMMUTABILITY GUARD, and the most important test in this section.
+
+    v0.1 is immutable once merged. If this ever fails, the v0.2 change was
+    made by editing v0.1 rather than by adding a file — which is the one
+    thing the prototype convention forbids outright, and which no amount
+    of green elsewhere would make acceptable.
+    """
+    spec = copy.deepcopy(_load_fixture("valid_retrieval_gap_detection.yaml"))
+    del spec["corpus_snapshot"]["retrieval_snapshot_sha256"]
+    assert spec["schema_version"] == "0.1"
+    assert _errors(spec) == [], _messages(spec)
+
+
+def test_v0_2_accepts_a_retrieval_spec_carrying_the_pin():
+    fixture = _load_fixture("valid_retrieval_v0_2_pinned.yaml")
+    assert _errors(fixture) == [], _messages(fixture)
+
+
+def test_v0_2_rejects_a_retrieval_spec_missing_the_pin():
+    """The requirement itself, asserted by rule and by location.
+
+    Asserting only that validation raised would pass equally if the spec
+    failed for some unrelated reason, which is how a test comes to certify
+    a rule it never exercised.
+    """
+    spec = _load_fixture("invalid_retrieval_v0_2_missing_snapshot_pin.yaml")
+    assert _errors(spec), "v0.2 accepted a retrieval spec with no snapshot pin"
+    assert "required" in _rules(spec)
+    messages = _messages(spec)
+    assert "retrieval_snapshot_sha256" in messages, messages
+    assert "corpus_snapshot" in messages, messages
+
+
+def test_v0_2_accepts_a_scoring_spec_pinning_a_snapshot_without_the_pin():
+    """THE OVER-REACH GUARD. The requirement is retrieval-class only.
+
+    A scoring-class scenario may legitimately pin a corpus snapshot — v0.1
+    records it as one leg of the scoring reproducibility identity — and
+    never queries an index. Requiring the retrieval pin there would be a
+    pin describing something the scenario never touched, which is exactly
+    what v0.1 forbids at generator_seed. A positive test cannot see this
+    failure; only this fixture can.
+    """
+    fixture = _load_fixture("valid_scoring_v0_2_snapshot_unpinned.yaml")
+    assert _errors(fixture) == [], _messages(fixture)
+
+
+def test_v0_2_carries_forward_the_generator_seed_prohibition():
+    """v0.2 adds one requirement and must relax nothing."""
+    spec = copy.deepcopy(_load_fixture("valid_retrieval_v0_2_pinned.yaml"))
+    spec["generator_seed"] = 1
+    assert _errors(spec), "v0.2 accepted generator_seed on a retrieval spec"
+    assert "generator_seed" in _messages(spec)
+
+
+def test_v0_2_carries_forward_the_scoring_generator_seed_requirement():
+    spec = copy.deepcopy(_load_fixture("valid_scoring_v0_2_snapshot_unpinned.yaml"))
+    del spec["generator_seed"]
+    assert _errors(spec), "v0.2 accepted a scoring spec with no generator_seed"
+    assert "generator_seed" in _messages(spec)
+
+
+def test_v0_2_rejects_a_spec_declaring_another_version():
+    """Cross-version routing fails closed at the const, not silently.
+
+    Validated against v0.2 explicitly rather than by the instance's own
+    declaration, because the point is what happens when a spec reaches the
+    wrong schema — which is the failure the runner's version selection
+    exists to prevent, tested here at the schema layer.
+    """
+    spec = copy.deepcopy(_load_fixture("valid_retrieval_v0_2_pinned.yaml"))
+    spec["schema_version"] = "0.1"
+    errors = _errors(spec, version="0.2")
+    assert errors, "v0.2 accepted a spec declaring a different version"
+    assert "const" in _rules(spec, version="0.2")
+    assert any(e.json_path == "$.schema_version" for e in errors), _messages(
+        spec, version="0.2"
+    )

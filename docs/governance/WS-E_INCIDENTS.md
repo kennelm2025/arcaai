@@ -928,6 +928,53 @@ regardless of surrounding prose).*
     affordance can write**. Different defects that happen to meet at the
     same prompt.
 
+71. **The coverage percentage quoted as gate evidence does not measure
+    the platform package (2026-08-14).** `pyproject.toml` line 55 reads
+    `source = ["agent", "api", "verticals", "ingest"]` under
+    `[tool.coverage.run]`. Everything under `arcaai/` is therefore
+    outside the measurement: `arcaai/platform/`, which holds the
+    governance trio, the append-only audit store, the event models,
+    `corpus.py` and the whole retrieval layer; and `arcaai/harness/`,
+    which holds the scenario runner and the spec schemas. The 60%
+    `fail_under` gate is applied to the remainder.
+
+    **Expected.** A coverage figure reported by the mandatory battery,
+    and quoted into commit bodies and gate evidence as this repository's
+    coverage, describes the repository.
+
+    **Observed.** It describes four packages of the code and silently
+    omits the package the governance argument rests on. The omission is
+    not visible in the battery output: the report lists the modules it
+    measured, and a reader who does not already know what is missing
+    sees a complete-looking table.
+
+    **How it surfaced, which is the part worth keeping.** The item 31
+    change added nineteen tests, including the first test coverage the
+    scenario runner has ever had, and the reported percentage did not
+    move by a hundredth — 76.33% before and 76.33% after. An unchanged
+    number after real new tests is the anomaly that prompted the read of
+    `pyproject.toml`. Had the change happened to touch a measured
+    package as well, the number would have moved plausibly and the gap
+    would have stayed hidden.
+
+    **Family.** Check-method: a figure whose stated subject is narrower
+    than the subject its name implies, in the same shape as the
+    governed-store instrument that reported a store empty while not
+    enumerating one of its tables (item 28 dossier). It is registered
+    here rather than queued as an improvement because the number is
+    relied on as evidence, and evidence that is believed comprehensive
+    while being partial is an incident about the evidence chain rather
+    than a wish about tooling.
+
+    **NOT FIXED HERE, and the fix is a ruling rather than a patch.**
+    Widening the source list is one line, and its consequence is not:
+    the honest figure across the whole tree may fall below the 60%
+    `fail_under` gate, in which case the choices are to lower the gate,
+    to raise coverage first, or to stage the widening — each of which is
+    an operator decision with a Build and Quality Plan ratchet behind it
+    (60% rising to 80% by B9). Nothing may quote the current figure as
+    whole-repository coverage until that ruling lands.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a

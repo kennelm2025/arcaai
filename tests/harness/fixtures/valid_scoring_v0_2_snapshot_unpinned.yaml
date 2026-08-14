@@ -1,0 +1,48 @@
+# TEST FIXTURE — not a reference document and not a real scenario.
+# The schema at arcaai/harness/schema/scenario_spec_v0.2.schema.json is the
+# sole authority on what a valid v0.2 spec is. This file is exercise material.
+#
+# THE NEGATIVE-SPACE CASE, and the reason it is committed rather than derived.
+# v0.2 makes retrieval_snapshot_sha256 required for retrieval-class scenarios
+# ONLY. This is a scoring-class scenario that legitimately pins a corpus
+# snapshot — v0.1 records the corpus snapshot as one leg of the scoring
+# reproducibility identity — and does NOT carry the retrieval pin, because it
+# invokes the generator and never queries an index.
+#
+# It must VALIDATE. A schema change that also bound this file would have
+# imported the exact defect v0.1 forbids at generator_seed: a pin describing
+# something the scenario never touched. The positive and negative retrieval
+# fixtures alone cannot catch that over-reach; only this one can.
+schema_version: "0.2"
+scenario_id: SCT-002
+title: Fixture — scoring scenario pinning a corpus snapshot without the index pin
+description: >
+  Exercises the boundary of the v0.2 requirement. A scoring-class scenario may
+  pin the manifest pair and must not be required to pin the retrieval snapshot,
+  which would describe an index it never queries.
+scenario_class: scoring
+vertical: fraud
+typology: card_not_present
+generator_seed: 20260814
+corpus_snapshot:
+  manifest_version: "0.0-fixture"
+  manifest_sha256: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+scoring:
+  parameters:
+    amount:
+      min: 1.0
+      max: 5000.0
+    channel:
+      values:
+        - ecommerce
+        - pos
+  n_records: 1000
+  expected_outcome:
+    metric: roc_auc
+    direction: higher_is_better
+migration_diff:
+  comparison: bit_identical
+acceptance:
+  metric: roc_auc
+  operator: ">="
+  value: 0.85

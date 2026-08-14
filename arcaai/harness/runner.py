@@ -65,7 +65,23 @@ from arcaai.platform.governance.corpus import (
 
 RUNNER_VERSION = "0.1.0-commissioning"
 
-SCHEMA_PATH = Path(__file__).resolve().parent / "schema" / "scenario_spec_v0.1.schema.json"
+SCHEMA_DIR = Path(__file__).resolve().parent / "schema"
+
+# Schema selection is by the spec's OWN declared version, not by a constant.
+# Until v0.2 this was a single hardcoded path, which was correct while one
+# schema existed and becomes a trap the moment a second does: each schema
+# file pins schema_version with a const, so a v0.2 spec checked against the
+# v0.1 file is rejected for the wrong reason entirely - the runner would
+# report a malformed spec where the truth is a runner that cannot read that
+# version. A rejection naming the wrong cause is worse than no rejection,
+# because it sends the reader to fix a spec that is correct.
+#
+# Each schema file stays immutable; a new version is a new file and a new
+# entry here, never an edit of an existing one.
+SCHEMA_BY_VERSION = {
+    "0.1": SCHEMA_DIR / "scenario_spec_v0.1.schema.json",
+    "0.2": SCHEMA_DIR / "scenario_spec_v0.2.schema.json",
+}
 
 REGIME = "COMMISSIONING"
 INADMISSIBILITY = (
@@ -120,11 +136,17 @@ def _git_commit(repo_hint: Path) -> str:
 
 
 def load_and_validate_spec(spec_path: Path) -> tuple[dict[str, Any], str]:
-    """Parse the spec and validate against schema v0.1.
+    """Parse the spec and validate against the schema the spec declares.
 
     Uses ``Draft202012Validator`` directly — the same validation path
     ``tests/harness/test_scenario_spec_schema.py`` exercises, so the runner
     and the test suite cannot disagree about what a valid spec is.
+
+    Version selection has three outcomes and they stay distinct: a known
+    version validates, an absent one refuses saying so, and an unknown one
+    refuses naming what it does know. None of the three is allowed to
+    present as another — an unreadable version reported as an invalid spec
+    is the check-method failure this repository names most often.
     """
     raw = spec_path.read_bytes()
     spec_sha = hashlib.sha256(raw).hexdigest()
@@ -135,7 +157,25 @@ def load_and_validate_spec(spec_path: Path) -> tuple[dict[str, Any], str]:
     if not isinstance(spec, dict):
         raise Refusal(EXIT_SPEC_INVALID, "spec root must be a mapping")
 
-    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    declared = spec.get("schema_version")
+    if declared is None:
+        raise Refusal(
+            EXIT_SPEC_INVALID,
+            "spec declares no schema_version, so no schema can be selected to "
+            "judge it. Validating against a default would make the runner, "
+            "not the spec, decide which rules applied.",
+        )
+    if declared not in SCHEMA_BY_VERSION:
+        raise Refusal(
+            EXIT_SPEC_INVALID,
+            f"spec declares schema_version {declared!r}, for which this runner "
+            f"has no schema. Known versions: "
+            f"{', '.join(sorted(SCHEMA_BY_VERSION))}. This is an unreadable "
+            f"version, not an invalid spec.",
+        )
+    schema_path = SCHEMA_BY_VERSION[declared]
+
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
     validator = Draft202012Validator(schema)
     errors = sorted(validator.iter_errors(spec), key=lambda e: str(e.json_path))
     if errors:
@@ -150,7 +190,8 @@ def load_and_validate_spec(spec_path: Path) -> tuple[dict[str, Any], str]:
             walk(err)
         raise Refusal(
             EXIT_SPEC_INVALID,
-            f"spec failed schema v0.1 validation with {len(errors)} error(s)",
+            f"spec failed schema v{declared} validation with "
+            f"{len(errors)} error(s)",
             detail,
         )
 
@@ -183,8 +224,12 @@ def verify_pins(spec: dict[str, Any], manifest_path: Path) -> dict[str, Any]:
         if pinned[key] != live[key]:
             diverged.append(f"{key}: spec pins {pinned[key]!r}, live manifest is {live[key]!r}")
 
-    # Optional at v0.1. Absence is reported as unpinned rather than passed
-    # over: "not checked" and "checked and matched" must not look alike.
+    # Optional at v0.1; REQUIRED for retrieval-class at v0.2, where absence
+    # is a schema rejection long before this line runs. The branch stays
+    # regardless, and not merely for tidiness: v0.1 specs remain valid and
+    # runnable, so the unpinned case is live for as long as any of them is.
+    # Absence is reported as unpinned rather than passed over, because
+    # "not checked" and "checked and matched" must not look alike.
     rss_pinned = "retrieval_snapshot_sha256" in pinned
     if rss_pinned and pinned["retrieval_snapshot_sha256"] != live["retrieval_snapshot_sha256"]:
         diverged.append(
