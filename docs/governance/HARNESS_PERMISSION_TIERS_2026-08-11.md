@@ -46,8 +46,17 @@ the corpus edges file, `docs/governance/WS-E_INCIDENTS.md`,
 `DECISIONS.md`, the rulings records, and the document register. Added
 2026-08-11: `pyproject.toml`; `.github/workflows/`;
 `.claude/settings.json`, `.claude/hooks/` and `.claude/skills/`; and
-`decisions/`. Plus, by repository state rather than by path: PR merge,
-branch deletion, and any git write while HEAD is main.
+`decisions/`. Added 2026-08-13 at `678f46a`: `.claude/agents/`. Plus, by
+repository state rather than by path: PR merge, branch deletion, and any
+git write while HEAD is main.
+
+**The `.claude/agents/` addition is a NARROWING**, and is recorded here
+because a review commissioned to reduce friction returned it. Agent
+definitions were ungated while skills prompted, so a subagent's tool
+grants and instructions could be rewritten with no gate at all. An agent
+definition states what a subagent **may do** and is at least as
+load-bearing as a skill, which only teaches. The gap was latitude nobody
+ruled rather than a decision anybody took.
 
 *Rationale, per group.* `pyproject.toml` and the workflows change what
 every future run means, so a silent edit rewrites the meaning of every
@@ -62,6 +71,23 @@ register numbers silently. It is register-consuming by mechanism and
 therefore gated by consequence. WS-E 64 records that the one near miss
 of this kind was caught by the working protocol and not by any gate;
 this is the gate that was missing.
+
+**"PR merge" above understates what is now built, and is corrected
+here.** As of `25d71b3` the merge gate is Option B: the guard reads live
+GitHub state and spends it on **refusing early** rather than on
+proceeding automatically. No approval, an approval not pinned to the
+current head SHA, any check failing or still pending, or state that
+cannot be read at all — each is a **deny**, the last one fail-closed,
+because an UNKNOWN rendered as a green is the shape every false green in
+this repository has taken. Only an approval on the current head with all
+checks green reaches **ask**. The guard never returns allow, by design:
+a guard that could allow would be a granting mechanism, and every future
+defect in it would confer merge rights rather than merely fail to block.
+So merging remains an operator act under Tier 3; what changed is that the
+confirmation can now only be reached by a pull request that genuinely
+carries approval and green checks. This is strictly stronger than the
+unconditional ask it replaced, which asked identically on every PR
+regardless of its state.
 
 **Absolute denies, unchanged and with no exception path:** force push
 in any form, git history rewrites, recursive force deletes, and the
@@ -164,15 +190,35 @@ false-green shape this repository catalogues.
   ask does not reach the operator. Tier 1 was narrowed the same day.
   See the narrowing note under Tier 1 and the amended coverage rule
   above.
-- **Whether an allow rule also pre-empts a guard DENY is UNVERIFIED,
-  and it cannot be tested safely.** Every deny here is destructive —
-  force push, history rewrite, recursive force delete — so no harmless
-  probe exists on that path. If deny is pre-empted the same way ask is,
-  then for the interval in which `git push` sat in the allow-list the
-  force-push guard was not in force. That interval is recorded rather
-  than papered over: it began when the tiering merged and ended with
-  the same-day narrowing. **Never allow-list a command family that
-  carries a deny.**
+- **Whether an allow rule also pre-empts a guard DENY: TESTED
+  2026-08-14, and the guard HELD.** A matching Tier 1 allow rule for the
+  force-push family was applied, the session restarted so the settings
+  provably loaded, and the probe issued: **no prompt fired and the
+  command was denied**, returning the guard's own refusal text. Branch A
+  of the discriminator — deny wins. Full record, including the two
+  verbatim strings and the preconditions with their evidence, at
+  `docs/governance/PRECEDENCE_DISCRIMINATOR_OUTCOME_2026-08-14.md`.
+  **Scope, stated so the result is not overread.** It is one observation
+  on one command family, the CL-E1 force-push guard. It settles
+  precedence for a **deny** only and leaves the 2026-08-11
+  allow-pre-empts-**ask** finding entirely untouched — the two mechanisms
+  remain alternatives at the ask level, and the rule directly above still
+  governs there.
+  **This bullet previously claimed the question could not be tested
+  safely. That claim was wrong, and the way it was wrong is the lesson.**
+  Every deny here is destructive, so the reasoning went, therefore no
+  harmless probe exists. But a force push aimed at a remote that does not
+  exist is harmless by construction, and that probe was available the
+  whole time. An untested control was recorded as untestable, which is a
+  stronger claim than the evidence supported and one that removed the
+  question from the queue of things anyone would attempt.
+  **The practical rule is unchanged: never allow-list a command family
+  that carries a deny.** Its basis is now narrower — one family proven,
+  not the class — and an allow rule overlapping a deny still buys nothing.
+  The historical interval in which `git push` sat in the allow-list is
+  recorded rather than papered over: it began when the tiering merged and
+  ended with the same-day narrowing. On this evidence the guard was
+  probably in force throughout it, which is reassurance and not proof.
 
 ## Post-merge verification — required
 
