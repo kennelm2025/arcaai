@@ -267,6 +267,47 @@ principle mapping for the B8/B9 artefact set.
   queue items, F6 attached to the Arc 2 combined pull request, and F8 — where a
   Commissioning Session Record lives is ruled only in part — raised for a future
   ruling.
+- [x] **CL-29** *(new, 16 Aug; CLOSED 2026-08-16)* D2.2a runner spike, arc 2: the
+  spike proper, of which CL-27 built the runner. Scenario **RQA-107** — the Rev C
+  Appendix A.1 Statute slot — authored, validated against scenario spec schema
+  **v0.2**, and executed end-to-end against the pinned corpus snapshot
+  `2026-08-13.8`. COMMISSIONING throughout, results **permanently inadmissible as
+  gate evidence**. *(Source: `CLAUDE.md` queue item 30; operator rulings of
+  2026-08-16 at arc open, entry-gate ordering, scenario approval, execution and
+  closure)*
+  **CLOSURE.** Discharged 2026-08-16 on branch `build/d22a-spike-2-2026-08-16`,
+  the runner unmodified at `0.1.0-commissioning`. Exit criterion met:
+  **REPRODUCIBLE: YES** — four runs at the same triple produced comparable-content
+  sha256 `aeed275708bd4b67900d37c763479beb19fe96644ac58bf72aba371624a209ef` on
+  every one, verified by a recompute external to the runner, with **exactly one
+  field differing** across the complete artefacts — `generated_at_utc`, classified
+  run-metadata — and the raw float scores comparing exactly equal with no rounding
+  applied. The scenario's own pass/fail is **not** an exit criterion and none is
+  recorded: RQA-107 scored recall_at_k 0.0, acceptance NOT EVALUATED, nothing
+  tuned. Validation was both-halves: four deny-shaped mutations refused at exit 2
+  each naming the fault, of which **D1 is the schema discriminator** — dropping
+  `retrieval_snapshot_sha256` yields a spec that passes under v0.1, so its refusal
+  is positive evidence that v0.2 was the schema applied, which no allow-shaped
+  pass could establish. Rev C section 5.2 criterion 4 takes its **first live
+  discharge**: E was fixed at authoring and stated before any retrieval ran.
+  **Finding yield: ELEVEN unhonoured items**, six runner-side and five spec-side,
+  each with a fix route, recorded as findings for the Rev C acceptance stop rather
+  than as defects in Rev C, which is UNACCEPTED with a delta round in flight. The
+  first material-parameter list is authored as a runner-build artefact carrying
+  **two** hashes, the definition's and the observed values', so a narrowing of what
+  counts as material is itself detectable. Two instrument defects are recorded,
+  both the harness's own, including an abort probe INDETERMINATE twice whose first
+  summary line is retracted verbatim. Full record:
+  `docs/governance/COMMISSIONING_SESSION_RECORD_2026-08-16_d22a-runner-spike-2.md`,
+  sha256 `67a401a11d29c356e1986591693a292a1f8b37026822f7d782cde2df89ab7dec`, the
+  second instance of the Commissioning Session Record form. *(Hash note: the
+  record was `f0236cd3…a307b150` when first committed at `c7ae90d` and moved to
+  the value above when this CL-29 claim was written into it. The later value is
+  the one cited, because a ledger citing a hash its own act invalidated would be
+  the exact failure hash-pinning exists to prevent.)* Artefact preservation
+  is **owed**: the spec, the environment-identity artefact and the four result
+  artefacts are held in hash custody outside the tree on the CL-27 pattern, in a
+  session scratchpad that nothing preserves beyond the session.
 
 ## Workstream E — Engineering process & protocols
 - [ ] **CL-E1** (carried in) Record the force-push-to-main incident + add a guard

@@ -10,20 +10,32 @@ form, after
 - **Date:** 2026-08-15 · **Regime:** COMMISSIONING · **Arc:** queue item 30, the
   D2.2a runner spike proper, under DEC-0017 build-first right of way
 - **Register anchor:** `REPO_MANIFEST.md` regenerated this session, 2026-08-15
-  12:54 UTC — DEC next 0018, ADR next 0011, CL **next 29**, WS-E next 72,
-  **0 divergences**
+  12:54 UTC — DEC next 0018, ADR next 0011, CL next 29, WS-E next 72,
+  **0 divergences**. That next-free number is **claimed by this arc as CL-29**;
+  see the register note below
 - **Base:** `c7881f8`, merged `main` after PR #130
 - **Runner exercised:** `arcaai/harness/runner.py` at `0.1.0-commissioning`,
   unmodified by this arc
 
-**Register note, stated rather than assumed.** Queue item 30 says the arc claims
-the next free CL number. This record does **not** consume one. A CL claimed in a
-record whose ledger entry does not exist would put
+**Register note — CL-29 IS CLAIMED, and its ledger entry lands in the same pull
+request.** Queue item 30 says the arc claims the next free CL number, and the
+operator ruled the claim on 2026-08-16. **CL-29** is that number. It was stated
+before being consumed, per the standing rule, and checked two ways rather than
+taken from the anchor alone: the session manifest reads CL highest 28, next 29,
+and the ledger itself holds CL-01 through CL-28 contiguously plus CL-E1, so the
+sequence-hold rule (highest + 1, only) gives 29 and no other number.
+
+**The claim is consummated here rather than promised.** A CL claimed in a record
+whose ledger entry does not exist would put
 `docs/governance/GOVERNANCE_REVIEW_CHANGELOG.md` — canonical for CL items — out
 of step with the narrative register, which is precisely the divergence class the
-manifest scanner exists to catch. The anchor above is cited in the "next N" form
-the house convention requires for an unconsumed number. **Consummating the claim
-is a separate governed act and is owed.**
+manifest scanner exists to catch. The entry therefore travels in the same commit
+as this record, not behind it.
+
+*Date note: the arc executed on 2026-08-15 and the record is dated 2026-08-16 in
+its filename and its CL entry, on the operator's ruling. Both dates are stated
+rather than reconciled, because a record whose apparent date differs from its
+execution date should say so in its own text.*
 
 ## 1. Exit criterion — stated before the evidence
 
@@ -430,7 +442,7 @@ and is not performed by this record.
 
 It does not evaluate acceptance, promote any result, or claim that RQA-107
 passed or failed — the comparison is deliberately unmade. It does not accept
-Rev C, amend it, or dispose any round-2 finding. It does not consume a CL number.
+Rev C, amend it, or dispose any round-2 finding.
 It does not commit the spec or the result artefacts. It does not investigate the
 density observation at section 10, and it does not build the abort path whose
 absence it records.
