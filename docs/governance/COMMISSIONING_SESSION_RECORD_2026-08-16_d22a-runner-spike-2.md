@@ -422,14 +422,58 @@ its result artefacts as held outside the tree, with only the runner and the
 record committed. The precedent was read before being followed rather than
 recalled.
 
+**Every hash in the block below is a FILE hash** — sha256 over the artefact's
+bytes as stored, which is what a preservation copy is verified against.
+
 ```
 5bad9660c7f8d5ebb3b04cfa5297651474770466444042f22ef9a90d4aeda0a3  d22a_scenario_RQA-107_COMMISSIONING-DRAFT.yaml
-efa3f537b4d5432a241fe1a52d6c521fac5c1f54b2308f0f062f44dcf34f0267  environment_identity_RQA-107.json
+e93acc9d8116958dcdbba1876e4b832c653f79dcd1341b56c530689a2c4c57fc  environment_identity_RQA-107.json
 56ab9ac59c989f62e5117941d95e4265187b12984024b9954832564e2a112080  results/result_RQA-107_20260815T133253152481+0000.json
 3172ce61283c46f264de2304a8de9ba5410bbae820603d016b17e991232cef92  results/result_RQA-107_20260815T133328576690+0000.json
 c851012e2601e6edf402239ef94cde69a698337c9a41b5f9e68cda3abc1762cd  results/result_RQA-107_20260815T133422933535+0000.json
 d5928958ede74dc7de9fe3249b0d025047313cd033618e7e34681efba9ea3637  results/result_RQA-107_20260815T133457824933+0000.json
 ```
+
+### 15.1 CORRECTION, ruled 2026-08-16 — a file hash is not the hash a file carries
+
+**Superseded value.** This block previously cited
+`efa3f537b4d5432a241fe1a52d6c521fac5c1f54b2308f0f062f44dcf34f0267` for
+`environment_identity_RQA-107.json`. **That is not the file's hash.** It is the
+`environment_config_sha256` — the hash of the *config payload*, computed over the
+nine observed material-parameter values — which sections 7 and 8 cite correctly
+and which this correction does not disturb. The file is a JSON wrapper that
+*carries* that value alongside the list definition, the list's own hash and the
+regime labels, so its bytes were never going to hash to the value inside it. The
+true file hash is `e93acc9d…4c57fc`, above.
+
+**Why the distinction is written out rather than just fixed.** Section 15 is a
+*custody* table: its one job is to let someone who copies an artefact verify that
+what arrived is what left. A payload hash sitting in that column fails that job
+in the most damaging direction — an intact file reports as a mismatch, the
+hash-pinned transfer rule then requires the copier to **stop and not act on the
+artefact**, and the discipline gets spent on a false positive. The three hashes in
+play here are genuinely different objects and are now named as such: the **file
+hash** identifies the bytes; the **`environment_config_sha256`** identifies the
+observed values; the **`material_parameter_list_sha256`** identifies the
+definition of what counts as material.
+
+**How it was caught, recorded because the sequencing is the lesson.** Not by
+review of the record, which had already merged at `fcfa5fd` with the wrong value.
+It surfaced when the six artefacts were re-hashed at their source immediately
+before the preservation copy — the step the custody table exists to serve. A
+custody table is only tested when someone uses it, and this one was wrong from
+authoring until first use.
+
+**Provenance of this correction.** Ruled by the operator on 2026-08-16 as an open
+correction to a merged governed artefact rather than a silent edit. It supersedes
+record hash `67a401a11d29c356e1986591693a292a1f8b37026822f7d782cde2df89ab7dec`,
+which was the value cited by CL-29 in
+`docs/governance/GOVERNANCE_REVIEW_CHANGELOG.md` at merge. **The CL-29 citation is
+therefore itself superseded by this correction** and is not amended here; the
+ledger entry names the record by path as well as by hash, so the reference
+resolves, and re-pinning a closed ledger entry is a separate act if it is wanted
+at all. No finding, run result, hash of any *other* artefact, or verdict recorded
+by this arc changes.
 
 The RQA-107 spec is Claude Code authorship and is admissible for this spike only.
 Its promotion to a committed scenario, if wanted, is a separate governed act.
