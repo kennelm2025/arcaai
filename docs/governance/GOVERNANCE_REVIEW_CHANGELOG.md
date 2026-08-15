@@ -299,15 +299,56 @@ principle mapping for the B8/B9 artefact set.
   both the harness's own, including an abort probe INDETERMINATE twice whose first
   summary line is retracted verbatim. Full record:
   `docs/governance/COMMISSIONING_SESSION_RECORD_2026-08-16_d22a-runner-spike-2.md`,
-  sha256 `67a401a11d29c356e1986591693a292a1f8b37026822f7d782cde2df89ab7dec`, the
-  second instance of the Commissioning Session Record form. *(Hash note: the
-  record was `f0236cd3…a307b150` when first committed at `c7ae90d` and moved to
-  the value above when this CL-29 claim was written into it. The later value is
-  the one cited, because a ledger citing a hash its own act invalidated would be
-  the exact failure hash-pinning exists to prevent.)* Artefact preservation
-  is **owed**: the spec, the environment-identity artefact and the four result
-  artefacts are held in hash custody outside the tree on the CL-27 pattern, in a
-  session scratchpad that nothing preserves beyond the session.
+  sha256 `84738dc44ab2a3a46f8ca90359175f3fdebcff56fd4d7091e5c4d88d08d19a0a`, the
+  second instance of the Commissioning Session Record form. *(Hash note,
+  RE-PINNED 2026-08-16. The record has carried three values and all three are
+  named so the trail is followable: `f0236cd3…a307b150` at first commit
+  (`c7ae90d`); `67a401a1…89ab7dec` once this CL-29 claim was written into it,
+  which is the value this entry cited at merge; and `84738dc4…08d19a0a` after the
+  section-15 custody correction merged at `c02147a`, which is the value cited
+  above. Re-pinned on the operator's ruling rather than left to resolve by path
+  alone: a ledger entry whose hash no longer matches its subject is a pin that
+  has stopped pinning, and the correction it missed was itself a hash defect.)*
+  Artefact preservation is **DISCHARGED 2026-08-16 by read-back**: the spec, the
+  environment-identity artefact and the four result artefacts were copied to
+  `D:\ArcaAI-artefact-custody\2026-08-16-spike-2\` and re-hashed **at the
+  destination**, six of six matching the corrected section 15, whose expected
+  values were parsed from the committed record rather than restated.
+- [x] **CL-30** *(new, 16 Aug; CLOSED 2026-08-16)* **D1.1 Test Plan ACCEPTED at
+  Rev C.** The panel process closes. Rev C, sha256
+  `9d6ab3b0da21d5e6603f7fa505d48a892da9acf11dba60725b83e5a8c590e88c`, is ruled
+  ACCEPTED by the chair on 2026-08-16 under the acceptance rule at
+  `docs/governance/D1.1_PANEL_ROUND2_CIRCULATION_PACK_2026-08-15.md` §2.1: the
+  round returned no finding rated BLOCKING or MATERIAL and sustained at that
+  severity. *(Source: chair ruling 2026-08-16; `CLAUDE.md` queue item 18;
+  `docs/governance/TOR_test-capability_RevC_RULED_2026-08-10.md` section 5A)*
+  **CLOSURE.** Discharged by a light delta round to the same four reviewers,
+  scope confined to the nine residual MATERIAL findings, each reviewer verifying
+  only its own. **Nine of nine returned DISCHARGED** — Grok 2, ChatGPT 1,
+  DeepSeek 2, Gemini 4 — with **zero dissents and zero defects-in-fix**. Full
+  return, so the non-response machinery was never engaged and **no finding
+  carries a chair-adjudicated-unverified marking**. The `F-DS-11` +
+  `F-GEM-REG-04` composite was verified from both sides independently and both
+  returned DISCHARGED, so the anticipated divergence adjudication was not needed.
+  The round's only chair severity movement, `F-GEM-REG-01` from BLOCKING to
+  MATERIAL with a remedy the reviewer did not propose, was verified and
+  discharged by that reviewer against the **adopted** remedy. Custody checked
+  rather than assumed: all four reviewers received Rev C at the governing hash
+  and the **post-amendment** same-day delta pack `765eedaf…dc4e8378`, verified by
+  hashing the per-reviewer outbound copies. Two matters recorded rather than
+  smoothed: Gemini's verdicts came on a third prompt after two non-responsive
+  summaries were rejected on form and not landed, and Gemini's return did not
+  restate the reviewed hash as the pack's return conditions require.
+  **Consequences:** D1.1 exits DRAFT at Rev C, the filename rename being a
+  separate owed act; the `TOR §5A` precondition for Regime 2 is SATISFIED; and
+  the `TOR §5A:101` post-acceptance amendment route is now OPEN, its first
+  customer the TOR-side three-leg identity statements deferred at `F-GROK-08`.
+  Acceptance does not make Regime 1 results admissible and does not lift the §2.4
+  external-reliance bar. Full record:
+  `docs/governance/D1.1_REVC_ACCEPTANCE_2026-08-16.md`, with the four returns
+  committed verbatim as
+  `docs/governance/DELTA_RETURN_D1.1_RevC_from_GROK_2026-08-16.md` and its three
+  siblings.
 
 ## Workstream E — Engineering process & protocols
 - [ ] **CL-E1** (carried in) Record the force-push-to-main incident + add a guard
