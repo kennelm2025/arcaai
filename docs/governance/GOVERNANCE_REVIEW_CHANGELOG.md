@@ -271,6 +271,30 @@ principle mapping for the B8/B9 artefact set.
 ## Workstream E — Engineering process & protocols
 - [ ] **CL-E1** (carried in) Record the force-push-to-main incident + add a guard
   (branch protection / documented exception). *(F-007)*
+- [ ] **CL-28** *(new, 15 Aug)* `docs/governance/review-protocols.md` uses one
+  word for two different round outcomes. Its "When a round fails" section
+  prescribes that the failed round is "**re-run** with the same reviewers — not
+  the next round", and reads as governing every negative outcome, because nothing
+  distinguishes a round that **did not complete** from a round that **completed
+  and returned a negative verdict**. Define both. **Process-incomplete** — the
+  round did not finish, so it is re-run with the same reviewers and the next round
+  does not open. **Verdict-negative** — the round completed, every finding and
+  dissenting position was disposed, and the document was not accepted, so the
+  round closes and the next round proceeds under a fresh disposition. Wording tidy
+  only: no change to protocol substance is intended or authorised by this item,
+  and the three-round structure, bench lists and acceptance route are untouched.
+  *(Source: operator ruling 2026-08-15 on D1.1 round identity — Reading B. Round 1
+  of the D1.1 Test Plan **completed with a negative verdict and did not fail**:
+  four reviews received; 26 findings and four dissenting positions all disposed
+  through a committed per-finding disposition table; and the round's single
+  BLOCKING finding, `F-DS-04`, converted at the chair's stop into bounded Rev B
+  obligations, since discharged. The re-run clause governs process-incomplete
+  rounds and does not bite here. Ambiguity surfaced at the Rev B round-2 readiness
+  assessment. **Count note:** the disposition's own factual note corrects its chair
+  statement's "2 dissents" to four — two unnumbered ChatGPT dissents plus DeepSeek
+  D-001 and D-002 — and the corrected figure is used here rather than the
+  superseded one. Detail:
+  `docs/governance/D1.1_PANEL_ROUND1_DISPOSITION_2026-08-14.md`.)*
 - Q-A6 root-cause fix lands here: trail docs update in the same commit as the work
   they record (see trail-integrity note above).
 
