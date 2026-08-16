@@ -1,0 +1,72 @@
+# RQA-105 — Thematic Review series, corpus QA. Appendix A.1 slot of D1.1 Rev C.
+# Conventions follow the template at RQA-107.yaml.
+schema_version: "0.3"
+scenario_id: RQA-105
+title: Thematic Review corpus QA - threshold calibration findings across fraud monitoring and sanctions screening
+scenario_class: retrieval
+vertical: fraud
+typology: thematic_review.threshold_calibration
+
+description: >
+  Obligation A coverage for the Thematic Review series. A two-limbed question on
+  what the reviews found about calibration of fraud transaction-monitoring
+  thresholds and of sanctions screening match thresholds, and what a firm should
+  be able to evidence about its threshold choices. TR-01 grounds the
+  fraud-monitoring limb and the derive-from-analysis evidence standard; TR-02
+  grounds the screening limb, including that both too-tight and too-loose
+  calibration are findings.
+
+  E composition reasoning, the recorded marginal case on TR-02's derivativeness,
+  and the pending_review overlap analysis are in the companion record
+  verticals/fraud/scenarios/RQA-105.authoring.md. E was fixed at authoring,
+  before any retrieval was run for this scenario, per D1.1 Rev C 5.2 criterion 4.
+
+corpus_snapshot:
+  manifest_version: "2026-08-13.8"
+  manifest_sha256: "2d5f2fb5ea6051167d89dc83aa70e1330f2cace212156a8a5014d98e7803809c"
+  retrieval_snapshot_sha256: "878b3439e8261e850510c7ea7b5d0e67655ee2eb3b34427a8d7c2b256d6ab928"
+
+retrieval:
+  retrieval_kind: corpus_qa
+  query: "What did the Authority's thematic reviews find about the calibration of fraud transaction-monitoring thresholds and of sanctions screening match thresholds, and what should a firm be able to evidence about its threshold choices?"
+  top_k: 5
+  top_k_absolute_cap: 7
+  scoring_method: semantic_distance
+  expected_document_ids:
+    - SYN-TR-01
+    - SYN-TR-02
+  binary_probe_justification: >
+    |E| is 2, so the Rev C 5.3 default computes to 1.0 and the attainable outcome
+    set is exactly {0, 1}. The binary form is intentional and follows from the
+    query's structure rather than from convenience: the question has two limbs,
+    fraud-monitoring calibration and screening calibration, each grounded by
+    exactly one document, so a partial retrieval is a genuinely half-ungrounded
+    answer and it is correct that it should not score partial credit. Padding E
+    to reach a graded range is impossible without violating Rev C 5.2
+    criterion 2, since the only candidates are documents whose absence leaves the
+    answer complete. Nothing was tuned after the fact: E was fixed before the
+    acceptance value was derived and no retrieval has been run. The sensitivity
+    lever is top_k, held at 5 against a cap of 7.
+  obligation_d_justification: >
+    The Thematic Review series is covered only by this binary probe, so
+    Obligation D requires either a companion scenario at |E| >= 5 or a stated
+    justification. The |E| >= 5 route is not constructible: the series contains
+    two eligible documents in total, and reaching five would require importing
+    documents from other series whose absence would not make the answer
+    ungrounded. A binary probe is sufficient evidence because the retrieval
+    question is presence-shaped, and because the query's two limbs map one-to-one
+    onto the series' two documents, so the probe cannot pass on a partial
+    retrieval and does discriminate at the finest granularity the series
+    supports. No precision claim is made or implied, and no inference about
+    ranking quality within top_k should be drawn from a pass. The series is also
+    the least dense in the eligible set at 5 and 4 chunks, so the probe evidences
+    retrieval from short documents only and nothing about dense-document
+    behaviour.
+
+migration_diff:
+  comparison: bit_identical
+
+acceptance:
+  metric: recall_at_k
+  operator: ">="
+  value: 1.0

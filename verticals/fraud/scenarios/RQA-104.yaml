@@ -1,0 +1,78 @@
+# RQA-104 — Sector Guidance series, corpus QA. Appendix A.1 slot of D1.1 Rev C.
+# Conventions follow the template at RQA-107.yaml.
+#
+# Query-selection note, because this series is the one most exposed to the
+# pending inclusion decision: seven of the fourteen pending_review documents are
+# Sector Guidance, spanning detection, intervention, customer treatment, SAR
+# quality, automated systems, vulnerability and account exit. The query was
+# therefore built on the one axis those seven do not occupy - the evidential
+# record of a decision, in the two decision classes belonging uniquely to the
+# eligible pair. See the authoring record.
+schema_version: "0.3"
+scenario_id: RQA-104
+title: Sector Guidance corpus QA - decision records for account opening and internal fraud escalation
+scenario_class: retrieval
+vertical: fraud
+typology: sector_guidance.account_opening_and_escalation_records
+
+description: >
+  Obligation A coverage for the Sector Guidance series. Asks what records a firm
+  must keep of an account opening decision and of a fraud suspicion escalated
+  internally, including where the decision was not to act, so the decision can
+  be reconstructed later. SG-01 grounds the opening limb; SG-02 grounds the
+  escalation limb and is the only eligible source for the decision-not-to-act
+  case.
+
+  E composition reasoning, the DP-01 and TR-01 marginal cases, and the
+  pending_review overlap analysis are in the companion record
+  verticals/fraud/scenarios/RQA-104.authoring.md. E was fixed at authoring,
+  before any retrieval was run for this scenario, per D1.1 Rev C 5.2 criterion 4.
+
+corpus_snapshot:
+  manifest_version: "2026-08-13.8"
+  manifest_sha256: "2d5f2fb5ea6051167d89dc83aa70e1330f2cace212156a8a5014d98e7803809c"
+  retrieval_snapshot_sha256: "878b3439e8261e850510c7ea7b5d0e67655ee2eb3b34427a8d7c2b256d6ab928"
+
+retrieval:
+  retrieval_kind: corpus_qa
+  query: "What records must a firm keep of an account opening decision and of a fraud suspicion escalated internally, including where the decision was not to act, so that the decision can be reconstructed later?"
+  top_k: 5
+  top_k_absolute_cap: 7
+  scoring_method: semantic_distance
+  expected_document_ids:
+    - SYN-SG-01
+    - SYN-SG-02
+  binary_probe_justification: >
+    |E| is 2, so under the Rev C 5.3 default the attainable values are exactly
+    {0, 1} and this is a binary probe rather than a graded measure. The binary
+    form is structural and intentional, not a shortfall of ambition: the eligible
+    Sector Guidance series holds exactly two documents, so 2 is the maximum |E|
+    this series admits and not a convenient minimum. The query was built
+    deliberately on the one axis needing both of them - the account opening
+    decision record in SG-01 and the internal escalation record in SG-02 - so the
+    probe exercises the whole eligible series rather than half of it, which a
+    single-document query would not. Padding E with DP-01 or TR-01 to reach a
+    graded band would admit documents whose absence would not leave the answer
+    ungrounded, which Rev C 5.2 criterion 2 forbids.
+  obligation_d_justification: >
+    The |E| >= 5 route is not constructible here: the eligible Sector Guidance
+    series contains two documents in total, and five necessary grounding
+    documents cannot be drawn from two. A binary probe is sufficient evidence for
+    this series because its retrieval question is presence-shaped at document
+    level, and E is BOTH eligible documents, so a pass evidences that the
+    retriever reaches every document the series currently has - the strongest
+    coverage a two-document series can yield. THIS JUSTIFICATION IS CONTINGENT
+    AND ITS EXPIRY CONDITION IS KNOWN NOW: if the pending inclusion decision
+    lands, the series grows from two documents to nine, the |E| >= 5 route
+    becomes constructible, and this argument stops holding. Obligation D would
+    then be re-discharged for this series by a graded scenario authored against
+    the enlarged set, not by re-citing this one. Nothing in this spec is evidence
+    about that future series.
+
+migration_diff:
+  comparison: bit_identical
+
+acceptance:
+  metric: recall_at_k
+  operator: ">="
+  value: 1.0

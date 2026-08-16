@@ -1,0 +1,69 @@
+# RQA-103 — Decision Procedures series, corpus QA. Appendix A.1 slot of
+# D1.1 Rev C. Conventions follow the template at RQA-107.yaml.
+schema_version: "0.3"
+scenario_id: RQA-103
+title: Decision Procedures corpus QA - firm-level action and the additional individual attribution test
+scenario_class: retrieval
+vertical: fraud
+typology: supervisory_decision_procedures.firm_and_individual_accountability
+
+description: >
+  Obligation A coverage for the Decision Procedures series. A two-limbed
+  question: how the Authority decides whether to act against the firm, and what
+  additional test must be satisfied before it acts against the responsible
+  senior individual. DP-01 grounds the firm limb; DP-02 grounds the individual
+  attribution test, which DP-01 only signposts.
+
+  E composition reasoning, the SG-02 marginal case, and the pending_review
+  overlap analysis are in the companion record
+  verticals/fraud/scenarios/RQA-103.authoring.md. E was fixed at authoring,
+  before any retrieval was run for this scenario, per D1.1 Rev C 5.2 criterion 4.
+
+corpus_snapshot:
+  manifest_version: "2026-08-13.8"
+  manifest_sha256: "2d5f2fb5ea6051167d89dc83aa70e1330f2cace212156a8a5014d98e7803809c"
+  retrieval_snapshot_sha256: "878b3439e8261e850510c7ea7b5d0e67655ee2eb3b34427a8d7c2b256d6ab928"
+
+retrieval:
+  retrieval_kind: corpus_qa
+  query: "When a fraud-control failure could lead to formal action, how does the Authority decide whether to act against the firm, and what additional test must be satisfied before it acts against the responsible senior individual?"
+  top_k: 5
+  top_k_absolute_cap: 7
+  scoring_method: semantic_distance
+  expected_document_ids:
+    - SYN-DP-01
+    - SYN-DP-02
+  binary_probe_justification: >
+    |E| is 2, so under Rev C 5.3 the attainable values of recall_at_k are exactly
+    {0, 1} and this is a binary probe rather than a graded measure. The binary
+    form is intentional and structural: the series holds exactly two eligible
+    documents, they partition the subject cleanly between firm-level action and
+    individual attribution, and the query is deliberately two-limbed so each limb
+    is grounded by exactly one of them. Padding E toward five would require
+    admitting documents the series merely cites, whose absence leaves the answer
+    grounded - which Rev C 5.2 criterion 2 forbids. Trimming E to one would raise
+    the apparent score by dropping a limb of the question rather than by
+    improving retrieval, the mirror failure named in the same section. The
+    sensitivity lever is top_k, not the threshold.
+  obligation_d_justification: >
+    The Decision Procedures series is covered only by this binary probe, so
+    Obligation D requires either a companion scenario at |E| >= 5 or a stated
+    justification. The justification route is taken because the |E| >= 5 route is
+    not constructible at any query: the series has two eligible documents in
+    total, and manufacturing five would mean importing documents from other
+    series whose absence would not make the answer ungrounded. A binary probe is
+    sufficient evidence because the retrieval question is presence-shaped -
+    either the procedural document governing the limb is retrieved or it is not.
+    The probe is not weak for being binary: it is a conjunction requiring both
+    documents in the top 5, so a retriever that finds the firm procedure and
+    misses the individual procedure scores 0, which is the discrimination this
+    series most needs given that DP-02 defers to DP-01 rather than restating it.
+    No precision claim is made or implied.
+
+migration_diff:
+  comparison: bit_identical
+
+acceptance:
+  metric: recall_at_k
+  operator: ">="
+  value: 1.0

@@ -1,0 +1,69 @@
+# RQA-101 — Customer Vulnerability series, corpus QA. Appendix A.1 slot of
+# D1.1 Rev C. Conventions follow the template at RQA-107.yaml.
+schema_version: "0.3"
+scenario_id: RQA-101
+title: Customer Vulnerability corpus QA - grounds for declining APP fraud reimbursement and the indicators weighed
+scenario_class: retrieval
+vertical: fraud
+typology: customer_vulnerability.app_fraud_reimbursement
+
+description: >
+  Obligation A coverage for the Customer Vulnerability series. A two-limbed
+  question: the standard governing a decline of reimbursement, and the
+  vulnerability and coercion indicators visible in the firm's own data that must
+  be weighed under it. Each limb is grounded by exactly one of the two eligible
+  documents in the series.
+
+  E composition reasoning, the marginal cases, and the pending_review overlap
+  analysis are in the companion record
+  verticals/fraud/scenarios/RQA-101.authoring.md. E was fixed at authoring,
+  before any retrieval was run for this scenario, per D1.1 Rev C 5.2 criterion 4.
+
+corpus_snapshot:
+  manifest_version: "2026-08-13.8"
+  manifest_sha256: "2d5f2fb5ea6051167d89dc83aa70e1330f2cace212156a8a5014d98e7803809c"
+  retrieval_snapshot_sha256: "878b3439e8261e850510c7ea7b5d0e67655ee2eb3b34427a8d7c2b256d6ab928"
+
+retrieval:
+  retrieval_kind: corpus_qa
+  query: "On what grounds may a firm decline or reduce reimbursement to a customer who was defrauded into authorising a payment, and which vulnerability and coercion indicators visible in the firm's own data must be weighed in that assessment?"
+  top_k: 5
+  top_k_absolute_cap: 7
+  scoring_method: semantic_distance
+  expected_document_ids:
+    - SYN-CV-01
+    - SYN-CV-02
+  binary_probe_justification: >
+    |E| is 2, so under the Rev C 5.3 default the attainable values are exactly
+    {0, 1} and this is a binary probe rather than a graded measure. The binary
+    form is intentional and not an artefact of a thin corpus slice: the query has
+    exactly two limbs - the standard governing a decline, and the indicators
+    weighed under it - and each limb is grounded by exactly one of the two
+    eligible documents, so E is two because the question is two-limbed. The
+    series holds only CV-01 and CV-02 as eligible documents, so |E| cannot exceed
+    2 for any honest query over it, and reaching a graded scale would mean
+    padding E with documents whose absence would not leave the answer ungrounded,
+    which Rev C 5.2 criterion 2 forbids. top_k is the sensitivity lever here, not
+    the threshold, which is computed mechanically from |E| and was not tuned.
+  obligation_d_justification: >
+    The series is covered only by this binary probe, so Obligation D requires
+    either a scenario at |E| >= 5 or a stated justification. The justification
+    route is taken because the |E| >= 5 route is not constructible: the series
+    holds exactly two eligible documents, so no query over it can have five
+    necessary grounding documents, and manufacturing one would mean reaching
+    outside the series and testing something other than the series. A binary
+    probe is sufficient here because the series' retrieval question is
+    presence-shaped - whether the two vulnerability-and-redress documents are
+    reachable for a query squarely in their subject area - which has no
+    intermediate answer worth measuring. No precision claim is made or implied.
+    It cannot evidence discrimination within a larger vulnerability population;
+    that becomes constructible only if the pending vulnerability documents become
+    eligible. Full reasoning in the authoring record.
+
+migration_diff:
+  comparison: bit_identical
+
+acceptance:
+  metric: recall_at_k
+  operator: ">="
+  value: 1.0
