@@ -428,9 +428,18 @@ this section is a working pointer, not the record.
    subagent routing remain unprobed, as do the rule strings. Detail:
    `docs/governance/HARNESS_PERMISSION_TIERS_2026-08-11.md` and
    `docs/governance/WS-E_INCIDENTS.md` item 68.
-5. **Corpus listing owed for SG-07, SG-08 and SG-09** — OPEN;
-   operator's decision whether it clears in one act or per document.
-   Detail: `docs/governance/SESSION_HANDOVER_2026-08-11c.md` open
+5. **Corpus listing owed for SG-07, SG-08 and SG-09 — DISCHARGED.
+   CLOSED 2026-08-17.** The listing act is complete: `MANIFEST.yaml` at
+   `2026-08-13.8` carries **30 documents**, including SYN-SG-03 through
+   SYN-SG-09 and SYN-TY-03 through SYN-TY-09, all fourteen at
+   `pending_review`. Read live from the manifest via the DEC-0014
+   machinery at the 2026-08-17 boot, not from a report. **What remains
+   is not listing but the inclusion decision**, which is item 12 and is
+   the operator's. Recorded rather than deleted because this item was
+   carried as open for several sessions after the act that discharged
+   it had already landed, which is the queue-staleness pattern the boot
+   readback exists to catch. Detail:
+   `docs/governance/SESSION_HANDOVER_2026-08-11c.md` open
    verification 7 and
    `docs/governance/RULINGS_RECORD_2026-08-10_TOR-test-capability.md`
    amendment 9.
@@ -497,9 +506,19 @@ this section is a working pointer, not the record.
     enforcement coverage.
 11. **PRs #64/#65 standing tree verification** — PARTIALLY CHIPPED.
     Detail: `docs/governance/SESSION_HANDOVER_2026-08-08b.md`.
-12. **Operator inclusion decision for TY-03..09** — OPEN, when ready.
-    Detail: `docs/governance/SESSION_HANDOVER_2026-08-11c.md` return
-    queue 10.
+12. **Operator inclusion decision — WIDENED 2026-08-17, and it is
+    FOURTEEN documents, not seven.** OPEN, when ready. The item read
+    "TY-03..09"; the live manifest shows **SYN-SG-03..09 AND
+    SYN-TY-03..09**, all fourteen sitting at `pending_review`, eligible
+    count 16 of 30. An inclusion decision would move the eligible set
+    from 16 toward 23 or 30 and would therefore **change
+    `retrieval_snapshot_sha256`, the eligible-set hash and the indexed
+    chunk count**, which are pinned by every retrieval scenario spec —
+    so it is a re-pinning event for the scenario set, not only a corpus
+    act. Sequence it against scenario authoring deliberately rather
+    than letting it land mid-flight. Detail:
+    `docs/governance/SESSION_HANDOVER_2026-08-11c.md` return
+    queue 10; `docs/governance/SESSION_HANDOVER_2026-08-17.md` §7.
 13. **CL-25 / inc4 pin writer** pending the agent module — OPEN, and
     sharper since 2026-08-12: WS-E 65 recorded that no harm has yet come
     of the audit store being destroyed only because nothing of record
@@ -519,11 +538,18 @@ this section is a working pointer, not the record.
 17. **Statute-edge width** — CORPUS-DESIGN FACT for the circulation
     pack. Detail: `docs/governance/SESSION_HANDOVER_2026-08-11b.md`
     return queue 16.
-18. **TOR errata** — CARRIED to the Test Plan (D1.1). Detail:
-    `docs/governance/SESSION_HANDOVER_2026-08-10c.md` and the PR #83
-    body.
+18. **TOR errata — DISCHARGED. CLOSED 2026-08-17.** Carried to the Test
+    Plan (D1.1), which is **ACCEPTED at Rev C** (CL-30, PR #134,
+    2026-08-16). The errata are carried in the accepted text. Detail:
+    `docs/governance/SESSION_HANDOVER_2026-08-10c.md`, the PR #83 body,
+    and `docs/governance/D1.1_REVC_ACCEPTANCE_2026-08-16.md`.
     Reporting rule inherited: D1.1 specifies the Regime-2 Test Report
     (operator ruling 2026-08-11).
+    **Residue, tracked separately and NOT closed by this:** the
+    `TOR §5A:101` post-acceptance amendment route is now OPEN, and its
+    first customer is the TOR-side three-leg identity statements at
+    `TOR §5:74` and `TOR §8:124`, deferred by name at `F-GROK-08`. That
+    is TOR text, not Test Plan text, and it remains owed.
 19. **Gemini architecture-review return** — CONSOLIDATION OWED before
     the Agentic Topology ADR work opens. Detail:
     `docs/governance/RULINGS_RECORD_2026-08-10_TOR-test-capability.md`.
@@ -597,7 +623,13 @@ this section is a working pointer, not the record.
     settling read at item 24.
 26. **`corpus-lister` scaling decisions owed before any wider fan-out**
     — NEW 2026-08-12, three design questions the pilot raised and did
-    not decide. (a) Whether the agent should hold an execution tool at
+    not decide. **NARROWED 2026-08-17: the listing debt this item was
+    scoped against is DISCHARGED** — all thirty documents are listed
+    (see item 5), so there is no outstanding fan-out to scale and the
+    urgency is gone. The three design questions survive on their own
+    merits, for the next time a fan-out is proposed; the count in this
+    item's closing paragraph — "seven documents wide" — is spent and
+    should not be read as live debt. (a) Whether the agent should hold an execution tool at
     all, a permissions decision deliberately not taken as part of the
     transcription repair; (b) whether fan-out is the right instrument,
     given `scripts/corpus_manifest_entries.py` already emits a complete
@@ -727,7 +759,23 @@ this section is a working pointer, not the record.
     pointing at the script rather than editing the prose as though it
     were current. Detail:
     `docs/governance/GOVERNANCE_REVIEW_CHANGELOG.md` CL-26.
-30. **D2.2a runner spike — the next arc under DEC-0017.** The spike
+30. **D2.2a runner spike — DISCHARGED at CL-29, PR #131. CLOSED
+    2026-08-16.** Exit criterion met: **REPRODUCIBLE YES** — four runs
+    of RQA-107 at one triple, comparable-content sha256
+    `aeed2757…a209ef` on every one, with `generated_at_utc` the only
+    differing field and raw scores exactly equal. The scenario's own
+    pass/fail was not an exit criterion and none is recorded
+    (`recall_at_k` 0.0, acceptance NOT EVALUATED, nothing tuned).
+    **Finding yield: eleven unhonoured Rev C requirements**, six
+    runner-side and five spec-side, now carried at items 35 and 36.
+    Ruled at close: the **D3.1 golden-baseline door keys on the
+    comparable-content hash, not the raw artefact hash**; run 1
+    (`56ab9ac5…`) is the candidate baseline. Preservation discharged by
+    read-back, 6/6 at
+    `D:\ArcaAI-artefact-custody\2026-08-16-spike-2\`. Record:
+    `docs/governance/COMMISSIONING_SESSION_RECORD_2026-08-16_d22a-runner-spike-2.md`.
+    Historical scope below, retained for the reasoning it carries: the
+    spike
     proper, of which the pre-flight at item 3 was one part: minimal
     runner plus one retrieval scenario end-to-end — spec in, corpus
     queried at a pinned snapshot, result JSON out. Runs under the D2.0
@@ -745,7 +793,20 @@ this section is a working pointer, not the record.
     and `docs/governance/TOR_test-capability_RevC_RULED_2026-08-10.md`
     section 5A.
 31. **`retrieval_snapshot_sha256` mandatory for retrieval-class at
-    spec schema v0.2** — NEW 2026-08-13, OPEN. The field is optional at
+    spec schema v0.2 — DISCHARGED. CLOSED 2026-08-17.** The v0.2 schema
+    exists in the tree at
+    `arcaai/harness/schema/scenario_spec_v0.2.schema.json` and makes the
+    field **required inside the retrieval-class branch**, conditional
+    rather than unconditional so it does not bind scoring-class
+    scenarios that pin a snapshot without querying an index. The runner
+    selects a schema from the spec's declared version. Verified live at
+    the 2026-08-16 spike, which validated RQA-107 against v0.2 and
+    proved by deny-shaped probe D1 that dropping the field is refused —
+    the same spec passing under v0.1, so the refusal evidences that
+    v0.2 was the schema applied. **This item was carried as OPEN after
+    the artefact discharging it had already merged**; recorded rather
+    than deleted, as the queue-staleness pattern at item 5. Original
+    text follows. The field is optional at
     v0.1 and the schema's own comment defers the question to the D2.2a
     spike; the spike pinned it, ruled in as spike-scoped only, and did
     not settle it. Substance: the manifest hash excludes the processing
@@ -986,6 +1047,92 @@ this section is a working pointer, not the record.
     the next sessions; **M6 is production-phase**, named early so the
     CL-24 precedent carries its explanation; the rest ride the
     control-framework deliverable.
+35. **Scenario spec schema v0.3 — NEW 2026-08-17, OPEN. The critical
+    path's likely first authoring act.** The D2.2a spike found **five
+    Rev C requirements v0.2 cannot hold**, because v0.2 is
+    `additionalProperties: false` at every level and predates every
+    round-2 fix. Four are carried in the spec's `description` under the
+    machine-findable prefix `CARRIED-NO-FIELD:` so a migration can find
+    every affected spec by grep: the **absolute `top_k` cap**, which
+    Rev C §5.4 says every scenario records *in the spec*; the
+    **binary-probe justification** (§5.3); the **Obligation D
+    justification** (§2.1); and the **density-stratified note** (§5.2).
+    The fifth is the **typology identifier**, used with an
+    `unverifiable-pending-vocabulary:` prefix because §2.4 requires a
+    stable identifier and no controlled vocabulary exists to draw one
+    from (Appendix B item 16) — and a schema can require a field but
+    cannot require that the field mean something, so this half needs the
+    corpus-side vocabulary and not only v0.3. **Fix route is a new
+    versioned file**; v0.2 is immutable once merged and is never
+    edited. **Every scenario authored against v0.2 carries
+    `CARRIED-NO-FIELD` baggage until this lands**, which is the argument
+    for taking it before scenario authoring rather than after. Detail:
+    `docs/governance/COMMISSIONING_SESSION_RECORD_2026-08-16_d22a-runner-spike-2.md`
+    §12 and `docs/governance/SESSION_HANDOVER_2026-08-17.md` §5.
+36. **Runner Rev C conformance — six unhonoured fields. NEW
+    2026-08-17, OPEN.** Confirmed ABSENT from the emitted result
+    artefact by reading its keys, not by reading the code alone:
+    **`evaluator_version`** (§6.8.1, the fourth identity leg — the
+    runner predates it); **`environment_config_sha256`** (§8.1
+    criterion 7); **`material_parameter_list_sha256`** (§9.5
+    element 3); **`confound: single_chunk`** (§12.3 — **it should have
+    fired**, both RQA-107 expected documents being single-chunk);
+    **`session_status: halted`** (§8.3 — no abort path exists in
+    `arcaai/harness/runner.py`: no signal handling, no `finally`);
+    **`invalidation_status`** (§9.8 — D2.5 ledger, the runner writes no
+    rows). Two of the six are the sharpest: the values for
+    `environment_config_sha256` and `material_parameter_list_sha256`
+    **already exist**, computed at the spike and preserved in custody,
+    and the runner simply does not carry them into the result — so the
+    artefact's environment identity is incomplete on its face while the
+    information needed to complete it sits beside it. Carries
+    DeepSeek's runner-build note from the delta round: the named
+    material-parameter list must include **search-time** parameters
+    such as `ef_search`, not only index-build parameters —
+    independently corroborated, the spike's list v0.1 having included
+    `hnsw_ef_search` without sight of that return. Detail:
+    `docs/governance/D1.1_REVC_ACCEPTANCE_2026-08-16.md` §7.
+37. **Rev C filename still says DRAFT — NEW 2026-08-17, OPEN,
+    cosmetic but not nothing.** The accepted text lives at
+    `docs/governance/D1.1_TEST_PLAN_DRAFT_RevC_2026-08-15.md`. D1.1
+    exited DRAFT status at acceptance on 2026-08-16, so the filename now
+    contradicts the document's own status and every future citation
+    inherits the contradiction. The rename **touches every citation of
+    the path** across the governance tree, which is why it is a
+    deliberate act rather than a tidy-up: `scripts/check_docs.py`
+    enforces that a backticked repo-relative path exists, so a rename
+    without a sweep breaks the docs check. Detail:
+    `docs/governance/D1.1_REVC_ACCEPTANCE_2026-08-16.md` §8 item 1.
+38. **Delta pack send-time record act — NEW 2026-08-17, OPEN, one
+    line.** `docs/governance/D1.1_ROUND2_DELTA_CIRCULATION_2026-08-16.md`
+    §3 carries an empty send-time row. It is **record-only** and gates
+    nothing: the 2026-08-16 same-day ruling made the deadline absolute,
+    so nothing computes from it and §10 item 1 is SPENT rather than
+    closed. The value was asked for twice and not supplied; **no time
+    was invented**, because a fabricated timestamp in the circulation
+    instrument of an accepted document is exactly the failure the empty
+    slot was protecting against. Fill it from the operator's actual send
+    time whenever convenient, or rule it permanently unrecorded — both
+    are fine, and only silence is not.
+39. **Governance guard denies a READ-ONLY command that names a
+    protected path — NEW 2026-08-17, WS-E-SHAPED, UNRAISED.** Observed
+    in-session 2026-08-16: a command composed only of `ls`, `git status`
+    and `git check-ignore`, naming `.claude/agents/` and
+    `.claude/skills/`, was refused with the guard's **write**-deny text.
+    The guard matched the path string, not the verb. **This contradicts
+    the enforcement section of this file**, which states that the
+    `.claude/` deny covers writes and that "Reads are untouched" — and
+    a guidance-versus-hook disagreement is by this file's own rule a
+    WS-E item. Polarity is worth naming: this is a **false-RED**, the
+    opposite of the family's usual false-green, and it is the safer
+    direction to fail — but it defeats exactly the read-only inspection
+    that verifying a `.claude/` change depends on, so it has teeth. The
+    workaround used was the file-read tools, which the deny does not
+    cover; that is a workaround and not a fix, and it means the two
+    surfaces disagree about what a read is. **WS-E next 72 is free and
+    is NOT consumed by this queue entry** — raising it is a governed act
+    and a separate one. Related: item 25's false-red in
+    `check_docs.py`, and the item 8 check-method family.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
