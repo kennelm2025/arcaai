@@ -78,9 +78,17 @@ SCHEMA_DIR = Path(__file__).resolve().parent / "schema"
 #
 # Each schema file stays immutable; a new version is a new file and a new
 # entry here, never an edit of an existing one.
+#
+# DUPLICATION FLAGGED, NOT REFACTORED (2026-08-17, at v0.3). This mapping
+# exists twice: here, and again at tests/harness/test_scenario_spec_schema.py
+# as _SCHEMA_PATHS. Adding a version means editing both in the same commit;
+# editing one is a silent divergence between what the runner validates and
+# what the suite believes it validates. Recorded rather than fixed because
+# the fix is a shared module and that is a refactor this arc did not rule.
 SCHEMA_BY_VERSION = {
     "0.1": SCHEMA_DIR / "scenario_spec_v0.1.schema.json",
     "0.2": SCHEMA_DIR / "scenario_spec_v0.2.schema.json",
+    "0.3": SCHEMA_DIR / "scenario_spec_v0.3.schema.json",
 }
 
 REGIME = "COMMISSIONING"

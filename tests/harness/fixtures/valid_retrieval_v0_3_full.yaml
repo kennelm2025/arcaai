@@ -1,0 +1,53 @@
+# TEST FIXTURE — not a reference document and not a real scenario.
+# The schema at arcaai/harness/schema/scenario_spec_v0.3.schema.json is the
+# sole authority on what a valid v0.3 spec is. This file is exercise material:
+# its ids, hashes and corpus references are deliberately synthetic so it
+# cannot be mistaken for a scenario anyone should run.
+#
+# The v0.3 positive case: a semantic-distance retrieval scenario carrying all
+# four new retrieval-block fields, and a typology in the identifier form the
+# v0.3 pattern now requires. |E| is 2, so binary_probe_justification is owed
+# and present; the two series-level fields are optional to the schema and are
+# present here to exercise them.
+schema_version: "0.3"
+scenario_id: RQA-902
+title: Fixture — v0.3 retrieval spec carrying all four added fields
+description: >
+  Exercises the four fields v0.3 adds to the retrieval block, and the typology
+  pattern. Nothing here is a real scenario; the corpus references are synthetic.
+scenario_class: retrieval
+vertical: fraud
+typology: fixture.statute-grounding
+corpus_snapshot:
+  manifest_version: "0.0-fixture"
+  manifest_sha256: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+  retrieval_snapshot_sha256: "fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210"
+retrieval:
+  retrieval_kind: corpus_qa
+  query: Which fixture provisions create the two fixture offences, and what must be proved?
+  top_k: 5
+  top_k_absolute_cap: 7
+  scoring_method: semantic_distance
+  expected_document_ids:
+    - FIXTURE-0001
+    - FIXTURE-0002
+  binary_probe_justification: >
+    |E| is 2, so attainable values under the default threshold are exactly
+    {0, 1}. The binary form is intentional: the fixture series holds two
+    documents and no honest query over it has five necessary grounding
+    documents. top_k is the sensitivity lever here, not the threshold.
+  obligation_d_justification: >
+    The fixture series is covered only by this binary probe. No scenario at
+    |E| >= 5 is constructible for it, so the justification route of Rev C
+    Obligation D is taken rather than the additional-scenario route.
+  density_stratified_note: >
+    The fixture series spans chunk counts 1 and 6, a 6x ratio and past the 4x
+    threshold. The expected set exercises the 1-chunk end only; the 6-chunk
+    document is not exercised, so this scenario evidences nothing about
+    retrieval from the dense end of the range.
+migration_diff:
+  comparison: bit_identical
+acceptance:
+  metric: recall_at_k
+  operator: ">="
+  value: 1.0
