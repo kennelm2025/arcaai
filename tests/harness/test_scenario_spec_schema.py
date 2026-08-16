@@ -1,4 +1,4 @@
-"""D2.1 — scenario spec schema conformance, v0.1 and v0.2.
+"""D2.1 — scenario spec schema conformance, v0.1, v0.2 and v0.3.
 
 Each schema file is the SOLE authority on what a valid spec of ITS
 version is. The YAML files under
@@ -38,9 +38,14 @@ from jsonschema import Draft202012Validator
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _SCHEMA_DIR = _REPO_ROOT / "arcaai" / "harness" / "schema"
+# DUPLICATION FLAGGED, NOT REFACTORED (2026-08-17, at v0.3). The same
+# mapping lives at arcaai/harness/runner.py as SCHEMA_BY_VERSION. Both are
+# edited in the same commit when a version is added; the parity test below
+# is what stops them drifting apart silently.
 _SCHEMA_PATHS = {
     "0.1": _SCHEMA_DIR / "scenario_spec_v0.1.schema.json",
     "0.2": _SCHEMA_DIR / "scenario_spec_v0.2.schema.json",
+    "0.3": _SCHEMA_DIR / "scenario_spec_v0.3.schema.json",
 }
 _VERSIONS = sorted(_SCHEMA_PATHS)
 _FIXTURES = Path(__file__).resolve().parent / "fixtures"
@@ -300,3 +305,134 @@ def test_v0_2_rejects_a_spec_declaring_another_version():
     assert any(e.json_path == "$.schema_version" for e in errors), _messages(
         spec, version="0.2"
     )
+
+
+# ------------------------------------------------------------------- v0.3
+#
+# v0.3 adds four fields to the retrieval block and one pattern to typology,
+# implementing the five Rev C requirements v0.2 could not hold. The tests
+# below split deliberately along the line the schema itself draws: what it
+# CAN enforce, and what it records but cannot.
+
+
+def test_v0_3_full_fixture_is_valid():
+    assert not _errors(_load_fixture("valid_retrieval_v0_3_full.yaml"))
+
+
+def test_v0_3_requires_the_absolute_top_k_cap():
+    """Rev C 5.4: every scenario records an absolute cap alongside the ratio."""
+    spec = copy.deepcopy(_load_fixture("valid_retrieval_v0_3_full.yaml"))
+    del spec["retrieval"]["top_k_absolute_cap"]
+    assert _errors(spec), "v0.3 accepted a retrieval spec with no absolute cap"
+    assert "top_k_absolute_cap" in _messages(spec)
+
+
+def test_v0_3_does_not_and_cannot_compare_top_k_against_its_cap():
+    """The limit is stated in the schema and asserted here so it stays known.
+
+    JSON Schema cannot compare two sibling values, so a spec whose top_k
+    exceeds its own recorded cap still validates. The comparison is the
+    runner's. This test exists so that limit is a recorded fact rather than
+    a surprise found later by someone trusting the field.
+    """
+    spec = copy.deepcopy(_load_fixture("valid_retrieval_v0_3_full.yaml"))
+    spec["retrieval"]["top_k"] = 99
+    spec["retrieval"]["top_k_absolute_cap"] = 7
+    assert not _errors(spec), (
+        "the schema compared top_k against its cap; if that is now enforced, "
+        "this test and the schema's stated limit both need updating"
+    )
+
+
+def test_v0_3_requires_a_binary_probe_justification_at_small_e():
+    """Rev C 5.3: |E| <= 4 is a binary probe and must say so intentionally."""
+    spec = copy.deepcopy(_load_fixture("valid_retrieval_v0_3_full.yaml"))
+    del spec["retrieval"]["binary_probe_justification"]
+    assert _errors(spec), "v0.3 accepted a binary probe with no justification"
+    assert "binary_probe_justification" in _messages(spec)
+
+
+def test_v0_3_does_not_demand_a_binary_probe_justification_at_graded_e():
+    """The obligation starts and stops at the |E| = 5 boundary."""
+    spec = copy.deepcopy(_load_fixture("valid_retrieval_v0_3_full.yaml"))
+    del spec["retrieval"]["binary_probe_justification"]
+    spec["retrieval"]["expected_document_ids"] = [f"FIXTURE-{n:04d}" for n in range(1, 6)]
+    assert not _errors(spec), _messages(spec)
+
+
+def test_v0_3_does_not_demand_a_binary_probe_justification_on_gap_detection():
+    """A gap-detection scenario carries no expected set, so nothing is owed."""
+    spec = copy.deepcopy(_load_fixture("valid_retrieval_v0_2_pinned.yaml"))
+    spec["schema_version"] = "0.3"
+    spec["retrieval"]["top_k_absolute_cap"] = 7
+    assert not _errors(spec), _messages(spec)
+
+
+def test_v0_3_leaves_the_two_series_level_fields_optional():
+    """Both answer conditions a single spec cannot observe.
+
+    Whether a series is covered only by binary probes, and whether it spans
+    more than a 4x chunk ratio, are properties of the SERIES. Requiring them
+    unconditionally would burden scenarios that owe nothing; conditioning
+    them on something invisible would be a rule with an unobservable trigger.
+    Rev C puts both checks at scenario acceptance.
+    """
+    spec = copy.deepcopy(_load_fixture("valid_retrieval_v0_3_full.yaml"))
+    del spec["retrieval"]["obligation_d_justification"]
+    del spec["retrieval"]["density_stratified_note"]
+    assert not _errors(spec), _messages(spec)
+
+
+def test_v0_3_typology_rejects_free_prose():
+    """Rev C 2.4's interim rule, mechanised: an identifier, not a sentence."""
+    spec = copy.deepcopy(_load_fixture("valid_retrieval_v0_3_full.yaml"))
+    spec["typology"] = "CNP fraud"
+    errors = _errors(spec)
+    assert errors, "v0.3 accepted free prose as a typology"
+    assert any(e.json_path == "$.typology" for e in errors), _messages(spec)
+    assert "pattern" in _rules(spec)
+
+
+def test_v0_3_typology_accepts_identifier_forms():
+    for value in ("card-not-present", "cnp_fraud", "statute.fraud_act_2006", "apf"):
+        spec = copy.deepcopy(_load_fixture("valid_retrieval_v0_3_full.yaml"))
+        spec["typology"] = value
+        assert not _errors(spec), f"{value!r} rejected: {_messages(spec)}"
+
+
+def test_v0_3_typology_pattern_does_not_make_spellings_comparable():
+    """The stated limit, asserted so nobody reads the pattern as more.
+
+    Two spellings of one typology both pass. Only the vertical-side
+    vocabulary owed at Rev C Appendix B item 16 can collapse them, and that
+    artefact must never live in this schema (Rev C 2.4, ADR-0009).
+    """
+    for value in ("card-not-present", "cnp-fraud"):
+        spec = copy.deepcopy(_load_fixture("valid_retrieval_v0_3_full.yaml"))
+        spec["typology"] = value
+        assert not _errors(spec)
+
+
+def test_v0_3_carries_forward_every_v0_2_rule():
+    """v0.3 adds; it must not silently drop what v0.2 required."""
+    base = _load_fixture("valid_retrieval_v0_3_full.yaml")
+
+    spec = copy.deepcopy(base)
+    del spec["corpus_snapshot"]["retrieval_snapshot_sha256"]
+    assert "retrieval_snapshot_sha256" in _messages(spec)
+
+    spec = copy.deepcopy(base)
+    spec["generator_seed"] = 1
+    assert _errors(spec), "v0.3 allowed generator_seed on a retrieval scenario"
+
+    spec = copy.deepcopy(base)
+    spec["retrieval"]["unknown_field"] = 1
+    assert _errors(spec), "v0.3 is not a closed schema"
+
+
+def test_v0_3_rejects_a_spec_declaring_another_version():
+    spec = copy.deepcopy(_load_fixture("valid_retrieval_v0_3_full.yaml"))
+    spec["schema_version"] = "0.2"
+    errors = _errors(spec, version="0.3")
+    assert errors, "v0.3 accepted a spec declaring a different version"
+    assert any(e.json_path == "$.schema_version" for e in errors)

@@ -62,8 +62,29 @@ def test_every_declared_version_maps_to_a_file_that_exists():
         assert path.exists(), f"schema for version {version!r} missing at {path}"
 
 
-def test_both_ruled_versions_are_known():
-    assert set(SCHEMA_BY_VERSION) >= {"0.1", "0.2"}
+def test_every_ruled_version_is_known():
+    assert set(SCHEMA_BY_VERSION) >= {"0.1", "0.2", "0.3"}
+
+
+def test_runner_and_suite_version_maps_agree():
+    """The version-to-path mapping exists TWICE and must not drift.
+
+    ``SCHEMA_BY_VERSION`` in the runner decides what actually gets
+    validated; ``_SCHEMA_PATHS`` in the schema-conformance suite decides
+    what the suite believes it validated. Adding a version to one and not
+    the other produces a suite reporting green about a file the runner
+    never reaches — a check whose stated subject is not its real subject,
+    which is the defect family this repository names most often.
+
+    The duplication is recorded rather than refactored away; this test is
+    what makes the duplication safe until it is.
+    """
+    from tests.harness.test_scenario_spec_schema import _SCHEMA_PATHS
+
+    assert dict(SCHEMA_BY_VERSION) == dict(_SCHEMA_PATHS), (
+        "the runner's schema map and the suite's have diverged: "
+        f"runner={sorted(SCHEMA_BY_VERSION)} suite={sorted(_SCHEMA_PATHS)}"
+    )
 
 
 # ------------------------------------------------------- dispatch, accepted

@@ -1,0 +1,405 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arcaai/schema/scenario_spec_v0.3.schema.json",
+  "title": "ArcaAI test-capability scenario spec, v0.3",
+  "description": "D2.1 keystone artefact for the test capability established at DEC-0015, per TOR WS-T2. A scenario spec is the unit the runner consumes: spec in, synthetic data materialised or corpus queried, machine-readable result out. This file is the SOLE authority on what a valid v0.3 spec is. It is immutable once merged: any change is a new versioned file (v0.4), never an edit of this one, per the prototype convention. v0.1 and v0.2 remain valid, immutable and untouched; specs declaring those versions are validated by their own files and are unaffected by anything here. PROVENANCE, recorded here because this series carries it in the artefact rather than in a register: v0.3 consumes no DEC and no register number, on the v0.2 precedent, because it implements an existing ruling chain rather than taking a new decision. The chain is D1.1 Test Plan Rev C, ACCEPTED 2026-08-16 at sha256 9d6ab3b0da21d5e6603f7fa505d48a892da9acf11dba60725b83e5a8c590e88c, whose round-2 fixes imposed five requirements the v0.2 shape could not hold; the D2.2a runner spike of 2026-08-16 found all five and recorded them as CARRIED-NO-FIELD at section 12 of its commissioning session record; and the operator rulings of 2026-08-17 settled the five field designs. Upstream authority is DEC-0015, whose amendments land on the Test Plan (D1.1) or on this schema (D2.1) at authoring. SCENARIO FILE LOCATION, recorded as the convention: authored scenario specs live vertical-side at verticals/fraud/scenarios/, because a scenario carries fraud business semantics and ADR-0009 puts business semantics in the vertical. The runner continues to take an explicit --spec path; there is no discovery mechanism, and this line is a convention rather than a lookup rule.",
+  "$comment": "DELTA FROM v0.2, and nothing else changes. FIVE FIELDS ARE ADDED, implementing the five D1.1 Rev C requirements the v0.2 shape could not hold. Specs authored against v0.2 carried all five in the free-text description under a CARRIED-NO-FIELD prefix, which is findable by grep but assertable by nothing; these fields make them structural. Four are retrieval-class detail and live in the retrieval block: top_k_absolute_cap (Rev C 5.4), binary_probe_justification (Rev C 5.3), obligation_d_justification (Rev C 2.1) and density_stratified_note (Rev C 5.2). The fifth constrains the existing top-level typology field by pattern (Rev C 2.4). EVERYTHING v0.2 REQUIRES STILL HOLDS, unchanged and re-stated so it is not read as dropped: retrieval_snapshot_sha256 remains REQUIRED for retrieval-class and optional for scoring-class; generator_seed and the scoring block remain FORBIDDEN on retrieval-class; the retrieval block remains forbidden on scoring-class; and additionalProperties remains false at every level. WHAT THIS SCHEMA CANNOT ENFORCE, stated because a field that looks enforced and is not is worse than an absent one. (1) top_k <= top_k_absolute_cap is a comparison between two sibling values, which JSON Schema cannot express; the cap is recorded structurally here and the comparison is the runner's to assert. (2) obligation_d_justification and density_stratified_note answer SERIES-level conditions - whether every scenario covering a series is a binary probe, and whether that series spans more than a 4x chunk-count ratio - and a single spec cannot see its siblings. Both are therefore optional to this schema and owed at scenario acceptance, which is where Rev C 2.1 and 5.2 place the check. Making them unconditionally required would force a justification onto scenarios that owe none, and conditioning them on something the schema cannot observe would be a rule whose trigger nobody can evaluate. (3) The typology pattern constrains FORM only: it rejects free prose and enforces a reusable identifier shape, and it does NOT make two spellings comparable. Comparability arrives only with the fraud-side vocabulary owed at Rev C Appendix B item 16, which lives vertical-side per Rev C 2.4 and the ADR-0009 boundary and never in this file. Closed schema throughout, unchanged from v0.2: additionalProperties is false at every level, mirroring the extra=forbid discipline the governance event models use. A spec that carries a field this schema does not know about is rejected rather than silently ignored, because a silently ignored field is a spec whose recorded hash does not describe what actually ran.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "scenario_id",
+    "title",
+    "scenario_class",
+    "vertical",
+    "typology",
+    "migration_diff",
+    "acceptance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.3",
+      "description": "The schema version this spec is written against. Constant per schema file: a spec declaring 0.3 is validated by this file and no other. The runner selects the schema file from this value rather than from a constant, so a spec of a version the runner has no schema for is refused as an unknown version rather than reported as a malformed spec."
+    },
+    "scenario_id": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]{1,7}-[0-9]{3}$",
+      "description": "Stable identifier, e.g. RQA-001. Appears in the result artefact and the results ledger."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "scenario_class": {
+      "enum": ["retrieval", "scoring"],
+      "description": "Retrieval-class scenarios query the corpus at a pinned snapshot. Scoring-class scenarios invoke the synthetic data generator. The class determines which further blocks are required and which are forbidden."
+    },
+    "vertical": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Owning vertical, e.g. fraud. Named rather than enumerated: the schema is platform-side machinery and must not encode the set of verticals, per the ADR-0009 boundary."
+    },
+    "typology": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9]+([._-][a-z0-9]+)*$",
+      "description": "Business typology under test, e.g. a fraud typology or a corpus subject area. Vertical semantics, carried as a string for the same reason as vertical: this schema is platform-side machinery and must not encode the set of fraud typologies, per the ADR-0009 boundary. NEW AT v0.3, and read the limit before relying on it. The pattern constrains FORM ONLY - lowercase alphanumeric tokens joined by a single dot, underscore or hyphen - which implements the Rev C 2.4 interim rule that authors 'reference a STABLE TYPOLOGY IDENTIFIER rather than free prose'. It rejects 'CNP fraud' for its space and accepts 'card-not-present'. IT DOES NOT MAKE TWO SPELLINGS COMPARABLE: 'card-not-present' and 'cnp-fraud' both pass and a coverage check still sees two typologies where there is one. Comparability arrives ONLY with the controlled fraud-side vocabulary owed at Rev C Appendix B item 16, which lives in a fraud-vertical artefact alongside the corpus and never in this file - Rev C 2.4 names adding an enum here as 'the instinctive fix' and 'the one place it must not go'. Until that artefact lands, the first scenario to name a typology fixes the identifier every later scenario reuses, and that convention is enforced by review rather than by this pattern."
+    },
+    "model_version": {
+      "type": "string",
+      "description": "Optional pin. The model version is recorded on every result as one leg of the reproducibility triple whether or not the spec pins it; pinning it here additionally constrains which model the scenario may run against."
+    },
+    "generator_seed": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "AMENDMENT 6 (binding on v0.1, carried unchanged into v0.2). Mandatory for scoring-class scenarios, in the spec and in the reproducibility payload, because those scenarios invoke the synthetic data generator. Retrieval-class scenarios do not invoke the generator, so this field is FORBIDDEN there rather than merely optional: a seed recorded against a run that never used one is a reproducibility claim with nothing behind it. For scoring-class scenarios the reproducibility identity is effectively spec hash + model version + corpus snapshot + generator seed."
+    },
+    "corpus_snapshot": {
+      "$ref": "#/$defs/corpus_snapshot"
+    },
+    "retrieval": {
+      "$ref": "#/$defs/retrieval_block"
+    },
+    "scoring": {
+      "$ref": "#/$defs/scoring_block"
+    },
+    "migration_diff": {
+      "$ref": "#/$defs/migration_diff"
+    },
+    "acceptance": {
+      "$ref": "#/$defs/acceptance"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "Retrieval class: corpus snapshot and retrieval block required; generator_seed and the scoring block forbidden. NEW AT v0.2: the snapshot must additionally carry retrieval_snapshot_sha256. The requirement is placed here rather than in the corpus_snapshot definition so that it binds retrieval-class scenarios only, which is what the deferring comment at v0.1 and the F2 argument both scope it to.",
+      "if": {
+        "properties": { "scenario_class": { "const": "retrieval" } },
+        "required": ["scenario_class"]
+      },
+      "then": {
+        "required": ["corpus_snapshot", "retrieval"],
+        "$comment": "Forbidden fields are expressed as not/required rather than as a false subschema. Both reject, but a false subschema reports only 'False schema does not allow <value>' without naming the field, while this form names it. A rejection that cannot say what it rejected is the same defect class as a success message claiming more than it verified.",
+        "properties": {
+          "corpus_snapshot": {
+            "required": ["retrieval_snapshot_sha256"],
+            "$comment": "The v0.2 change, in one line. A retrieval scenario is defined by querying an index, and the manifest pair does not identify that index: it excludes the processing facts that decide what the retriever sees. Expressed as required-on-the-nested-object so the rejection names corpus_snapshot and the missing field, rather than failing the whole retrieval branch anonymously."
+          }
+        },
+        "allOf": [
+          { "not": { "required": ["generator_seed"] } },
+          { "not": { "required": ["scoring"] } }
+        ]
+      }
+    },
+    {
+      "$comment": "Scoring class: generator_seed and scoring block required; retrieval block forbidden. Unchanged from v0.1. A scoring-class spec MAY carry a corpus_snapshot, and if it does it is the manifest pair that is required of it - not the retrieval snapshot, which would describe an index the scenario never queries.",
+      "if": {
+        "properties": { "scenario_class": { "const": "scoring" } },
+        "required": ["scenario_class"]
+      },
+      "then": {
+        "required": ["generator_seed", "scoring"],
+        "not": { "required": ["retrieval"] }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "64 lowercase hex characters, matching the corpus manifest's own hash discipline."
+    },
+    "corpus_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["manifest_version", "manifest_sha256"],
+      "description": "Corpus snapshot identity is the DEC-0014 manifest hash pair (DEC-0015). The corpus_version database row is evidence that a version was loaded and is never a reconstruction of the manifest, so it is not referenced here. At v0.2 retrieval-class scenarios additionally require retrieval_snapshot_sha256; that requirement lives in the retrieval-class branch above rather than in this required list, because this definition is shared with scoring-class scenarios that may pin a snapshot without querying an index.",
+      "properties": {
+        "manifest_version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The manifest_version label, as pinned in the manifest itself."
+        },
+        "manifest_sha256": {
+          "$ref": "#/$defs/sha256",
+          "description": "Hash of the canonicalised manifest. Together with manifest_version this is the pair that hash-pinning enforces on load."
+        },
+        "retrieval_snapshot_sha256": {
+          "$ref": "#/$defs/sha256",
+          "description": "REQUIRED for retrieval-class scenarios at v0.2; optional for scoring-class. Distinct from manifest_sha256: it folds in processing facts such as chunker version, embedding model and chunk counts, so it is what actually determines the contents of the index a retrieval scenario queries. A retrieval scenario pinning only the manifest pair records a reproducibility claim narrower than it appears, which is the argument recorded at F2 of the D2.2a commissioning session record. KNOWN LIMIT OF THIS PIN, stated rather than left to be discovered: the platform's hash function stringifies absent processing facts, so the hash computes cleanly over documents carrying no processing block at all. A spec can therefore satisfy this requirement with a correct, matching hash that folds in three absent values - a required pin with nothing behind it, which is the very defect the requirement exists to close. Making the pin mandatory does not make the facts present. The corpus-side obligation is a separate queued act adjacent to the unruled processing null-versus-placeholder question, and is deliberately not addressed by this schema: a schema can require a field, and cannot require that the field mean something."
+        }
+      }
+    },
+    "migration_diff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["comparison"],
+      "description": "AMENDMENT 3 (binding on v0.1, carried unchanged into v0.2). Migration-diff comparison semantics are settled PER SCENARIO and declared here, so that each scenario carries its own comparison rule rather than inheriting a global one. Bit-identical where the pipeline is deterministic at the specified inputs; defined tolerances where nondeterministic components exist. Required on every scenario of either class: the pre-migration baseline (D2.6) compares results across an environment move, and a result whose comparison rule was never declared cannot be diffed without inventing one after the fact.",
+      "properties": {
+        "comparison": {
+          "enum": ["bit_identical", "tolerance"],
+          "description": "bit_identical: the result must match byte for byte at the specified inputs. tolerance: the result must match within the declared numeric bounds."
+        },
+        "tolerance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["metric", "max_abs_delta"],
+          "description": "Required when and only when comparison is tolerance. Naming the nondeterministic component is not optional prose: it is how a reviewer checks that a tolerance was chosen rather than reached for.",
+          "properties": {
+            "metric": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The scalar the tolerance applies to, e.g. the scenario score."
+            },
+            "max_abs_delta": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Maximum permitted absolute difference between baseline and comparison run."
+            },
+            "max_rel_delta": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Optional maximum permitted relative difference, as a fraction."
+            },
+            "nondeterminism_source": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Which component makes this scenario nondeterministic. Stated so the tolerance is auditable against a cause."
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "comparison": { "const": "tolerance" } },
+            "required": ["comparison"]
+          },
+          "then": { "required": ["tolerance"] }
+        },
+        {
+          "$comment": "A declared bit-identical comparison carrying a tolerance block is a contradiction, and is rejected rather than resolved by precedence.",
+          "if": {
+            "properties": { "comparison": { "const": "bit_identical" } },
+            "required": ["comparison"]
+          },
+          "then": { "not": { "required": ["tolerance"] } }
+        }
+      ]
+    },
+    "acceptance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric", "operator", "value"],
+      "description": "The scenario's pass/fail threshold, stated so it is machine-evaluable rather than narrated. Note that under the D2.0 commissioning frame a scenario's own pass/fail is NOT an exit criterion for a commissioning run — this threshold governs Regime-2 formal execution, and is carried on commissioning specs so the same spec runs unchanged under either regime.",
+      "properties": {
+        "metric": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The scored quantity the threshold applies to, e.g. recall_at_k or gap_detection_score."
+        },
+        "operator": {
+          "enum": [">=", ">", "<=", "<"],
+          "description": "Comparison direction. Enumerated rather than free text so the gate is evaluated, not interpreted."
+        },
+        "value": {
+          "type": "number",
+          "description": "Threshold value."
+        }
+      }
+    },
+    "retrieval_block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["retrieval_kind", "query", "top_k", "top_k_absolute_cap", "scoring_method"],
+      "description": "Retrieval-class detail. The three retrieval kinds are the scenario classes named in TOR Section 3: corpus QA, citation-following, and gap detection against the D1/D2 planted ground truth. NEW AT v0.3: four fields are added to this block - top_k_absolute_cap, binary_probe_justification, obligation_d_justification and density_stratified_note - implementing four of the five Rev C requirements that v0.2 could not hold.",
+      "properties": {
+        "retrieval_kind": {
+          "enum": ["corpus_qa", "citation_following", "gap_detection"]
+        },
+        "query": {
+          "type": "string",
+          "minLength": 1
+        },
+        "top_k": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Retrieval cut-off k. Every scoring formula below is evaluated over the top-k result set R_k."
+        },
+        "top_k_absolute_cap": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "NEW AT v0.3, REQUIRED on every retrieval-class scenario. Rev C 5.4: 'Every scenario records an ABSOLUTE top_k CAP for its class in the spec, alongside the 10% ratio. A corpus expansion that would move a scenario's effective window beyond its recorded cap requires a RULED VARIANCE under 5.5 before that scenario runs again.' The two bounds catch what the other misses: the 10% ratio bounds the PROPORTION of the corpus searched and loosens in absolute terms as the corpus grows; this cap bounds the SIZE of the payload returned and loosens as a proportion. LIMIT OF ENFORCEMENT: JSON Schema cannot compare two sibling values, so this file records the cap and does not assert top_k <= top_k_absolute_cap. That comparison, and the variance requirement on corpus expansion, are the runner's to assert."
+        },
+        "binary_probe_justification": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000,
+          "description": "NEW AT v0.3. REQUIRED when scoring_method is semantic_distance and expected_document_ids holds four or fewer entries, which this schema does enforce. Rev C 5.3: a scenario at |E| <= 4 has attainable values of exactly {0, 1} under the default threshold, is 'a binary probe, not a graded measure', and 'requires a stated justification that the binary form is intentional rather than accidental'. top_k is the sensitivity lever in such a scenario, not the threshold. Absent on a graded scenario at |E| >= 5, where nothing is owed."
+        },
+        "obligation_d_justification": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000,
+          "description": "NEW AT v0.3, OPTIONAL TO THIS SCHEMA AND OWED AT SCENARIO ACCEPTANCE. Rev C 2.1 Obligation D: 'A series covered only by binary probes - every one of its scenarios at |E| <= 4 - requires at least one scenario at |E| >= 5, or a stated justification why a binary probe is sufficient evidence for that series.' The trigger is a property of the SERIES, not of this scenario: whether every scenario covering the series is a binary probe cannot be seen from inside one spec. This schema therefore cannot make the field conditionally required without conditioning on something it cannot observe, which would be a rule whose trigger nobody can evaluate. Rev C places the check at scenario acceptance and Appendix A.1 says so in terms; this field is where the answer is recorded when it is owed."
+        },
+        "density_stratified_note": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000,
+          "description": "NEW AT v0.3, OPTIONAL TO THIS SCHEMA AND OWED AT SCENARIO ACCEPTANCE. Rev C 5.2: 'Where a series spans more than a 4x chunk-count ratio, a DENSITY-STRATIFIED NOTE is required with the scenario, stating which part of the range the expected set exercises and which it does not.' As with obligation_d_justification the trigger is series-level - the chunk-count spread across the series - and is not visible from inside one spec, so the field is optional here and owed at acceptance. The live instance at the current eligible set is the Statute series at 1, 1, 7 and 16 chunks, a 16x ratio; every other series sits at or below 1.33x."
+        },
+        "expected_document_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true,
+          "description": "The expected grounding set E, as corpus document ids. Required for semantic_distance scoring; meaningless for gap_detection, where by construction no document grounds the claim."
+        },
+        "distractor_document_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true,
+          "minItems": 1,
+          "description": "The near-miss distractor set D: documents a naive system may retrieve as though they grounded the claim. Required for gap_detection scoring."
+        },
+        "ground_truth_ref": {
+          "enum": ["D1", "D2"],
+          "description": "Which planted under-implementation this scenario detects. D1 and D2 are the two deliberate gaps planted as gap-detection ground truth."
+        },
+        "scoring_method": {
+          "enum": ["semantic_distance", "gap_detection"],
+          "description": "Which scoring formula applies. Selecting gap_detection additionally requires the distractor set, the ground truth reference and the weights."
+        },
+        "gap_detection_scoring": {
+          "$ref": "#/$defs/gap_detection_scoring"
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "Semantic-distance scoring, stated mathematically. Let R_k be the ranked result set truncated at top_k, and E the expected_document_ids set. score = |R_k INTERSECT E| / |E|, i.e. recall at k over the expected grounding set. This scores PRESENCE: how much of what should have been retrieved was retrieved.",
+          "if": {
+            "properties": { "scoring_method": { "const": "semantic_distance" } },
+            "required": ["scoring_method"]
+          },
+          "then": {
+            "required": ["expected_document_ids"],
+            "not": { "required": ["gap_detection_scoring"] },
+            "properties": {
+              "expected_document_ids": { "minItems": 1 }
+            }
+          }
+        },
+        {
+          "$comment": "AMENDMENT 5 (binding on v0.1, carried unchanged into v0.2). Gap-detection scoring is defined mathematically and is DISTINCT from semantic-distance scoring: it scores absence, not similarity. It must never be computed as a distance between retrieved text and an expected passage, because for a planted gap there is no passage that would be correct to retrieve. See gap_detection_scoring for the formula.",
+          "if": {
+            "properties": { "scoring_method": { "const": "gap_detection" } },
+            "required": ["scoring_method"]
+          },
+          "then": {
+            "required": [
+              "distractor_document_ids",
+              "ground_truth_ref",
+              "gap_detection_scoring"
+            ],
+            "not": { "required": ["expected_document_ids"] }
+          }
+        },
+        {
+          "$comment": "NEW AT v0.3, and the only one of the four added fields whose trigger this schema can actually observe. Rev C 5.3 makes a stated justification mandatory for any semantic-distance scenario at |E| <= 4, because such a scenario's attainable values are exactly {0, 1} and the binary form must be shown to be intentional. |E| is expected_document_ids, which is present in the instance, so maxItems 4 is a condition the validator can evaluate - unlike the series-level triggers behind obligation_d_justification and density_stratified_note, which is why only this one is enforced. Expressed against scoring_method as well as the array so it cannot fire on a gap-detection scenario, which carries no expected set at all.",
+          "if": {
+            "properties": {
+              "scoring_method": { "const": "semantic_distance" },
+              "expected_document_ids": { "maxItems": 4 }
+            },
+            "required": ["scoring_method", "expected_document_ids"]
+          },
+          "then": { "required": ["binary_probe_justification"] }
+        }
+      ]
+    },
+    "gap_detection_scoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["abstention_weight", "distractor_avoidance_weight"],
+      "description": "AMENDMENT 5, the formula. Let R_k be the ranked result set truncated at top_k; let D be distractor_document_ids; let A be 1 if the system reported insufficient grounding and 0 otherwise; let w_a be abstention_weight and w_d be distractor_avoidance_weight, with w_a + w_d = 1. Then: gap_detection_score = w_a * A + w_d * (1 - |R_k INTERSECT D| / |D|). The first term scores negative grounding directly — the system saying it cannot ground the claim, which is the correct answer for a planted gap. The second scores avoidance of the near-miss distractors that a similarity-ranked retriever is most likely to surface instead. Both terms lie in [0,1], so the score lies in [0,1] and is comparable across scenarios. Neither term is a semantic distance, which is the point of the amendment: a gap-detection scenario that scored well on semantic distance would be measuring the opposite of what it is for.",
+      "properties": {
+        "abstention_weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "w_a. Weight on the system explicitly reporting insufficient grounding."
+        },
+        "distractor_avoidance_weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "w_d. Weight on avoiding the near-miss distractor set. The runner asserts w_a + w_d = 1; the schema constrains each to [0,1] because JSON Schema cannot express the sum constraint, and the runner therefore states in its failure message which of the two checks it applied."
+        }
+      }
+    },
+    "scoring_block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parameters", "expected_outcome"],
+      "description": "Scoring-class detail. These scenarios materialise synthetic data from the generator at generator_seed and score the model over it.",
+      "properties": {
+        "parameters": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/parameter_range" },
+          "description": "Parameter ranges the generator is driven over, keyed by parameter name."
+        },
+        "n_records": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of synthetic records to materialise."
+        },
+        "expected_outcome": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["metric", "direction"],
+          "description": "What the scenario asserts about model behaviour over the generated data. The numeric gate lives in acceptance; this states the behavioural claim being tested.",
+          "properties": {
+            "metric": { "type": "string", "minLength": 1 },
+            "direction": {
+              "enum": ["higher_is_better", "lower_is_better"],
+              "description": "Stated explicitly so a threshold can never be applied in the wrong direction."
+            }
+          }
+        }
+      }
+    },
+    "parameter_range": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["min", "max"],
+          "properties": {
+            "min": { "type": "number" },
+            "max": { "type": "number" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["values"],
+          "properties": {
+            "values": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": ["string", "number", "boolean"] }
+            }
+          }
+        }
+      ],
+      "description": "Either a continuous range (min/max) or an explicit value set. oneOf rather than anyOf: a parameter declaring both forms is ambiguous about what the generator should sweep, and is rejected."
+    }
+  }
+}
