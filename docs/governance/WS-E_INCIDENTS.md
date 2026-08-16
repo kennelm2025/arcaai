@@ -975,6 +975,97 @@ regardless of surrounding prose).*
     (60% rising to 80% by B9). Nothing may quote the current figure as
     whole-repository coverage until that ruling lands.
 
+72. **A git global option before the subcommand defeats the guard's
+    subcommand-anchored deny regexes (2026-08-17).** Proven for `-C` by
+    two controlled pairs, run seconds apart in one session against the
+    same guard, with the prefix as the only variable.
+
+    **Expected.** A command carrying an absolute deny is refused with the
+    guard's own text, whatever spelling reaches it.
+
+    **Observed.** `git push --force-with-lease nonexistent-probe-remote
+    main` was REFUSED with `Force push is prohibited (CL-E1)`, and
+    `git -C <path> push --force-with-lease nonexistent-probe-remote main`
+    EXECUTED, returning git's own `fatal: 'nonexistent-probe-remote' does
+    not appear to be a git repository`. Independently,
+    `git branch -D <throwaway>` was REFUSED and
+    `git -C <path> branch -D <throwaway>` EXECUTED and deleted the
+    branch. Both probes were no-ops by construction — a nonexistent
+    remote and a throwaway branch merged at HEAD.
+
+    **Mechanism.** The deny patterns anchor on the executable followed by
+    the subcommand. Git's global options sit between the two, so the
+    pattern cannot match while the act is identical. **The class is "any
+    git global option before the subcommand"; only `-C` was tested, and
+    `-c`, `--git-dir`, `--work-tree` and `--no-pager` are named as
+    untested members rather than claimed as proven.**
+
+    **What it is not.** Not case-folding: the settings file records an
+    open risk that `Bash(git branch -d:*)` might catch `-D`, and the
+    plain-form refusal disconfirms it — the allow rule is sound. Not a
+    failure of deny precedence: the 2026-08-14 proof stands untouched,
+    because both plain forms refused with allow rules present. **The deny
+    wins when it matches; the defect is that it fails to match.**
+
+    **Reach, recorded rather than minimised.** The no-bare-`cd`
+    corrective written after item 68 requires addressing by absolute
+    path, and for git that is `-C <path>`. Every git command of the
+    session that found this used that form. **For that session, and for
+    any earlier one following the same convention, the git deny surface
+    was inactive.** Nothing improper was attempted — commits, feature-
+    branch pushes and safe `-d` deletions — but that is a fact about what
+    was attempted and not about what was prevented, and **no prior clean
+    record is evidence the denies worked.**
+
+    **Family.** Two individually-correct conventions combining into a
+    hole, and coverage asserted against one shape of the guarded thing —
+    the same shape as item 64, where the guard was wired to Bash while
+    PowerShell went unguarded.
+
+    **Interim compensation, not a fix.** GitHub branch protection was
+    enabled on `main` the same day as an emergency subset of queue item
+    34 M3: ruleset `main-protection`, enforcement active, bypass actors
+    none, blocking deletion and non-fast-forward and requiring a pull
+    request. It is environment-independent and therefore unreachable by
+    a client-side pattern defect. It does not protect the local working
+    tree. **NOT FIXED HERE.** Fix spec and re-probe list at
+    `docs/governance/FINDINGS_2026-08-17_guard-bypass-ADDENDUM_fix-spec.md`;
+    full record at
+    `docs/governance/FINDINGS_2026-08-17_guard-bypass-git-global-options.md`.
+73. **The `>` inside `2>&1` reads as a write construct, so a read-only
+    command naming a protected path is refused as a write
+    (2026-08-17).** Supersedes the path-string theory recorded at queue
+    item 39.
+
+    **Expected.** Reads of `.claude/` are unaffected; the deny covers
+    writes. The guard's own refusal text says so: *"Reading these paths
+    is unaffected."*
+
+    **Observed, four commands, one variable.** `ls -la <path>/.claude/agents/`
+    EXECUTED. `git check-ignore -v .claude/agents/corpus-lister.md`
+    EXECUTED. `ls -la <path>/.claude/skills/` EXECUTED.
+    `ls -la <path>/.claude/agents/ 2>&1 | head -3` was REFUSED with the
+    write-deny text.
+
+    **Mechanism.** `2>&1` duplicates a file descriptor and writes no
+    file. The write-detection reads the `>` character as a write
+    construct; combined with a protected path it fires the deny. The
+    original instance is explained exactly — that command carried `2>&1`
+    twice.
+
+    **Why it matters beyond nuisance.** It is a FALSE-RED, the opposite
+    polarity to this ledger's usual concern and the safer direction to
+    fail, but it defeats precisely the read-only inspection that
+    verifying a `.claude/` change depends on. **Queue item 39 states the
+    trigger as the path string and is wrong**; it is corrected to this
+    mechanism in the same act that raises this item.
+
+    **Family.** Check-method: a check whose stated subject is wider than
+    its real one, and a diagnosis that survived because the first
+    instance was a compound command in which the true variable was not
+    isolated. **NOT FIXED HERE.** Fix spec at
+    `docs/governance/FINDINGS_2026-08-17_guard-bypass-ADDENDUM_fix-spec.md`.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a
