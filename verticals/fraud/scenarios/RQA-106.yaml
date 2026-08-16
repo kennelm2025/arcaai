@@ -1,0 +1,80 @@
+# RQA-106 — Typology series, corpus QA. Appendix A.1 slot of D1.1 Rev C.
+# Conventions follow the template at RQA-107.yaml.
+#
+# NAMED RE-AUTHORING TRIGGER, and it is the sharpest in the batch-1 set. Two
+# pending_review documents are near-duplicates of this scenario's E by subject:
+# SYN-TY-03 (APP Fraud) against SYN-TY-02, and SYN-TY-04 (Money Mule Networks)
+# against SYN-TY-01. Sufficiency is a property of the ELIGIBLE SET, not of a
+# document in isolation: if TY-04 restates mule-network structure, the claim
+# "the absence of TY-01 would leave the answer ungrounded" may simply cease to
+# be true. If either becomes eligible, THIS SCENARIO IS RE-AUTHORED, NOT MERELY
+# RE-PINNED, and the re-authoring is a fresh act satisfying the independence
+# criterion - E fixed before any retrieval against the new snapshot.
+schema_version: "0.3"
+scenario_id: RQA-106
+title: Typology corpus QA - money mule networks and coerced authorisation, the dual-role customer
+scenario_class: retrieval
+vertical: fraud
+typology: fraud_typology.mule_networks_and_app_fraud
+
+description: >
+  Obligation A coverage for the Typology series. Asks whether the same customer
+  can be both a victim of authorised push payment fraud and a money mule, and
+  what patterns a firm would see on the sending and the receiving side. TY-02 is
+  the only eligible source of the dual-role proposition and the sending-side
+  coercion pattern; TY-01 is the only eligible source of the receiving-side
+  network patterns, which TY-02 reaches only by cross-reference.
+
+  E composition reasoning, the CV-01 marginal case, and the pending_review
+  overlap analysis including the re-authoring trigger above are in the companion
+  record verticals/fraud/scenarios/RQA-106.authoring.md. E was fixed at
+  authoring, before any retrieval was run for this scenario, per D1.1 Rev C 5.2
+  criterion 4.
+
+corpus_snapshot:
+  manifest_version: "2026-08-13.8"
+  manifest_sha256: "2d5f2fb5ea6051167d89dc83aa70e1330f2cace212156a8a5014d98e7803809c"
+  retrieval_snapshot_sha256: "878b3439e8261e850510c7ea7b5d0e67655ee2eb3b34427a8d7c2b256d6ab928"
+
+retrieval:
+  retrieval_kind: corpus_qa
+  query: "Can the same customer be both a victim of authorised push payment fraud and a money mule, and what patterns would a firm see on the sending and the receiving side?"
+  top_k: 5
+  top_k_absolute_cap: 7
+  scoring_method: semantic_distance
+  expected_document_ids:
+    - SYN-TY-01
+    - SYN-TY-02
+  binary_probe_justification: >
+    |E| is 2, and for any |E| <= 4 the mechanically computed pass condition is
+    1.0, so the attainable outcomes are exactly {0, 1}: complete grounding or
+    not, with no graded middle. The binary form is structural rather than a
+    shortfall - the Typology series holds exactly two eligible documents, so 2 is
+    the largest |E| any honest query confined to the series can have, and the
+    query is deliberately built on the one proposition spanning both documents
+    rather than on a single-document fact that would have made |E| = 1. Padding E
+    would mean admitting CV-01, SG-01, SG-02 or TR-01, each cross-referenced by
+    section from both eligible documents and each failing sufficiency. The probe
+    is a genuine test despite being binary, because a two-sided question over two
+    4-chunk documents can only pass if the retriever surfaces both sides at k=5
+    against a corpus in which twelve other documents discuss fraud.
+  obligation_d_justification: >
+    The |E| >= 5 route is not constructible from the eligible set: only TY-01 and
+    TY-02 are eligible Typology documents, so |E| cannot exceed 2 for any query
+    over the series whatever its wording, and reaching five would mean pulling in
+    Sector Guidance, Customer Vulnerability and Thematic Review documents, which
+    would stop being a Typology-series probe and would admit members failing
+    sufficiency. A binary probe is sufficient evidence because the two documents
+    are complementary halves of one subject - the receiving side and the sending
+    side, explicitly cross-linked - and a query on their intersection cannot be
+    answered from either alone. The probe therefore tests the hardest question
+    the eligible series can be asked rather than the easiest. No precision claim
+    is made or implied.
+
+migration_diff:
+  comparison: bit_identical
+
+acceptance:
+  metric: recall_at_k
+  operator: ">="
+  value: 1.0

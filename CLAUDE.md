@@ -519,6 +519,29 @@ this section is a working pointer, not the record.
     than letting it land mid-flight. Detail:
     `docs/governance/SESSION_HANDOVER_2026-08-11c.md` return
     queue 10; `docs/governance/SESSION_HANDOVER_2026-08-17.md` §7.
+    **GUARD 2 — SEVEN SCENARIOS NOW CARRY RE-PIN DEBT AGAINST THIS
+    DECISION, appended 2026-08-17.** `RQA-101`, `RQA-102`, `RQA-103`,
+    `RQA-104`, `RQA-105`, `RQA-106` and `RQA-107`, authored this date
+    against the 16-document eligible set and all pinning one corpus
+    state — `2026-08-13.8` / `2d5f2fb5…3809c` / rss `878b3439…ab928`.
+    An inclusion ruling moves all three values and every one of the
+    seven is re-pinned. **Two of the seven need more than a re-pin, and
+    the difference is load-bearing.** `RQA-106` carries a **RE-AUTHORING
+    trigger**: `SYN-TY-03` and `SYN-TY-04` are near-duplicates of its
+    expected set by subject, and sufficiency is a property of the
+    eligible set rather than of a document in isolation, so if either
+    becomes eligible the claim that its E members are necessary may
+    cease to be true and criterion 2 fails by construction — re-pinning
+    alone would carry forward a sufficiency argument that no longer
+    holds, and the re-author must fix E before any retrieval against
+    the new snapshot. `RQA-104` carries an **Obligation D EXPIRY**: its
+    series grows from two documents to nine, the `\|E\| >= 5` route
+    becomes constructible, and its justification stops holding, so
+    Obligation D is re-discharged by a graded scenario against the
+    enlarged set rather than by re-citing the existing one. Weaker
+    cases at `RQA-105` and `RQA-101` are recorded in their own
+    authoring records. Detail:
+    `verticals/fraud/scenarios/RQA-BATCH1.set-record.md`.
 13. **CL-25 / inc4 pin writer** pending the agent module — OPEN, and
     sharper since 2026-08-12: WS-E 65 recorded that no harm has yet come
     of the audit store being destroyed only because nothing of record
@@ -1092,6 +1115,22 @@ this section is a working pointer, not the record.
     independently corroborated, the spike's list v0.1 having included
     `hnsw_ef_search` without sight of that return. Detail:
     `docs/governance/D1.1_REVC_ACCEPTANCE_2026-08-16.md` §7.
+    **EXTENDED 2026-08-17 — a SEVENTH item, the load-time comparison
+    schema v0.3 cannot hold.** v0.3 adds `top_k_absolute_cap` as a
+    required retrieval-block field, so the cap is now recorded
+    structurally on every scenario. **JSON Schema cannot compare two
+    sibling values**, so the schema records the cap and does not assert
+    `top_k <= top_k_absolute_cap`; a spec whose `top_k` exceeds its own
+    cap validates cleanly today, and a test asserts that so the limit
+    is found by whoever changes it rather than by whoever trusts it.
+    **The runner must make that comparison at load time** and refuse on
+    breach, which is the only place it can be made. Rev C §5.4 also
+    makes a corpus expansion pushing a scenario past its recorded cap a
+    **ruled variance under §5.5** before that scenario runs again — a
+    second assertion the runner is the natural home for, and one that
+    bites the moment the item 12 inclusion decision lands. Detail:
+    `arcaai/harness/schema/scenario_spec_v0.3.schema.json`, the
+    `top_k_absolute_cap` description.
 37. **Rev C filename still says DRAFT — NEW 2026-08-17, OPEN,
     cosmetic but not nothing.** The accepted text lives at
     `docs/governance/D1.1_TEST_PLAN_DRAFT_RevC_2026-08-15.md`. D1.1
@@ -1133,6 +1172,46 @@ this section is a working pointer, not the record.
     is NOT consumed by this queue entry** — raising it is a governed act
     and a separate one. Related: item 25's false-red in
     `check_docs.py`, and the item 8 check-method family.
+40. **Pre-existing pytest failure blocks full-suite green as evidence
+    — NEW 2026-08-17, OPEN.**
+    `api/tests/test_api_contract.py::test_route_is_wired_to_contract_models`
+    fails with `AttributeError: '_IncludedRouter' object has no
+    attribute 'path'`. It is FastAPI/Starlette dependency drift: the
+    test iterates `app.routes` expecting route objects and the
+    installed version yields an `_IncludedRouter` wrapper. **Verified
+    pre-existing** by running the same test at pristine `main` in a
+    throwaway git worktree on 2026-08-17 — it failed identically there,
+    so it is not caused by any change of that date. **The consequence
+    is what makes this a queue item rather than a nuisance: a full
+    `pytest` run exits 1 for a reason unrelated to whatever is being
+    tested, so "full suite green" is unavailable as evidence until it
+    is fixed.** Every session must instead report the failure as itself
+    and distinguish it from new failures, which is a manual
+    discrimination and therefore exactly the kind that eventually gets
+    skipped. Note CI does not catch it: `ci-devops` passed on the v0.3
+    PR, so the workflow's own scope differs from a local full run —
+    worth establishing which is right before fixing the test. Same
+    family as item 8.
+41. **No live register home for code-series artefacts — NEW
+    2026-08-17, PLACEMENT OWED.** Surfaced when ruling D5 of the v0.3
+    arc directed the scenario spec schema series into
+    `docs/governance/document-register.yaml`. That file is a **six-line
+    RETIRED tombstone** — `status: retired`, `superseded_by:
+    ../../DECISIONS.md`, retained so stale links fail loudly rather
+    than silently — so writing entries into it would resurrect a
+    retired register against its own text, in one of the six Tier 2
+    governed stores. The canonical alternative it names, `DECISIONS.md`
+    **Locked suite**, registers the June 2026 business-document suite
+    and not code artefacts, so schema files there are a second category
+    error. **Net: versioned code artefacts have nowhere to be
+    registered.** Today the schema series carries its own provenance in
+    each file's description block, which is the v0.1/v0.2/v0.3
+    convention and works — but it is per-artefact self-description, not
+    a register, and nothing enumerates the series from outside it.
+    **Placement to be ruled under item 34's audit-readiness work**,
+    where M7's traceability matrix needs exactly this: an artefact an
+    auditor can start from that lists what exists. Detail: the v0.3
+    stop report of 2026-08-17 §5.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session

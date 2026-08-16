@@ -1,0 +1,105 @@
+# RQA-107 — Statute series, corpus QA. Appendix A.1 slot of D1.1 Rev C.
+#
+# LOCATION CONVENTION, recorded here because this is the first scenario spec
+# committed to the repository and the convention binds every later one:
+# authored scenario specs live at verticals/fraud/scenarios/. A scenario carries
+# fraud business semantics - query text, expected fraud documents, a fraud
+# typology - and ADR-0009 puts business semantics in the vertical, not in
+# platform machinery. Verified against ADR-0009, D1.1 Rev C and DEC-0015 on
+# 2026-08-17: none contradicts this placement. The runner takes an explicit
+# --spec path and has NO discovery mechanism, so this is a convention for
+# humans, not a lookup rule for code.
+#
+# TEMPLATE CONVENTIONS, which the RQA-101..106 set follows:
+#   - one spec per file, named for its scenario id;
+#   - the four justification fields v0.3 added are used for their own purpose
+#     and never as general prose;
+#   - E composition reasoning, marginal cases, and the pending_review overlap
+#     analysis live in the companion authoring record RQA-107.authoring.md,
+#     because description is capped at 2000 characters and D1.1 Rev C 5.2 puts
+#     E-composition review at scenario acceptance rather than in the spec;
+#   - every spec in the set pins ONE corpus state, so the three snapshot values
+#     are identical across all seven.
+schema_version: "0.3"
+scenario_id: RQA-107
+title: Statute corpus QA - Fraud Act 2006 offence-creating provisions
+scenario_class: retrieval
+vertical: fraud
+# typology re-key, 2026-08-17. At v0.2 this read
+# "unverifiable-pending-vocabulary:statute.fraud_act_2006" - a colon-separated
+# status marker that the v0.3 pattern now refuses. The marker is not merely
+# re-punctuated but DROPPED: v0.3's pattern enforces identifier form and its
+# field description states the non-comparability limit in terms, so the marker's
+# job is done by the schema, and a vocabulary-status prefix baked into every
+# value would go stale the moment the fraud-side vocabulary lands. All seven
+# batch-1 scenarios use plain descriptive identifiers on this reasoning.
+typology: statute.fraud_act_2006
+
+description: >
+  Obligation A coverage for the Statute series. Asks which Fraud Act 2006
+  provisions create the offences of fraud by false representation and fraud by
+  abuse of position, and what must be proved for each.
+
+  F1-INDEPENDENCE RECORD, required by D1.1 Rev C Appendix A.4 under F-DS-06.
+  The Statute series is the population in which finding F1 arose - the
+  2026-08-13 commissioning spike scored recall_at_k 0.0 on a statute-grounding
+  query. Rev C therefore requires this scenario's query selection, expected
+  grounding set and top_k to be chosen by a stated design process with the
+  acceptance threshold fixed BEFORE any reference to F1's outcome. That is
+  discharged as follows. The threshold is the Rev C 5.3 default computed
+  mechanically from |E|, ceil(0.8 x 2)/2 = 1.0, and was not tuned. top_k is 5,
+  which is the plan's own worked example at 7.0% of 71 chunks and the harder of
+  the two unflagged options - 7 being the ceiling - so the choice raises
+  difficulty rather than lowering it. E was fixed at authoring and is stated in
+  the companion authoring record. Nothing in this spec was adjusted after seeing
+  any retrieval output, from the spike or otherwise.
+
+  E composition, marginal cases and the pending_review overlap analysis are in
+  the companion record verticals/fraud/scenarios/RQA-107.authoring.md.
+
+corpus_snapshot:
+  manifest_version: "2026-08-13.8"
+  manifest_sha256: "2d5f2fb5ea6051167d89dc83aa70e1330f2cace212156a8a5014d98e7803809c"
+  retrieval_snapshot_sha256: "878b3439e8261e850510c7ea7b5d0e67655ee2eb3b34427a8d7c2b256d6ab928"
+
+retrieval:
+  retrieval_kind: corpus_qa
+  query: "Which provisions of the Fraud Act 2006 create the offences of fraud by false representation and fraud by abuse of position, and what must be proved for each?"
+  top_k: 5
+  top_k_absolute_cap: 7
+  scoring_method: semantic_distance
+  expected_document_ids:
+    - OGL-0001
+    - OGL-0002
+  binary_probe_justification: >
+    |E| is 2, so under the Rev C 5.3 default the attainable values are exactly
+    {0, 1} and this is a binary probe, not a graded measure. The binary form is
+    intentional: the question has exactly two limbs, each grounded by exactly one
+    statutory provision, and padding E to reach five would add documents whose
+    absence would not make the answer ungrounded - which Rev C 5.2 criterion 2
+    forbids. top_k is the sensitivity lever here, not the threshold.
+  obligation_d_justification: >
+    The Statute series is covered only by this binary probe, so Obligation D
+    requires either a scenario at |E| >= 5 or a stated justification. The
+    justification route is taken because the |E| >= 5 route is not constructible
+    for this series: it holds four documents in total, and no honest query over
+    them has five necessary grounding documents. A binary probe is sufficient
+    evidence for this series because the series' retrieval question is
+    presence-shaped - either the statute that creates the offence is retrieved or
+    it is not - and no precision claim is made or implied.
+  density_stratified_note: >
+    The Statute series spans chunk counts 1, 1, 7 and 16, a 16x ratio and the
+    only series in the eligible set past the 4x threshold. E is OGL-0001 and
+    OGL-0002, both single-chunk, so this scenario exercises the 1-chunk end of
+    that range ONLY. OGL-0003 at 7 chunks and OGL-0004 at 16 chunks are not
+    exercised, and this scenario therefore evidences nothing about retrieval from
+    dense statute documents. A scenario covering the dense end is not authored
+    here and is not implied by this one.
+
+migration_diff:
+  comparison: bit_identical
+
+acceptance:
+  metric: recall_at_k
+  operator: ">="
+  value: 1.0

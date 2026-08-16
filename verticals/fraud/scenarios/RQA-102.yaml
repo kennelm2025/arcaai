@@ -1,0 +1,70 @@
+# RQA-102 — Chief Executive letter series, corpus QA. Appendix A.1 slot of
+# D1.1 Rev C. Conventions follow the template at RQA-107.yaml.
+schema_version: "0.3"
+scenario_id: RQA-102
+title: Chief Executive letter corpus QA - board assurance obligations and the scope of the announced supervisory work
+scenario_class: retrieval
+vertical: fraud
+typology: chief_executive_letter.board_expectations
+
+description: >
+  Obligation A coverage for the Chief Executive letter series. Asks what the
+  letter series expects a board to have assured itself of ahead of the announced
+  supervisory work, and what the board must minute. DL-01 carries the minuting
+  obligation, the supervisory programme and four expectations; DL-02 carries the
+  data-quality expectations and the scope statement bringing them inside that
+  programme.
+
+  E composition reasoning, two recorded marginal cases (TR-01 and DP-01), and
+  the pending_review overlap analysis are in the companion record
+  verticals/fraud/scenarios/RQA-102.authoring.md. E was fixed at authoring,
+  before any retrieval was run for this scenario, per D1.1 Rev C 5.2 criterion 4.
+
+corpus_snapshot:
+  manifest_version: "2026-08-13.8"
+  manifest_sha256: "2d5f2fb5ea6051167d89dc83aa70e1330f2cace212156a8a5014d98e7803809c"
+  retrieval_snapshot_sha256: "878b3439e8261e850510c7ea7b5d0e67655ee2eb3b34427a8d7c2b256d6ab928"
+
+retrieval:
+  retrieval_kind: corpus_qa
+  query: "Ahead of the supervisory work the Authority has announced, what does the Chief Executive letter series expect our board to have assured itself of, and what must the board minute?"
+  top_k: 5
+  top_k_absolute_cap: 7
+  scoring_method: semantic_distance
+  expected_document_ids:
+    - SYN-DL-01
+    - SYN-DL-02
+  binary_probe_justification: >
+    |E| is 2, so under the Rev C 5.3 default the attainable values are exactly
+    {0, 1} and this is a binary probe rather than a graded measure. The binary
+    form follows from the corpus, not from convenience: the series holds exactly
+    two eligible documents and the query is constructed so that both are
+    necessary - DL-01 for the minuting obligation, the supervisory programme and
+    four expectations, DL-02 for the data-quality expectations and the scope
+    statement that brings them inside that programme. Reaching a graded |E| would
+    require importing the cross-referenced documents, every one of which fails
+    sufficiency because the letters state their expectations on their own face
+    and expressly decline to reproduce the guidance they cite. The sensitivity
+    lever is top_k, not the threshold, which is the mechanical default and was
+    not tuned.
+  obligation_d_justification: >
+    The series is covered only by this binary probe, so Obligation D requires
+    either a scenario at |E| >= 5 or a stated justification. The justification
+    route is taken because the |E| >= 5 route is not constructible: the series
+    holds two eligible documents, so no honest query over them can have five
+    necessary grounding documents. A binary probe suffices because a Chief
+    Executive letter is a short, self-contained statement of expectation - either
+    the letter carrying it is retrieved or it is not. The probe is a genuine
+    two-document test rather than a degenerate one: recall 1.0 requires reaching
+    both letters, which differ in subject vocabulary - payment interventions and
+    board appetite in DL-01, data feeds and change control in DL-02 - so it
+    cannot be satisfied by whichever letter is lexically nearest. No precision
+    claim is implied. Full reasoning in the authoring record.
+
+migration_diff:
+  comparison: bit_identical
+
+acceptance:
+  metric: recall_at_k
+  operator: ">="
+  value: 1.0
