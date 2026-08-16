@@ -34,6 +34,16 @@ guarded: the PreToolUse matcher in .claude/settings.json routes the
 call here, and SHELL_TOOLS below decides whether the command string is
 inspected. WS-E 64 records what happens when they disagree.
 
+GIT PATTERNS ANCHOR ON THE SUBCOMMAND, never on adjacency to the
+executable. Git global options sit between the two, so a pattern
+requiring `git <subcommand>` is defeated by ANY of them and the deny
+silently does not fire (WS-E 72). See GIT_GLOBAL_OPTS.
+
+REDIRECTION DETECTION DISTINGUISHES A FILE REDIRECTION FROM A
+DESCRIPTOR DUPLICATION. The `>` inside `2>&1` writes no file, and
+counting it as a write refused read-only commands that named a
+protected path (WS-E 73). See WRITEY_RE.
+
 Cross-platform: pure stdlib, no shell assumptions. Windows-safe.
 """
 import json
@@ -201,6 +211,61 @@ PROTECTED_PATTERNS = [
 ] + NEVER_SILENT_PATTERNS
 PROTECTED_RE = re.compile("|".join(PROTECTED_PATTERNS), re.IGNORECASE)
 
+# ------------------------------------------------- git global-option absorber
+#
+# F1, WS-E 72. Operator ruling PROMPT 124, 2026-08-17; fix spec at
+# docs/governance/FINDINGS_2026-08-17_guard-bypass-ADDENDUM_fix-spec.md.
+#
+# THE DEFECT WAS ADJACENCY, NOT THE OPTION. Every git pattern in this module
+# required the subcommand IMMEDIATELY after the executable - `git\s+push`,
+# `git\s+branch`, `git\s+(filter-branch|filter-repo)`. Git global options sit
+# between the two, so `git -C <path> push --force-with-lease` matched nothing
+# and the CL-E1 force-push deny did not fire at all. Any pattern requiring
+# adjacency is defeated by ANY global option, which is why this closes the
+# class rather than the single member the finding happened to prove.
+#
+# APPLIED TO ALL FIVE ADJACENCY-KEYED PATTERNS, not to the two that were
+# probed: the force-push deny, the force-branch-delete deny, the
+# history-rewrite deny, the HEAD-is-main write ask, and the branch-deletion
+# ask. The last two are ASKS and were bypassable by exactly the same
+# insertion - and the HEAD-is-main ask is the one Tier 2 protection that
+# cannot be expressed as a permission rule, so it is the one this defect
+# could least afford to reach.
+#
+# WHY NOT ENUMERATE THE OPTIONS. An allow-list of -C, -c, --git-dir,
+# --work-tree and --no-pager closes exactly the five members that were
+# probed and leaves --exec-path, --namespace, --bare, --literal-pathspecs
+# and every future addition open. That is the one-spelling trap the H-11
+# comment below already names, reached by a different route.
+#
+# WHY NOT A LAZY `git[^\n]*push` BRIDGE. It closes the class too, but it
+# denies `git log --grep="push --force"` - a read. The run below absorbs only
+# tokens that LOOK like options: a leading dash, plus an optional following
+# value token for the space-separated forms `-C <path>` and `-c <k>=<v>`.
+# The optional value must not itself start with a dash, so an option taking
+# no value cannot swallow the subcommand. Checked against
+# `git log --grep="push --force"`: no match, because `log` carries no
+# leading dash and the run therefore stops before it.
+#
+# BOUNDED REPETITION IS DELIBERATE. `{0,8}` rather than `*`: the repeated
+# group carries an optional sub-group, so an unbounded `*` leaves the engine
+# 2^n paths to explore before it can report a non-match, and this hook runs
+# on EVERY tool call. A wedged hook fails the session closed (WS-E 68), so
+# the bound is a safety property, not tidiness. KNOWN AND NOT COVERED,
+# STATED RATHER THAN LEFT TO BE DISCOVERED: a command carrying nine or more
+# global options before its subcommand is not matched. No real invocation
+# approaches that; widening the bound is a decision, not a patch.
+#
+# THE `\bgit\b` ANCHOR IS UNIFORM ACROSS ALL FIVE. Two of the originals wrote
+# a bare `git`, three wrote `\bgit`. Sharing one prefix is what makes the five
+# provably consistent, which is the whole point of F1 - per-pattern variation
+# is how the class reopens one edit at a time. NOTE THE ONE BEHAVIOURAL
+# CONSEQUENCE, flagged for the diff rather than slipped in: the two bare-`git`
+# patterns previously also matched a command word ENDING in git, so
+# `mygit push --force` drew the deny and now does not. That narrows the deny
+# surface by one case which was never the governed subject.
+GIT_GLOBAL_OPTS = r"(?:\s+-{1,2}\S+(?:\s+[^-\s]\S*)?){0,8}"
+
 # Tier 2, state-dependent. These cannot be expressed as permission
 # rules, which match command text and cannot read repository state -
 # which is why the branch condition lives here and not in
@@ -208,11 +273,18 @@ PROTECTED_RE = re.compile("|".join(PROTECTED_PATTERNS), re.IGNORECASE)
 # ask and never allow, so it can narrow a Tier 1 grant but can never
 # widen one.
 GIT_WRITE_RE = re.compile(
-    r"\bgit\s+(add|commit|push|merge|rebase|reset|revert|cherry-pick|am"
+    r"\bgit\b" + GIT_GLOBAL_OPTS +
+    r"\s+(add|commit|push|merge|rebase|reset|revert|cherry-pick|am"
     r"|apply|tag)\b"
 )
 ASK_COMMAND_RES = [
-    (re.compile(r"\bgit\s+branch\s+-[dD]\b"),
+    # KNOWN AND NOT COVERED, unchanged by F1 and deliberately not fixed here:
+    # `-[dD]` does not match the long form `git branch --delete <x>`, which
+    # therefore draws no ask. It is the same one-spelling trap the H-11 deny
+    # below was hardened against, surviving one pattern above it. Raising it
+    # is a separate governed act and it is NOT in scope for this fix - see
+    # the PROMPT 127 draft report.
+    (re.compile(r"\bgit\b" + GIT_GLOBAL_OPTS + r"\s+branch\s+-[dD]\b"),
      "Branch deletion is gated (Tier 2). Deleting the just-merged branch "
      "is routine, but this guard cannot tell which branch that is - "
      "confirm which branch is going and why."),
@@ -231,7 +303,8 @@ DENY_COMMAND_RES = [
     #
     # CASE-SENSITIVE ON PURPOSE. re is case-sensitive by default and this
     # pattern must never gain re.IGNORECASE: folding case here would deny the
-    # lowercase form too and silently revoke the ruled cleandown grant.
+    # lowercase form too and silently revoke the ruled cleandown grant. The
+    # F1 prefix carries no flags and does not change this.
     #
     # Recovery is not lost. A branch deleted with -d is reachable by reflog,
     # and a genuinely unmerged branch that must go is an operator act at the
@@ -241,17 +314,20 @@ DENY_COMMAND_RES = [
     # Caught during probe design: a pattern matching only -D would have left
     # the long form open, which is the same verb reached by a different
     # keystroke - exactly the gap a one-spelling rule string always leaves.
-    (re.compile(r"\bgit\s+branch\b(?:[^\n]*\s-D\b|[^\n]*\s--force\b)"),
+    (re.compile(r"\bgit\b" + GIT_GLOBAL_OPTS +
+                r"\s+branch\b(?:[^\n]*\s-D\b|[^\n]*\s--force\b)"),
      "Force branch delete is blocked (-D, or --delete --force). It deletes an "
      "unmerged branch without the refusal that makes -d safe. Use -d, which "
      "declines rather than destroys on surprising state; if the branch is "
      "genuinely unmerged and must go, that is an operator act at your own "
      "terminal."),
-    (re.compile(r"git\s+push\b[^\n]*(\s--force\b|\s-f\b|--force-with-lease)"),
+    (re.compile(r"\bgit\b" + GIT_GLOBAL_OPTS +
+                r"\s+push\b[^\n]*(\s--force\b|\s-f\b|--force-with-lease)"),
      "Force push is prohibited (CL-E1). No exception path exists; "
      "if you believe one is needed, stop and raise it with the operator "
      "outside this tool call."),
-    (re.compile(r"git\s+(filter-branch|filter-repo)\b"),
+    (re.compile(r"\bgit\b" + GIT_GLOBAL_OPTS +
+                r"\s+(filter-branch|filter-repo)\b"),
      "Git history rewriting is prohibited on this repository."),
     (re.compile(r"\brm\s+(-[a-zA-Z]*r[a-zA-Z]*f|-[a-zA-Z]*f[a-zA-Z]*r)\b"),
      "Recursive force delete is blocked. Delete specific files "
@@ -316,8 +392,30 @@ DENY_COMMAND_RES = [
 
 # Bash constructs that can write into a file: redirection, tee, sed -i,
 # in-place perl/python, move/copy onto the path.
+#
+# F2, WS-E 73. Operator ruling PROMPT 124, 2026-08-17. The leading branch
+# was `>>?`, which matches the `>` inside `2>&1`. Paired with a protected
+# path on the shell branch, that refused READ-ONLY commands with the write
+# deny: `ls -la .claude/agents/ 2>&1 | head -3` was blocked while the same
+# command without the redirection ran. A descriptor duplication writes no
+# file, and the guard must not read one as a write.
+#
+# `>(?!&)>?` distinguishes the two by what FOLLOWS the bracket. Excluded:
+# `2>&1`, `1>&2`, `*>&1` and every other N>&M - the `>` is followed by `&`.
+# Still covered: `>` onto a filename, `>>` append (the first `>` is followed
+# by `>`, not `&`), and bash `&>file` / `&>>file`, where the ampersand
+# PRECEDES the bracket and the lookahead never sees it.
+#
+# KNOWN AND NOT COVERED, stated rather than left to be discovered: the
+# csh-inherited `cmd >& file` form, which bash accepts as a redirection of
+# both streams to a FILE, has `>` followed by `&` and is therefore excluded.
+# That is a FALSE GREEN - the wrong polarity for a deny - and it is accepted
+# on two grounds: `&>file` is the form in ordinary use and stays covered, and
+# the alternative is to distinguish `>&` followed by a digit from `>&`
+# followed by a filename, which a regex cannot do reliably once quoting and
+# variables are involved. Widening this is a decision, not a patch.
 WRITEY_RE = re.compile(
-    r"(>>?|\btee\b|\bsed\b[^\n]*-i|\bmv\b|\bcp\b|\bMove-Item\b|"
+    r"(>(?!&)>?|\btee\b|\bsed\b[^\n]*-i|\bmv\b|\bcp\b|\bMove-Item\b|"
     r"\bCopy-Item\b|\bSet-Content\b|\bAdd-Content\b|\bOut-File\b)",
     re.IGNORECASE,
 )
