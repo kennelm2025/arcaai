@@ -666,8 +666,28 @@ this section is a working pointer, not the record.
     unlisted — and that SG-03..06 stay excluded pending the item 9
     scope decision. Detail:
     `docs/governance/PILOT_2026-08-12_corpus-lister-fan-out.md`.
-27. **Permission-tier review — CANDIDATE DRAFTED, awaiting ruling; not
-    a change.** Occasion: tonight's pilot ran three subagents cleanly
+27. **Permission-tier review — HELD 2026-08-17. NOT DISCHARGED.**
+    **Status by component:** the rule-string restatement and the
+    `.claude/agents/` narrowing discharged earlier at `678f46a`, the
+    latter superseded entirely when all four `.claude/` paths became
+    DENY on 2026-08-14. **Part A, the READ/VERIFY widening, is APPLIED**
+    at the operator's terminal 2026-08-17 and is probe-supported.
+    **Part B, the REVERSIBLE-MUTATION widening, is HELD** and the reason
+    is evidence rather than caution. It was drafted with a blocker
+    already stated — an allow rule pre-empts a guard ask, the
+    HEAD-is-main protection lives in the guard, and the branch condition
+    cannot be a rule string, so settings-allowing the git write verbs
+    would remove the gate on main rather than widen it off main. The
+    probe set then found worse: **WS-E 72**, the guard's git denies can
+    fail to match at all. Widening the git write verbs against a deny
+    surface with a known bypass compounds two defects. **Part B unblocks
+    when item 42's guard repair and re-probe list pass**, not before.
+    The item cannot be discharged while its principal component is held;
+    saying otherwise would be the overclaim the together-in-one-PR
+    condition existed to prevent. Detail:
+    `docs/governance/PERMISSION_CLASSES_2026-08-17_partA-applied-widening-held.md`.
+    Original candidate text follows.
+    Occasion: tonight's pilot ran three subagents cleanly
     and concurrently inside their own tool grants while the lead
     needed operator approval for read-only inspection, scratchpad
     writes and pull-request waiting mechanics. The candidate
@@ -1154,11 +1174,28 @@ this section is a working pointer, not the record.
     time whenever convenient, or rule it permanently unrecorded — both
     are fine, and only silence is not.
 39. **Governance guard denies a READ-ONLY command that names a
-    protected path — NEW 2026-08-17, WS-E-SHAPED, UNRAISED.** Observed
+    protected path — RAISED AS WS-E 73, 2026-08-17. MECHANISM
+    CORRECTED; the original diagnosis below was WRONG.** Observed
     in-session 2026-08-16: a command composed only of `ls`, `git status`
     and `git check-ignore`, naming `.claude/agents/` and
     `.claude/skills/`, was refused with the guard's **write**-deny text.
-    The guard matched the path string, not the verb. **This contradicts
+    **CORRECTION 2026-08-17, on evidence from the PROMPT 123 probe
+    set.** This item stated the trigger as the path string — *"The guard
+    matched the path string, not the verb"* — and that is
+    **DISCONFIRMED**. Four commands, one variable:
+    `ls -la <path>/.claude/agents/` EXECUTED;
+    `git check-ignore -v .claude/agents/corpus-lister.md` EXECUTED;
+    `ls -la <path>/.claude/skills/` EXECUTED; and
+    `ls -la <path>/.claude/agents/ 2>&1 | head -3` REFUSED. **The
+    trigger is the `>` inside `2>&1`**, a descriptor duplication that
+    writes no file, which the guard's write-detection reads as a write
+    construct. The original instance carried `2>&1` twice, which
+    explains it exactly. Corrected rather than deleted, because a wrong
+    diagnosis that survived on a compound command in which the true
+    variable was never isolated is itself the lesson. Full record at WS-E
+    73; fix spec at
+    `docs/governance/FINDINGS_2026-08-17_guard-bypass-ADDENDUM_fix-spec.md`.
+    The original text follows for the trail. **This contradicts
     the enforcement section of this file**, which states that the
     `.claude/` deny covers writes and that "Reads are untouched" — and
     a guidance-versus-hook disagreement is by this file's own rule a
@@ -1212,6 +1249,43 @@ this section is a working pointer, not the record.
     where M7's traceability matrix needs exactly this: an artefact an
     auditor can start from that lists what exists. Detail: the v0.3
     stop report of 2026-08-17 §5.
+42. **Guard repair for WS-E 72 and 73, plus the re-probe list — NEW
+    2026-08-17, OPEN. BLOCKS item 27 Part B.** Two pattern defects,
+    both operator acts at the operator's terminal because the fix is a
+    `.claude/hooks/` change carrying an absolute deny. **F1:** anchor
+    the deny patterns on the subcommand **anywhere in the argument
+    vector** rather than immediately after `git`, which closes the class
+    rather than the single tested member — git global options sit
+    between executable and subcommand, so any adjacency-requiring
+    pattern is defeated by any of them. **F2:** stop treating `2>&1` as
+    a write construct; distinguish a file redirection from a descriptor
+    duplication, or the protected-path write-deny keeps firing on
+    read-only commands. **Re-probe, and a green is only a green when
+    every row passes:** both controlled pairs from WS-E 72 — force-push
+    and `branch -D`, each in plain and prefixed form, all four required
+    to REFUSE — plus **one probe per named global option**, `-c`,
+    `--git-dir`, `--work-tree` and `--no-pager`, because the finding
+    proved `-C` and named the class without testing the others. Every
+    probe must return the guard's own refusal text verbatim; **git's own
+    error is a BYPASS result, not a pass.** Plus the WS-E 73 pair: a
+    read with `2>&1` must execute, and a genuine write to a protected
+    path must still refuse. Detail:
+    `docs/governance/FINDINGS_2026-08-17_guard-bypass-ADDENDUM_fix-spec.md`.
+43. **Reconcile the no-bare-`cd` convention with the guard's command
+    patterns — NEW 2026-08-17, OPEN, and it is to be TESTED rather than
+    reasoned about.** WS-E 72's reach comes from two individually
+    correct conventions combining into a hole: the corrective written
+    after WS-E 68 requires addressing by absolute path, and for git that
+    is `git -C <path>`, which is exactly the form the deny patterns
+    cannot see. **Neither convention is to be reversed on argument.**
+    The reconciliation is a decision about which form the harness uses
+    for git and what the guard must therefore match, and it is settled
+    by running the pairs under each candidate form rather than by
+    deciding which reading is more natural. Interim practice adopted
+    2026-08-17 without waiting for the ruling: plain `git …` from the
+    repo-root working directory, which involves no `cd`, satisfies the
+    convention, and is the form the guard can see. Recorded as interim
+    practice, not as the answer. Related: WS-E 68, WS-E 72, item 42.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
