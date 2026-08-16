@@ -25,6 +25,41 @@ set rather than inside any one file.
 Seven series, seven scenarios, complete against Obligation A. No expected
 document appears in more than one scenario.
 
+## Rulings
+
+Placed before the findings deliberately: R1 governs how Finding S1 is read, and a
+constraint on reading is worth nothing if the reader meets it afterwards.
+
+### R1 — the batch-1 evidence boundary. **OPERATOR RULING via coordinator, 2026-08-17.**
+
+> **A green across `RQA-101`..`RQA-107` evidences DOCUMENT-LEVEL PRESENCE ONLY.
+> No precision claim, no rank-quality claim, no distractor-avoidance claim.
+> Nothing may quote batch-1 results as more than that.**
+
+Acknowledged as a **standing constraint**, not an observation to be weighed. It
+governs the reading of Finding S1 below, which records why the boundary exists:
+all seven scenarios sit at |E| = 2, so Rev C §5.4's precision-or-rank obligation —
+which begins at |E| >= 5 — is never triggered anywhere in this batch.
+
+The practical test: a sentence citing a batch-1 result is within the boundary if
+it says a document was or was not retrieved, and outside it if it says anything
+about how well, in what order, or against what competing content.
+
+### R2 — `RQA-107` typology marker drop, RATIFIED. **OPERATOR RULING via coordinator, 2026-08-17.**
+
+> **`statute.fraud_act_2006` stands as committed.**
+
+Rationale of record: the schema's pattern description and its tests carry the
+non-comparability disclaimer, so the marker's work is done where it can be
+asserted rather than in each value; and **vocabulary status is a property of the
+vocabulary, not of each value**, so a marker embedded per-value goes stale the
+moment the fraud-side vocabulary lands.
+
+The re-key history — `unverifiable-pending-vocabulary:statute.fraud_act_2006` at
+v0.2, refused by the v0.3 pattern for its colon, then the marker dropped rather
+than re-punctuated — is at `RQA-107.authoring.md`. All seven batch-1 scenarios
+carry plain descriptive identifiers on this reasoning.
+
 ## Finding S1 — the whole set is binary probes, and nothing exercises the precision boundary
 
 **All seven scenarios sit at |E| = 2. Not one is at |E| >= 5.** Obligation D is
@@ -100,3 +135,7 @@ typology coverage until the manifest typology field and the controlled vocabular
 land. It contains no citation-following (RCF) or gap-detection (RGD) scenarios —
 both are out of scope for this act, and the runner lacks the capability either
 would need.
+
+**It is also not precision evidence, and that is a ruling rather than a caveat —
+see R1 above.** A green here says the documents were reached; it says nothing
+about how well, in what order, or against what competing content.
