@@ -962,6 +962,17 @@ this section is a working pointer, not the record.
     in-repo and found nowhere, and entered the tree on 2026-08-13 at
     `docs/governance/ADR-candidate-input_rulings-record_2026-08-13.md`
     only because it was supplied from disk.
+    **M2 notes appended 2026-08-18, from the fold-in arc.** (i) The
+    numbered-prompt trail survives only where a record happens to quote
+    it — prompts 125 and 126 are RETIRED-UNVERIFIABLE for exactly that
+    reason, nothing having quoted them. **Interim practice adopted
+    pending M2 proper: every session and commissioning record states the
+    prompt numbers it consumed.** (ii) A predicted next-prompt number
+    has zero authority — a prompt exists when it arrives in the terminal
+    and not before, which is the PROMPT 115 delivery lesson running
+    outbound rather than inbound. Detail:
+    `docs/governance/FOLD_IN_2026-08-18_prompts-125-126-and-guard-install.md`
+    section 5.
     **M3 — Server-side enforcement.** Client-side guards under
     `.claude/` bind only the executor's tool calls; **any other git client
     bypasses them entirely.** Enable GitHub branch protection on `main`:
@@ -1090,8 +1101,21 @@ this section is a working pointer, not the record.
     the next sessions; **M6 is production-phase**, named early so the
     CL-24 precedent carries its explanation; the rest ride the
     control-framework deliverable.
-35. **Scenario spec schema v0.3 — NEW 2026-08-17, OPEN. The critical
-    path's likely first authoring act.** The D2.2a spike found **five
+35. **Scenario spec schema v0.3 — DISCHARGED at PR #136, 2026-08-17.
+    CLOSED 2026-08-18.** The schema is in the tree at
+    `arcaai/harness/schema/scenario_spec_v0.3.schema.json`, honouring all
+    five Rev C spec-side requirements. Typology ruled **Option A**:
+    identifier-shaped string, form-only, non-comparability disclaimed in
+    the description AND asserted by test — no enum, because Rev C §2.4
+    and ADR-0009 bar vertical semantics in platform machinery.
+    **Residue this closure does NOT carry:** the typology *vocabulary*
+    half is corpus-side and remains owed — a schema can require a field
+    but cannot require that the field mean something. **Recorded rather
+    than deleted** because the item was still carried as OPEN at the
+    2026-08-18 boot, after the artefact discharging it had already
+    merged — the queue-staleness pattern at items 5, 24 and 31. Original
+    text follows.
+    The D2.2a spike found **five
     Rev C requirements v0.2 cannot hold**, because v0.2 is
     `additionalProperties: false` at every level and predates every
     round-2 fix. Four are carried in the spec's `description` under the
@@ -1286,6 +1310,41 @@ this section is a working pointer, not the record.
     repo-root working directory, which involves no `cd`, satisfies the
     convention, and is the form the guard can see. Recorded as interim
     practice, not as the answer. Related: WS-E 68, WS-E 72, item 42.
+44. **RCF and RGD scenario classes are blocked on runner capability —
+    NEW 2026-08-18, OPEN.** Batch 1 contains no citation-following
+    (`RCF-*`) or gap-detection (`RGD-*`) scenarios, and the reason is
+    **not** scope alone: the set record states that *"the runner lacks
+    the capability either would need."* Rev C specifies both classes —
+    `RCF-101` through `RCF-106`, and `RGD-101` and `RGD-102` — and
+    fixtures for the gap-detection shape already sit in the tree at
+    `tests/harness/fixtures/valid_retrieval_gap_detection.yaml`, so the
+    specification side is ahead of the runner side rather than waiting
+    on it. **Consequence for evidential reach:** until the capability
+    lands, every authored scenario exercises `corpus_qa` only, and no
+    coverage claim spanning the Rev C scenario classes may be made from
+    batch 1 or from any set authored against the same runner. Sequence
+    against item 36, which is the runner's other open conformance debt;
+    both are runner-side and a single runner arc could take them
+    together. Detail:
+    `verticals/fraud/scenarios/RQA-BATCH1.set-record.md`, "What this set
+    is not".
+45. **Evaluator golden-fixture suite — NEW 2026-08-18, OPEN. OPERATOR
+    OWNERSHIP. BLOCKS REGIME 2.** Rev C §5.7(a) makes an independent,
+    versioned golden-fixture set, asserting the threshold comparison at
+    known inputs, the **sixth entry criterion**; the Test Plan's
+    invalidation table depends on it, an evaluator version change
+    invalidating nothing by itself *only while* the suite is GREEN at
+    both versions. **Ownership is the operator's by ruling rather than
+    by default:** `F-GROK-09` was sustained MATERIAL at round 2 and
+    discharged into §5.7(a) with operator ownership named, on the
+    reasoning that the party whose work the fixtures check should not
+    also author them. **Unmoved since acceptance**, and it is the gate
+    between the authored scenario set and any Regime 2 execution —
+    nothing has been RUN, and authoring and execution are separate acts.
+    Detail: `docs/governance/D1.1_REVC_ACCEPTANCE_2026-08-16.md`,
+    `docs/governance/D1.1_PANEL_ROUND2_DISPOSITION_2026-08-15.md` R2-4,
+    and `docs/governance/D1.1_TEST_PLAN_DRAFT_RevC_2026-08-15.md`
+    §5.7(a).
 <!-- QUEUE-END -->
 
 ## Orientation for a new session

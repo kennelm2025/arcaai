@@ -1065,6 +1065,49 @@ regardless of surrounding prose).*
     instance was a compound command in which the true variable was not
     isolated. **NOT FIXED HERE.** Fix spec at
     `docs/governance/FINDINGS_2026-08-17_guard-bypass-ADDENDUM_fix-spec.md`.
+74. **The branch-deletion ask does not match the long form
+    `git branch --delete`, so the plain long form passes ungated
+    (2026-08-18).**
+
+    **Expected.** Branch deletion is a Tier 2 gated act. The guard's
+    `ASK_COMMAND_RES` carries a pattern whose message is *"Branch
+    deletion is gated (Tier 2). Deleting the just-merged branch is
+    routine, but this guard cannot tell which branch that is."*
+
+    **Observed.** The pattern ends `-[dD]`, which requires a single
+    hyphen followed by `d` or `D`. `git branch --delete feature/x`
+    presents two hyphens, so the pattern cannot match and the command
+    draws **no ask at all**. Established by evaluating the installed
+    module's own `ASK_COMMAND_RES` against both spellings: the short
+    form `git branch -d feature/x` matches and asks, so the pattern is
+    live and the miss is specific to the spelling rather than to the
+    wiring.
+
+    **Scope, stated precisely because the deny above it is sound.** The
+    force form is separately denied, and that deny catches
+    `--delete --force` through its `--force` alternative — so the
+    *destructive* long form is blocked. What passes ungated is the plain
+    long form, which carries the safe `-d` semantics and declines on
+    unmerged state. **The exposure is a missing gate, not a missing
+    deny:** a merged branch can be deleted without the Tier 2
+    confirmation its one-hyphen twin draws.
+
+    **Family, and it is this module's own stated lesson.** The comment
+    above the force-delete deny reads: *"a pattern matching only -D
+    would have left the long form open, which is the same verb reached
+    by a different keystroke - exactly the gap a one-spelling rule
+    string always leaves."* That lesson was applied to the deny and not
+    to the ask sitting immediately above it. One-spelling coverage, in
+    the one file that names the trap.
+
+    **Found while authoring the WS-E 72 / 73 repair, and deliberately
+    NOT fixed there.** The authoring scope was locked to the five
+    adjacency-keyed patterns and the redirection lookahead. Widening a
+    pattern set inside a change whose reviewability depends on a
+    byte-exact diff is how scope creep enters an enforcement path, and
+    the refusal strings were ruled invariant across that fix for the
+    same reason. **NOT FIXED HERE.** Detail:
+    `docs/governance/FOLD_IN_2026-08-18_prompts-125-126-and-guard-install.md`.
 
 ## Footnotes
 

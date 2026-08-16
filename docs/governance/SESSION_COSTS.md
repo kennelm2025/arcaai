@@ -37,6 +37,7 @@ Cost-per-arc telemetry. Two downstream consumers:
 | 2026-08-13 | A | $115.78 | 2h17m | +6624/-253 | 11 (10 merged at readout, #117 pending) | CL-27 | claude-opus-5 (184.0m cache read) | 93% of usage >150k context; subagent-heavy (corpus-lister fan-out) | ~$10.53/PR | operator `/cost` readout, pasted at close |
 | 2026-08-15 | NOT SUPPLIED | $41.66 | 54m 57s | +4008/-223 | 3 — #127, #128, #129 (DERIVED) | CL-28 (DERIVED) | NOT SUPPLIED | NOT SUPPLIED | NOT SUPPLIED | cost figures: operator `/cost` readout carried in `docs/governance/SESSION_HANDOVER_2026-08-17.md` §10. PRs and registers: DERIVED, see notes |
 | 2026-08-16 | NOT SUPPLIED | $33.00 | 49m 27s | +2791/-41 | 5 — #130, #131, #132, #133, #134 (DERIVED) | CL-29, CL-30 (DERIVED) | NOT SUPPLIED | NOT SUPPLIED | NOT SUPPLIED | cost figures: operator `/cost` readout carried in `docs/governance/SESSION_HANDOVER_2026-08-17.md` §10. PRs and registers: DERIVED, see notes |
+| 2026-08-17 | NOT SUPPLIED | $88.05 | 1h 16m 41s | +4804/-56 | 5 — #135, #136, #137, #138, #139 (DERIVED) | WS-E 72, WS-E 73 (DERIVED) | claude-opus-5 | NOT SUPPLIED | ~$17.61/PR (DERIVED) | cost figures: DERIVED BY SUBTRACTION from the cumulative `/cost` readout carried at `docs/governance/SESSION_HANDOVER_2026-08-18.md` section 9 — method stated below. PRs and registers: DERIVED |
 
 ### Notes on the 2026-08-13 row
 
@@ -98,6 +99,68 @@ note**, and **Cost per merged PR**. None was in the readouts as carried, and the
 2026-08-17 ruling directed that unsupplied fields be written as such rather than
 derived or estimated. An empty cell and a cell nobody could fill are different
 facts, and only one of them is checkable.
+
+### Notes on the 2026-08-17 row
+
+**This row is DERIVED BY SUBTRACTION, and that is the one derivation this
+register permits.** Everywhere else a figure is either read from a `/cost`
+readout or written NOT SUPPLIED. The exception is granted here because the
+subtraction is exact and checkable rather than estimated, and because the
+alternative is to lose a session's telemetry entirely.
+
+**Why a subtraction is needed at all.** The executor terminal was **not
+restarted** after the 2026-08-16 session, so the readout taken at the 2026-08-17
+close is cumulative over both sessions rather than a single-session figure.
+
+**The cumulative readout, transcribed:** $121.05 · API 2h 6m 8s · wall
+22h 24m 5s · 7,595 added / 97 removed · dominant model `claude-opus-5`, with
+haiku negligible at $0.0011.
+
+**The subtrahend is the already-transcribed 2026-08-16 row** — $33.00 ·
+49m 27s · +2,791/−41 — which sits three rows above and was itself transcribed
+rather than derived.
+
+**All four fields subtract clean, and this was computed at authoring rather
+than carried over from the source narrative:**
+
+| Field | Cumulative | Less 2026-08-16 | Row |
+|---|---|---|---|
+| Total cost | $121.05 | $33.00 | **$88.05** |
+| API duration | 7,568 s | 2,967 s | **4,601 s = 1h 16m 41s** |
+| Lines added | 7,595 | 2,791 | **4,804** |
+| Lines removed | 97 | 41 | **56** |
+
+**A consistency check the source offers and this row keeps.** The counter cannot
+also include the 2026-08-15 session: removals for 2026-08-15 and 2026-08-16
+together are 264, which exceeds the cumulative 97, so the subtraction would go
+negative. The counter therefore spans exactly the two sessions claimed.
+
+**Wall time is NOT SEPARABLE and is not stated as a per-session figure.** The
+counter's wall clock spans an overnight idle, so no defensible split exists. The
+raw cumulative **22h 24m 5s** is recorded here in the notes with its derivation
+stated, per the precedent set by the 2026-08-15 row — which this table also has
+no column for.
+
+**Dominant model is READ, not derived**, and fills a column written NOT SUPPLIED
+on the two rows above it.
+
+**Three columns remain NOT SUPPLIED** — Session, Context note, and, for
+2026-08-17, no context telemetry was in the readout as carried. **Cost per
+merged PR is marked DERIVED** rather than NOT SUPPLIED because it is arithmetic
+over two cells of this same row, not an outside figure.
+
+**Register numbers consumed are WS-E 72 and WS-E 73, and no CL number.** The
+manifest regenerated at the 2026-08-18 boot reads CL highest 30, next 31 —
+unchanged from the 2026-08-16 close at CL-30 — so the 2026-08-17 session
+consumed no CL number across five merged pull requests. Same register economy
+the 2026-08-13 note records.
+
+**Date basis.** This row is labelled by *session*, on the same footing as the two
+rows above and for the same reason. The label-versus-clock offset is **not a
+fixed skew** and should not be reconciled by subtracting a constant; the evidence
+is recorded at
+`docs/governance/FOLD_IN_2026-08-18_prompts-125-126-and-guard-install.md`
+section 3(b).
 
 ## A convention this register cannot yet follow
 
