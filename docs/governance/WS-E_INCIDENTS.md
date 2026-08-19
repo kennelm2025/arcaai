@@ -1067,7 +1067,53 @@ regardless of surrounding prose).*
     `docs/governance/FINDINGS_2026-08-17_guard-bypass-ADDENDUM_fix-spec.md`.
 74. **The branch-deletion ask does not match the long form
     `git branch --delete`, so the plain long form passes ungated
-    (2026-08-18).**
+    (2026-08-18). DISCHARGED 2026-08-19.**
+
+    **DISCHARGE 2026-08-19.** The F3/F4 fix merged at PR #143
+    (`dc06118`), install byte-verified at sha256
+    `6223e639…aa68fe22` against the reviewed candidate — 35,344 bytes,
+    705 LF lines, 0 CR bytes — and the round-trip inversion reproduced
+    the pre-fix file at `c02192e2…670db01b`, so no change beyond the
+    two named edits exists anywhere in the module. The re-probe of
+    PROMPT 141 returned **11 / 11 rows as expected**, including the
+    F1-composition rows carrying a global option before the
+    subcommand. **Pre/post pairs for rows 1, 7 and 8 moved
+    `allow(silent)` → `ask`** against the `f236e6f` module executed
+    directly, and the deny controls at rows 2, 4 and 6 were
+    `deny` → `deny`, unchanged.
+
+    **Evidence tiers, stated rather than collapsed, because the two
+    halves of that table are not the same kind of fact.** The **DENY
+    rows are proven live**: the guard's own refusal text returned
+    verbatim through the harness, which additionally evidences that
+    the PreToolUse matcher routes Bash calls to this hook — a
+    positive result bearing on item 64, where a guard was correct in
+    its patterns and unreachable in its wiring for three days. The
+    **ASK rows are closed guard-side**, by feeding each command to the
+    module as a PreToolUse payload on stdin and reading its JSON
+    answer; that exercises `main()` and its real dispatch order rather
+    than a reimplementation of it, so it is stronger than the
+    composition item 75 anticipated. **Human surfacing remains
+    unprovable** and is not claimed — item 75. Chaining the two: the
+    harness routes to this hook, and this hook answers `ask` for every
+    ask-class string; only the final link to a human eye is open.
+
+    **Scope note: the fix closed a second gap this item does not
+    name.** F4 — the pattern required the flag *immediately* after
+    `branch`, so `git branch -q -d x` and `git branch -q --delete x`
+    also drew no ask. That is independent of the long-form defect
+    recorded below and was found while reading for it. Two holes in
+    one expression; this item named one.
+
+    **Accepted trade, recorded at the discharge rather than left in
+    the PR.** The replacement scans to end of line, so an exotic
+    read-only form carrying the flag text in an argument —
+    `git branch --list --format='%(refname) -d'` — now draws an ask.
+    A false-red, the safe direction, and the identical construct the
+    force-delete deny already uses. Detail: PR #143 and
+    `docs/governance/FINDINGS_2026-08-17_guard-bypass-ADDENDUM_fix-spec.md`.
+
+    **Original text follows, as written when the item was raised.**
 
     **Expected.** Branch deletion is a Tier 2 gated act. The guard's
     `ASK_COMMAND_RES` carries a pattern whose message is *"Branch
@@ -1146,6 +1192,29 @@ regardless of surrounding prose).*
     Raised 2026-08-18 (session clock), written 2026-08-19. Origin: the
     item 42 re-probe, PROMPT 131 — rows 4 and 5, which closed by
     composition rather than by live observation.
+
+    **METHOD UPGRADE, recorded at the item 74 discharge, 2026-08-19.**
+    The gap is **narrowed but not closed**, and the narrowing is worth
+    stating precisely. Ask-class rows were closed at PROMPT 141 by
+    feeding each command to the module as a **PreToolUse payload on
+    stdin** and reading its JSON answer — the harness's own interface,
+    exercising `main()` and its real dispatch order rather than a
+    reimplementation assembled from the module's constants. That is
+    strictly stronger than the composition this item was raised
+    against, because a reimplementation can agree with the module's
+    parts while diverging from its order, and dispatch order is
+    load-bearing here: the H-11 deny runs first and `respond()` exits,
+    so an ask that composition would report is one the module never
+    reaches.
+
+    Combined with the live DENY rows — which return the guard's own
+    refusal text through the harness and therefore evidence **routing**
+    — what remains open is **only the final human-surfacing link**:
+    that a person sees a surfaced ask. Everything upstream of the eye
+    is now evidenced. **The gap is not discharged by this**, and no
+    ask may yet be cited as evidence that a human was consulted; the
+    remaining link is the one no probe can reach, which is the whole
+    of this item's claim rather than a part of it.
 
 ## Footnotes
 

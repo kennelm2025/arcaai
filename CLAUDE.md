@@ -487,6 +487,25 @@ this section is a working pointer, not the record.
    `docs/governance/FINDINGS_2026-08-11_onnx-acl-root-cause.md` §5,
    `docs/governance/SESSION_HANDOVER_2026-08-11b.md` open verification 3,
    and `docs/governance/WS-E_INCIDENTS.md` item 68.
+   **NEW INSTANCE 2026-08-19, and it is about a probe SPEC rather than
+   a probe — the family's first of that shape (PROMPT 141).** The guard
+   re-probe rule *"git's own error is a BYPASS result, not a pass"* is
+   correct **for deny rows**, where the guard should have intercepted
+   and git running at all proves it did not. **It inverts for ask
+   rows**, where an approved ask lets the command run and git's own
+   error is the *expected* signature of the gate having worked.
+   Applied mechanically across the WS-E 74 table it would have failed
+   six correct rows — a false-RED, arising from a rule written when
+   the table carried only denies. **The corrective is that probe-spec
+   expectations are stated PER TIER, never per table**, because one
+   pass condition cannot serve two response classes whose observable
+   signatures are opposite. Sharper still, and the part worth
+   carrying: on the ask tier **no observable signature discriminates
+   at all** — an approved ask and a silent allow are identical from
+   the transcript — so those rows needed a different **instrument**
+   (stdin PreToolUse payload against `main()`), not a different
+   threshold. Detail: `docs/governance/WS-E_INCIDENTS.md` items 74
+   and 75.
 9. **Batch-2 panel circulation** — UNBLOCKED; scope decision owed on
    whether SG-03..SG-06 sit inside it. Detail:
    `docs/governance/RULINGS_RECORD_2026-08-10_TOR-test-capability.md`.
@@ -677,8 +696,10 @@ this section is a working pointer, not the record.
     blocker rather than a consequence of WS-E 72; (iii) **the ask tier
     is guard-proven only** — human surfacing is not provable by any
     probe (**WS-E 75**), and a widening that leans on asks inherits
-    that limit; (iv) **WS-E 74** is an adjacent hole in the same file,
-    unfixed. **Applying Part B requires a fresh chair ruling, and the
+    that limit; (iv) **WS-E 74** was an adjacent hole in the same
+    file — **DISCHARGED 2026-08-19 at PR #143**, so this ground is
+    spent and no longer supports the hold; grounds (i) to (iii)
+    stand and are sufficient on their own. **Applying Part B requires a fresh chair ruling, and the
     discharge of item 42 does not license it** — reading it as licence
     would be the blocker-cleared-therefore-proceed step that the
     together-in-one-PR condition exists to prevent.
@@ -1316,10 +1337,14 @@ this section is a working pointer, not the record.
     method than the rows measured against the fold-in's strings.
     Baselined this PR at
     `docs/governance/FOLD_IN_2026-08-18_ADDENDUM_history-rewrite-baseline_2026-08-19.md`.
-    (c) **WS-E 74 remains live and unfixed in the same file** — the
-    long form `git branch --delete` draws no ask, though the
-    force-delete deny above it is sound. An adjacent hole,
-    deliberately outside the repair's locked scope.
+    (c) **WS-E 74 — DISCHARGED 2026-08-19 at PR #143**, after this
+    caveat was written. It read "remains live and unfixed in the same
+    file": the long form `git branch --delete` drew no ask, though the
+    force-delete deny above it was sound. The F3/F4 fix closed it, and
+    closed the intervening-flags gap the item did not name. The caveat
+    is spent rather than wrong — it was true when written, and it is
+    kept so the discharge has something to point at. Basis: the
+    PROMPT 141 re-probe, 11 / 11.
     **What this discharge does not license:** it clears item 27 Part
     B's *technical* blocker and nothing else — see item 27. Original
     text follows. Two pattern defects,
