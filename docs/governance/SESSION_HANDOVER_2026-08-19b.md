@@ -89,16 +89,23 @@ still open, and (iii) the ask tier is guard-proven-only, all stand and are
 **sufficient on their own**. Needs a fresh chair ruling; the discharge of
 item 42 does not license it.
 
-**(b) DEC-0018 — numbering collision, then ruling. CHAIR-SUPPLIED, AND
-UNVERIFIED IN-REPO — read this caveat before acting on it.** The chair
-records that a delegation model and a dashboard both claim DEC-0018, with
-"Footnote F1 reduced form" on the table for the ruling. **No repository
-evidence supports or contradicts this**: the manifest regenerated at this
-close reads `DEC: highest 0017 → next 0018`, unconsumed, and a repo search
-finds no artefact claiming 0018 at all. It is carried verbatim as supplied
-rather than dropped or elaborated. **The successor should establish the two
-claimants before allocating 0018** — the collision, if real, lives outside
-this repository, which is itself the item 34 M2 problem.
+**(b) The next DEC number — numbering collision, then ruling.
+CHAIR-SUPPLIED, AND UNVERIFIED IN-REPO — read this caveat before acting on
+it.** The chair records that a delegation model and a dashboard both claim
+**next 0018**, with "Footnote F1 reduced form" on the table for the ruling.
+**No repository evidence supports or contradicts this**: the manifest
+regenerated at this close reads `DEC: highest 0017 → next 0018`, unconsumed,
+and a repo search finds no artefact claiming it at all. It is carried as
+supplied rather than dropped or elaborated. **The successor should establish
+the two claimants before allocating the number** — the collision, if real,
+lives outside this repository, which is itself the item 34 M2 problem.
+
+*Citation form is deliberate here and is not a stylistic choice.* The number
+is written **"next 0018"** throughout rather than in bare `DEC-NNNN` form,
+because `scripts/repo_manifest.py` cannot distinguish a bare citation from a
+claim that the ledger entry exists, and reports a divergence when it finds
+one above the `DECISIONS.md` high-water mark. This paragraph originally used
+the bare form and did exactly that — see section 6.
 
 **(c) Item 36 — next session's build-first spine.** Runner Rev C conformance:
 six unhonoured fields plus the seventh, the load-time `top_k` ≤
@@ -170,6 +177,23 @@ section 5 — which is dated and is not edited.
 - **PROMPT 143 arrived truncated** mid-sentence and was completed in a second
   delivery. Recorded because the transmission-truncation pattern already has
   precedent at queue item 33.
+- **A bare unconsumed register number was cited, and the manifest caught it —
+  post-merge, in the same act that verified the close.** Section 4(b) of this
+  handover originally wrote the next DEC number in bare `DEC-NNNN` form. The
+  regeneration at the close verification then reported **1 divergence** where
+  every prior run this session reported 0: *"DEC — cited but above the
+  DECISIONS.md high-water mark. Ledger entry missing."* The rule is already
+  in `CLAUDE.md` under "Conventions that will bite you", established by the
+  PR #85 correction note, and it bit anyway. Corrected at PR #146, the number
+  now written **"next 0018"** throughout. **Two things worth keeping.** First,
+  the failure is the one shape this repository most reliably produces — a
+  written convention correctly stated and not applied at the moment of
+  writing. Second, and against the run of the register: **the control worked.**
+  The divergence count moved 0 → 1 the moment the fault landed, the
+  post-merge regeneration is what surfaced it, and it was found by an
+  instrument rather than by a reader. Had the close ended at the merge without
+  that regeneration, the next `/session-open` would have stopped on a
+  divergence this session created and left no note of.
 
 ## 7. VERIFICATION BATTERY
 
@@ -187,7 +211,7 @@ section 5 — which is dated and is not edited.
 ## 8. OPEN VERIFICATIONS FOR THE SUCCESSOR
 
 1. **WS-E 75 is narrowed, not discharged.** The human-surfacing link is open.
-2. **DEC-0018's claimants are unverified in-repo** — section 4(b).
+2. **The next DEC number's claimants are unverified in-repo** — section 4(b).
 3. **Item 40 status unknown this session** — no full-suite run.
 4. **Item 47 is recorded, not fixed** — `/session-open` step 5 still has one
    sentence for two outcomes and an unstated dev-stack precondition.
