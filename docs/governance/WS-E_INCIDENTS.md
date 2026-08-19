@@ -1065,6 +1065,59 @@ regardless of surrounding prose).*
     instance was a compound command in which the true variable was not
     isolated. **NOT FIXED HERE.** Fix spec at
     `docs/governance/FINDINGS_2026-08-17_guard-bypass-ADDENDUM_fix-spec.md`.
+
+    ### DISCHARGE NOTE 2026-08-19
+
+    **Appended, not patched.** The entry above stands unaltered and is
+    the record of what was observed on 2026-08-17. This note exists
+    because the entry ends on **"NOT FIXED HERE"** and carried no
+    successor, so a reader of this register alone would conclude the
+    defect is live. **It is not.**
+
+    **(a) DISCHARGED by the F2 fix at PR #143, 2026-08-19** — the fix
+    that stopped treating `2>&1` as a write construct, distinguishing a
+    descriptor duplication from a file redirection. This entry was
+    observed 2026-08-17, before that fix existed.
+
+    **(b) EVIDENCE — the entry's own probes, re-run.** `ARCA-R-0152`
+    part A re-ran all four commands recorded above against the current
+    guard. The three controls still execute, and **the fourth — this
+    entry's only refusal — now EXECUTES.** That is an independent
+    confirmation of F2 from outside the item 42 probe set that
+    originally certified it: a different route, a different purpose, the
+    same result, which is stronger than a repetition of the original
+    would have been.
+
+    **(c) METHOD FOOTNOTE, recorded so this register is honest about its
+    own rigour.** The heading above says "four commands, one variable".
+    **It is two.** The fourth command differs from the first by adding
+    the descriptor duplication AND a pipe, so the attribution to `2>&1`
+    was not isolated by the evidence offered for it — which is the very
+    error the Family paragraph above names as the reason the FIRST
+    diagnosis was wrong. The attribution was nonetheless **correct**:
+    `ARCA-R-0152` separated the two tokens under the current guard, and
+    F2 targeting `2>&1` demonstrably fixed the behaviour. Correct, but
+    under-isolated at the time; the rigour arrived later, from the fix
+    working rather than from the probe design.
+
+    **(d) RELATIONSHIP TO ITEM 76 — LABELLED INFERENCE, NOT A PROBE
+    RESULT.** The two are **not one live mechanism**: item 76's trigger
+    fires today and this one's does not, and the crux probe designed to
+    unify them PASSED. What is *inferred*, and is offered as inference
+    only, is that they were **one rule whose token set F2 narrowed** —
+    that before the fix the write-detection read the `>` character
+    wherever it appeared, including inside `2>&1`, and F2 removed that
+    token while leaving genuine write redirection in. Three legs support
+    it: F2's fix spec names this exact behaviour; the fourth probe no
+    longer refuses; and append denies while descriptor duplication
+    passes, which is precisely the distinction F2 specified. **The
+    pre-fix guard cannot be probed from any present vantage, so this
+    cannot be raised above inference by any future run against the
+    current guard.** It must not be cited as an established behaviour.
+
+    Cross-reference: `ARCA-R-0152` and PR #143. Item 76 carries the
+    reciprocal reference in its own amendment block.
+
 74. **The branch-deletion ask does not match the long form
     `git branch --delete`, so the plain long form passes ungated
     (2026-08-18). DISCHARGED 2026-08-19.**
@@ -1316,6 +1369,65 @@ regardless of surrounding prose).*
     the entry 3 correction. Observed during the run that produced PR
     #150, merge commit `51c6454`; second instance observed under PROMPT
     150 itself. Registered under PROMPT 150.
+
+    ### AMENDMENT 2026-08-19 — probe-established characterisation
+
+    **Appended, not patched.** The entry above stands unaltered; this
+    block records what the controlled probe sets established after it
+    was written. When the two differ, this block governs on trigger
+    behaviour and the entry above remains the record of what was
+    observed at the time. Source: `ARCA-R-0151` (seven probes) and
+    `ARCA-R-0152` (nine probes), the probe set the entry itself named
+    as owed.
+
+    **(a) TRIGGER — a conjunction, and neither half suffices.** A
+    protected path string appearing anywhere in the command text, AND a
+    write-redirection construct, both in a shell-tool command.
+    Redirection alone does not fire it; the path string alone does not
+    fire it; together they do. **One protected string suffices** — a
+    single-string probe denied.
+
+    **(b) FAMILY BOUNDARY, mapped rather than assumed.** Tokens that
+    TRIGGER: `>`, `>>` (append — newly established, the entry above
+    left append untested) and the heredoc form. Tokens that DO NOT
+    trigger: descriptor duplication `2>&1`, and pipes. The boundary is
+    write-redirection, and it looks deliberate rather than accidental,
+    being what the F2 fix asked for.
+
+    **(c) THE DESTINATION IS NEVER CONSULTED — now isolated rather than
+    inferred.** Every denied probe wrote outside the repository
+    entirely or had no write target at all. Not one had a protected
+    destination. This was the entry's central claim and it holds.
+
+    **(d) INSTRUMENT ASYMMETRY, and it is the sharpest single result.**
+    The file-write instrument is evaluated by its DECLARED TARGET PATH;
+    shell commands are evaluated by a TEXT SCAN of the command.
+    Identical content — the same two protected path strings — passes
+    through the file tool and is denied through the shell. **Effective
+    coverage therefore differs by INSTRUMENT rather than by ACT**, which
+    is both why the resolution recorded above works and a fact worth
+    knowing before anyone reasons about what this deny does or does not
+    cover.
+
+    **(e) REFINEMENT of this entry's own wording, not a contradiction of
+    it.** The entry calls this "a third trigger in the same false-RED
+    family". On the probe evidence that is stronger than warranted: the
+    better reading is the **same rule as item 73, with the
+    descriptor-duplication token removed by the F2 fix**. "Same
+    false-RED family" stands. "Third trigger" does not, and was a
+    reasonable reading when no probe set existed.
+
+    **(f) CAVEAT THAT MUST TRAVEL WITH ANY CITATION OF THIS BLOCK.**
+    **Every denial ever observed used a SETTINGS path** — the settings
+    file or the local settings file. **No deny has been observed with a
+    hooks, skills or agents string.** The refusal text names all four
+    families, which makes the generalisation tempting; only the settings
+    family is evidenced, and this block claims nothing about the other
+    three.
+
+    Still OPEN. The characterisation does not fix anything, and the
+    candidate fix remains a hooks-directory change travelling the
+    operator-installs route.
 
 ## Footnotes
 

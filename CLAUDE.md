@@ -1743,6 +1743,25 @@ this section is a working pointer, not the record.
     WS-E 64-shaped coverage gap, recorded before it is relied upon.
     Detail: `docs/governance/DEC-0018_A6_CORRECTION_2026-08-19.md`
     sections 3(d) and 3(e).
+    **A THIRD COVERAGE FACT, ADDED 2026-08-19, and it points the other
+    way — a constraint that is not a control.** The auto-mode
+    classifier blocked a **read-only** command mid-run, returning
+    "Blocked by classifier" rather than any governance-guard text. It
+    is **harness-level and NOT a governed control**: nothing in this
+    repository configures it, no ruling establishes it, and no probe of
+    the guard evidences anything about it. It is recorded here rather
+    than in the incident register **by chair ruling**, on the executor's
+    own recommendation — a register of governance incidents would
+    misfile it and, worse, would imply the project governs something it
+    does not. **Why it belongs in this item specifically:** it stalls an
+    unattended run exactly as the queue-cycle record's F-Q1 describes
+    for the poll leg, and it does so on a command that was reading, not
+    writing. So the unattended model faces two opposite failure shapes —
+    a guard that is not invoked on one route (above), and a constraint
+    outside the guard that halts a benign act on another. Neither is
+    reachable by the envelope mechanism, since an envelope resolves
+    ask-tier guard calls and this is not one. Detail:
+    `ARCA-R-0150` section 6 as ratified at PROMPT 153.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
