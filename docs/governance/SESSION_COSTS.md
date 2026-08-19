@@ -40,6 +40,7 @@ Cost-per-arc telemetry. Two downstream consumers:
 | 2026-08-17 | NOT SUPPLIED | $88.05 | 1h 16m 41s | +4804/-56 | 5 — #135, #136, #137, #138, #139 (DERIVED) | WS-E 72, WS-E 73 (DERIVED) | claude-opus-5 | NOT SUPPLIED | ~$17.61/PR (DERIVED) | cost figures: DERIVED BY SUBTRACTION from the cumulative `/cost` readout carried at `docs/governance/SESSION_HANDOVER_2026-08-18.md` section 9 — method stated below. PRs and registers: DERIVED |
 | 2026-08-18 | NOT SUPPLIED | $52.14 | 1h 3m 12s | +1204/-31 | 2 — #140, #141 (DERIVED) | WS-E 74 (DERIVED) | NOT SUPPLIED | NOT SUPPLIED | ~$26.07/PR (DERIVED) | cost figures: operator `/cost` readout, basis **DIRECT** — single-session, reset proven by sign check against the 2026-08-17 cumulative anchor; method below. PRs and registers: DERIVED |
 | 2026-08-19 | A-2026-08-19-01 "Guard integrity close-out" | $18.20 | 27m 50s | +1432/-15 | 3 — #142, #143, #144 (DERIVED) | WS-E 75 (DERIVED) | claude-opus-5 | wall 1h 6m 18s | ~$6.07/PR (DERIVED) | cost figures: operator `/cost` readout at the close stop, basis **DIRECT** — two sign checks, method below. PRs and registers: DERIVED |
+| 2026-08-19 | A-2026-08-19-02 + A-2026-08-19-03 (COMBINED — see notes) | $30.75 | 43m 8s | +2773/-13 | 5 — #145, #146, #147, #148, #149 (DERIVED) | DEC-0018 (DERIVED) | claude-opus-5 | wall 3h 48m 5s | ~$6.15/PR (DERIVED) | cost figures: operator `/cost` readout at CC session close, basis **DIRECT** by correspondence — the sign check is INAPPLICABLE here, method below. PRs and registers: DERIVED |
 
 ### Notes on the 2026-08-13 row
 
@@ -287,6 +288,83 @@ against ~$10.53, ~$17.61 and ~$26.07 above it. Recorded as an observation and
 DERIVED PR count, the arcs differ in kind, and item 34's consolidation cost-cap
 discipline is *placeholder until measured*. A number here is an observation,
 never a bound.
+
+### Notes on the second 2026-08-19 row
+
+**Two rows now carry the same date, and that is correct rather than a
+duplicate.** They are two distinct CC sessions on one calendar day. The row
+above covers arc `A-2026-08-19-01`; this row covers the second session, prompts
+144 through 148 plus its close ceremony. The register is labelled by session,
+as every note above states.
+
+**THE SIGN CHECK IS INAPPLICABLE HERE, and saying so is the point of this
+note.** The method adopted at the 2026-08-18 row proves a reset by reading the
+figure against the previous cumulative anchor. It works only when the new figure
+is **lower**. Here $30.75 is **higher** than the $18.20 anchor, so the check
+cannot discriminate: a counter that reset would read $30.75 for this session,
+and a counter that did not would also read $30.75 having accumulated $18.20 plus
+$12.55. **Both hypotheses survive the sign check**, so it is recorded as
+inapplicable rather than stretched into a pass. A method that only works in one
+direction should be said to have failed to apply, not quietly reported as green.
+
+**Correspondence is the method actually used, and it is stated so a reader can
+reject it.** Two independent facts point the figure at this session rather than
+at a cumulative total:
+
+- **Wall time.** 3h 48m 5s matches this session's own span. The prior session's
+  wall time was 1h 6m 18s, and a cumulative counter would have to exceed their
+  sum.
+- **Line delta.** The readout's +2773/−13 matches the work merged under arcs 02
+  and 03, and does not match the first session's. **Corroborated at authoring
+  against the tree rather than taken on the readout's word:** the span from the
+  `#144` merge to the `#149` merge is **+2448/−7**, while the first session's
+  span is **+616/−13**. The readout is the right order of magnitude for the
+  former and nowhere near the latter. The residual gap between 2773 and 2448 is
+  expected and is not a discrepancy — `/cost` counts lines authored, including
+  lines subsequently revised or discarded, whereas `git diff` reports net
+  surviving change. The two instruments measure different things and are used
+  here only for correspondence of magnitude.
+
+**The residual limit, stated because correspondence is weaker than a sign
+check.** Correspondence establishes which session the figure describes; it does
+not exclude a small cumulative component with the same order of magnitude. This
+row is therefore DIRECT on the same footing as the 2026-08-18 row — a figure
+that is probably exact — and not on the stronger footing of the row above it,
+which had two bracketing readouts. **The cheap corrective is already known:**
+the 2026-08-19-01 note records that an interim readout plus a close readout
+brackets a session and removes exactly this ambiguity. One was not taken here.
+
+**ATTRIBUTION IS JOINT TO ARCS 02 AND 03, AND THE COMBINED FIGURE IS NOT
+SPLIT.** A single counter ran across both arcs, and nothing in the readout
+separates them. Inventing a split — by PR count, by line delta, by elapsed
+time — would manufacture two precise-looking figures from one measurement, which
+is the fabrication this register exists to prevent. The arc register's two
+pending cells both cite this one row and both say so.
+
+**Session column carries two identifiers**, the second time that column has been
+filled at all. Note again that arc identifiers now have a register home,
+`docs/governance/ARC_REGISTER.md`, closing half of queue item 41; the other half,
+a home for versioned code-series artefacts, remains open.
+
+**Two columns are DERIVED.** **PRs merged**: `#145` through `#149`, read from
+merge history — `3049449`, `c1b50a8`, `012fb33`, `896ac73`, `4c3d809`. The
+boundary against the first session is **weaker than any boundary recorded
+above** and is flagged rather than smoothed over: `#144` merged at 14:27:38 and
+`#145` at 14:40:38, a gap of only **13 minutes**, where prior boundaries rested
+on gaps of hours. The boundary here rests instead on the two sessions reporting
+separate readouts and on the coordinator's own prompt-range statement, not on
+the gap. **Register numbers consumed**: DEC-0018, and nothing else. The manifest
+regenerated at the 2026-08-19 boot reads DEC next 0019, against the first
+session's close at DEC next 0018; ADR, CL and WS-E are unchanged at next 0011,
+31 and 76. **Five merged pull requests against one register number** — the same
+economy the 2026-08-13, 2026-08-17 and 2026-08-19-01 notes all record, now at
+its fourth consecutive observation.
+
+**Cost per merged PR is ~$6.15**, marked DERIVED as arithmetic over two cells of
+this row. It sits alongside the ~$6.07 above it. Recorded as an observation and
+**not** as a trend: two adjacent low figures are two observations, the PR counts
+are DERIVED on both, and item 34's cost-cap discipline remains *placeholder
+until measured*.
 
 ## A convention this register cannot yet follow
 
