@@ -1041,6 +1041,28 @@ this section is a working pointer, not the record.
     outbound rather than inbound. Detail:
     `docs/governance/FOLD_IN_2026-08-18_prompts-125-126-and-guard-install.md`
     section 5.
+    **M2 instance CLOSED 2026-08-19 — the DEC-0018 source documents.**
+    DEC-0018 adopted the 17 August delegation/envelope candidate plus
+    Riders R1 and R2 "in full form" while all three existed only in
+    coordinator chat and Gmail transport, so the register cited
+    components — A1 through A6 — that no reader could read in their own
+    words. That was raised at the DEC-0018 write as the **second**
+    recorded instance of this gap, the first being the 2026-08-10
+    rulings record. **Discharged:** all three are now in-tree at
+    `docs/governance/DEC-0018_CANDIDATE_2026-08-17.md`,
+    `docs/governance/DEC-0018_RIDER_R1_2026-08-19.md` and
+    `docs/governance/DEC-0018_RIDER_R2_2026-08-19.md`, transcribed
+    verbatim under provenance headers that name the register as
+    authority where the two disagree. **What this closes is one
+    instance, not M2.** M2 proper is a mechanism — session records
+    committed per session so the deliberative trail stops depending on
+    anyone remembering to transcribe it — and this discharge is exactly
+    the manual act M2 exists to make unnecessary. It took a chair
+    instruction naming three drafts by subject; nothing would have
+    caught the omission on its own. Recorded as evidence for M2's
+    priority rather than as progress against it. Detail:
+    `DECISIONS.md` DEC-0018 and
+    `docs/governance/ARC_RECORD_2026-08-19_dec-0018-fold-in-and-queue-commissioning.md`.
     **M3 — Server-side enforcement.** Client-side guards under
     `.claude/` bind only the executor's tool calls; **any other git client
     bypasses them entirely.** Enable GitHub branch protection on `main`:
@@ -1573,6 +1595,25 @@ this section is a working pointer, not the record.
     tools — see item 49 before treating that as comfort. Detail:
     `DECISIONS.md` DEC-0018 and
     `docs/governance/DEC-0018_A6_CORRECTION_2026-08-19.md` section 3(c).
+    **SOURCE TEXT NOW IN-TREE AND REVIEWABLE, 2026-08-19.** The brief no
+    longer has to work from the ruling's summary of its inputs. **R1 A1**
+    (the default in-envelope toolset, six clauses) and **R1 A2** (ask-tier
+    resolution as new §4.7, including the TW-2 tripwire) are at
+    `docs/governance/DEC-0018_RIDER_R1_2026-08-19.md`; **R2 A3** (the
+    Gmail queue in the default toolset, namespace-scoped) is at
+    `docs/governance/DEC-0018_RIDER_R2_2026-08-19.md`. **A2 is the
+    brief's actual specification** — it names the log row's fields
+    (action, tier, envelope ID, timestamp, `resolution=ENVELOPE-ALLOW`),
+    makes ask-tier log review a mandatory element of every stop-point
+    status echo, and resolves ambiguity conservative at A2.1(d). Two
+    warnings carry with it. **First, A2 was drafted against the struck
+    settings-side route**, so its mechanism is adopted while its
+    implementation route is not — read it beside section 3(c) of the
+    correction file, never alone. **Second, A2.2 claims it "directly
+    discharges the observability concern in WS-E 75 for the in-envelope
+    case", and that claim needs the corrected mechanism to be true at
+    all** — under the struck route the guard would have been pre-empted
+    and no row written. WS-E 75's general limit is untouched regardless.
 49. **Render-route bypass carried as a NAMED STANDING RISK of the
     unattended model, and the disambiguation probe is owed — NEW
     2026-08-19, OPEN.** Recorded at

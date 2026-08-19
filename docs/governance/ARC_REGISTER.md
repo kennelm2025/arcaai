@@ -36,6 +36,7 @@ clock.
 | Arc | Name | Lane | OPEN (UTC) | CLOSE (UTC) | PRs | Cost | Basis |
 |---|---|---|---|---|---|---|---|
 | A-2026-08-19-01 | Guard integrity close-out | governance | 2026-08-19T12:44:41Z | 2026-08-19T13:43:56Z | #142–#146 | $18.20 | **RECONSTRUCTED** — see notes |
+| A-2026-08-19-02 | DEC-0018 fold-in and queue commissioning | governance | 2026-08-19T16:19:15Z | *(open)* | #147, and this PR | *(pending)* | OPEN **RECONSTRUCTED** — see notes |
 
 ### Notes on A-2026-08-19-01
 
@@ -92,6 +93,55 @@ was merged or materially advanced. The narrow *directly-blocks* exception was
 available and **was not claimed**. Full ruling at
 `docs/governance/ARC_RECORD_2026-08-19_guard-integrity-close-out.md` section 3
 and `CLAUDE.md` queue item 46.
+
+### Notes on A-2026-08-19-02
+
+**This row is written while the arc is OPEN**, which is a first for this
+register and is the shape A5.1 intends: the identifier is assigned at open,
+not at close, and the CLOSE cell stays empty until there is something true to
+put in it. An empty CLOSE here means *not yet closed*, never *not recorded*.
+
+**OPEN is RECONSTRUCTED, and it is the fold-in's start rather than the arc's
+earliest act.** The value is the release time of `ARCA-P-0146` — the draft's
+last-modified stamp, `2026-08-19T16:19:15Z`, which is when the chair's rename
+to `[RELEASED]` landed. Per A4.2 the draft date is corroboration and the body
+`TS:` line is the timestamp of record for *authoring*; for *release* the draft
+date is the better witness, because the rename is what shifts it.
+
+**The arc's own acts begin earlier, and the register says so rather than
+smoothing it.** This arc covers the `ARCA-P-0144` round trip, which is
+evidenced from `2026-08-19T15:44:42Z` (the 0144 draft) and
+`2026-08-19T15:53:25Z` (the `ARCA-R-0144` reply). Both precede the recorded
+OPEN by roughly half an hour. The OPEN value is recorded as specified rather
+than adjusted to the earliest act, and the discrepancy is stated here so a
+reader reconciling this row against the arc record finds the answer instead of
+the puzzle.
+
+**Named after its acts had begun — second consecutive instance.** A5.1 says
+arc IDs are assigned at OPEN. Both rows in this register were in fact named
+retrospectively: `A-2026-08-19-01` after both its PRs merged, and this one
+after the round trip and after PR #147. **Two in two is worth flagging as a
+practice gap rather than a coincidence** — the convention is sound and has not
+yet been exercised as written.
+
+**Cost is PENDING, and the pending-ness is itself the record.** The figure
+will cover the combined round-trip and fold-in CC session and is supplied at
+that session's close. The standing method applies: a counter reset is proven
+by **sign check against the previous cumulative anchor**, never by recollection
+of whether a terminal was restarted. The previous anchor is the 2026-08-19 row
+at `docs/governance/SESSION_COSTS.md`, $18.20. Note that figure belongs to the
+*coordinator* session and this arc's executor cost is separate and still owed —
+the outstanding item the DEC-0018 ruling already named.
+
+**DEC-0017 disposition: DISPLACEMENT RULED, not an exception.** The 2026-08-19
+close bound the next session build-first with item 36 as spine; the chair's
+Q-R3 amendment of the same evening displaced that binding **for this arc
+only**. Ruling verbatim, and the binding it leaves in place, at
+`docs/governance/ARC_RECORD_2026-08-19_dec-0018-fold-in-and-queue-commissioning.md`.
+This is a different disposition from row 01's, which recorded an exception
+against a rule left tight; here the earlier binding is displaced by a later
+ruling, and the build-first obligation moves to the session after this one
+rather than being waived.
 
 No control mapping line is carried, for the reason
 `docs/governance/SESSION_COSTS.md` states: queue item 34 M11(d) requires
