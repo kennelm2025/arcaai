@@ -1242,7 +1242,43 @@ this section is a working pointer, not the record.
     for taking it before scenario authoring rather than after. Detail:
     `docs/governance/COMMISSIONING_SESSION_RECORD_2026-08-16_d22a-runner-spike-2.md`
     §12 and `docs/governance/SESSION_HANDOVER_2026-08-17.md` §5.
-36. **Runner Rev C conformance — six unhonoured fields. NEW
+36. **Runner Rev C conformance — RUNNER-SIDE ELEMENTS IMPLEMENTED
+    2026-08-19 (arc A-2026-08-19-03). RESIDUE OPEN; NOT DISCHARGED.**
+    All seven elements are implemented in `arcaai/harness/runner.py`
+    with per-element tests at
+    `tests/harness/test_runner_revc_conformance.py`, each citing its
+    Rev C clause: `evaluator_version` (§6.8.1),
+    `environment_config_sha256` (§8.1 criterion 7),
+    `material_parameter_list_sha256` (§9.5 element 3), `confound:
+    single_chunk` (§12.3), `session_status` with a real halt path
+    (§8.3), `invalidation_status` (§9.8), and the load-time
+    `top_k` versus `top_k_absolute_cap` comparison (§5.4/§5.5).
+    **Three pieces of residue, and the item stays open on them.**
+    (a) **The environment identity is HONEST BUT PARTIAL.** The
+    ChromaStore adapter exposes the embedding model and distance space
+    and does not expose the HNSW construction, M or search-ef
+    parameters, so those read `UNKNOWN` on every run. UNKNOWN is
+    recorded rather than defaulted — a default presented as a reading
+    would make two genuinely different environments hash identically —
+    and the result names its unknown parameters explicitly so a partial
+    identity cannot read as a complete one. Widening means exposing the
+    parameters on the adapter, a change under `arcaai/platform/` that
+    was outside this arc's writable scope.
+    (b) **Only the runner halves landed.** §8.1 criterion 7 also
+    obliges `scripts/d22a_preflight.py` to ASSERT the environment hash,
+    and §9.8 obliges gate-evaluation and pre-flight tooling to FILTER on
+    `invalidation_status`; the D2.5 ledger itself does not exist. The
+    runner now emits what those instruments will consume. Emission is
+    not assertion, and this item is not discharged by it.
+    (c) **The material-parameter list is authored here at v0.1 against
+    §9.5 and has NOT been diffed against the spike's own list v0.1**,
+    which sits in custody outside the tree. If they differ, the spike's
+    is the earlier statement and the difference is a finding.
+    Also owed: `invalidation_status` currently emits `none_recorded`
+    with an adjacent note, because the controlled vocabulary is D2.5's
+    to rule and inventing a token would be worse than naming the gap.
+    Original text follows.
+    **Runner Rev C conformance — six unhonoured fields. NEW
     2026-08-17, OPEN.** Confirmed ABSENT from the emitted result
     artefact by reading its keys, not by reading the code alone:
     **`evaluator_version`** (§6.8.1, the fourth identity leg — the
@@ -1339,7 +1375,24 @@ this section is a working pointer, not the record.
     is NOT consumed by this queue entry** — raising it is a governed act
     and a separate one. Related: item 25's false-red in
     `check_docs.py`, and the item 8 check-method family.
-40. **Pre-existing pytest failure blocks full-suite green as evidence
+40. **STILL FIRING as of 2026-08-19, re-observed but NOT re-confirmed
+    against pristine `main` this session.** The failure was run again
+    on the arc A-2026-08-19-03 branch and fails identically:
+    `api/tests/test_api_contract.py::test_route_is_wired_to_contract_models`,
+    1 failed of 5. **Precision matters here and the distinction is
+    kept:** it was CONFIRMED pre-existing on 2026-08-17 by running it at
+    pristine `main` in a throwaway worktree; today it was observed
+    firing on a branch that touches neither `api/` nor its
+    dependencies, which is strong but not the same evidence. Recorded
+    as still-firing rather than re-confirmed, because claiming the
+    stronger word without re-running the stronger test is exactly the
+    check-method slippage item 8 tracks. **Consequence unchanged:
+    "full suite green" remains unavailable as evidence**, and each
+    session must keep distinguishing this failure from new ones by
+    hand. For the record from this arc: `tests/harness/` 64 passed and
+    `tests/governance/` 188 passed, both green, with the api failure
+    the only red anywhere in the run.
+    **Pre-existing pytest failure blocks full-suite green as evidence
     — NEW 2026-08-17, OPEN.**
     `api/tests/test_api_contract.py::test_route_is_wired_to_contract_models`
     fails with `AttributeError: '_IncludedRouter' object has no

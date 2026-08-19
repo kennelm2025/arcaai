@@ -36,7 +36,8 @@ clock.
 | Arc | Name | Lane | OPEN (UTC) | CLOSE (UTC) | PRs | Cost | Basis |
 |---|---|---|---|---|---|---|---|
 | A-2026-08-19-01 | Guard integrity close-out | governance | 2026-08-19T12:44:41Z | 2026-08-19T13:43:56Z | #142–#146 | $18.20 | **RECONSTRUCTED** — see notes |
-| A-2026-08-19-02 | DEC-0018 fold-in and queue commissioning | governance | 2026-08-19T16:19:15Z | *(open)* | #147, and this PR | *(pending)* | OPEN **RECONSTRUCTED** — see notes |
+| A-2026-08-19-02 | DEC-0018 fold-in and queue commissioning | governance | 2026-08-19T16:19:15Z | 2026-08-19T16:57:12Z | #147, #148 | *(pending)* | OPEN **RECONSTRUCTED**, CLOSE **ACTUAL** — see notes |
+| A-2026-08-19-03 | Runner Rev C conformance | build | 2026-08-19T17:06:20Z | *(open)* | this PR | *(pending)* | OPEN **ACTUAL** — see notes |
 
 ### Notes on A-2026-08-19-01
 
@@ -142,6 +143,39 @@ This is a different disposition from row 01's, which recorded an exception
 against a rule left tight; here the earlier binding is displaced by a later
 ruling, and the build-first obligation moves to the session after this one
 rather than being waived.
+
+**CLOSED 2026-08-19.** CLOSE is `2026-08-19T16:57:12Z`, the `mergedAt` of PR
+#148 read from GitHub — **actual, not reconstructed**, unlike this row's OPEN.
+The row therefore carries one measured endpoint and one derived one, and the
+Basis column says so rather than averaging the two into a single claim. PRs
+resolve to #147 and #148; the "and this PR" placeholder written while the arc
+was open is now the merged number.
+
+**Cost stays PENDING at close, deliberately.** The CC session spans arcs 02 and
+03, so a single `/cost` readout cannot be attributed to either without a split
+rule. The figure is supplied at CC-session close under the standing method —
+sign check against the previous cumulative anchor, never restart recollection —
+and **no figure is invented here**. A pending cost on a closed arc is a
+recorded gap; a guessed one would be a false entry in a register whose whole
+value is that its numbers were measured.
+
+### Notes on A-2026-08-19-03
+
+**OPEN is ACTUAL, and that is the point of this row.** `2026-08-19T17:06:20Z`
+is the release time of `ARCA-P-0148`, read from the draft's own Gmail date at
+fetch. **This breaks the two-in-two late-naming pattern** the row above flagged:
+arcs 01 and 02 were both named after their acts had begun, contrary to A5.1's
+"assigned at arc OPEN". This arc was named at open, by the chair, before any
+work began — so A5.1 is now exercised as written rather than merely stated.
+
+**Lane is BUILD, the first in this register.** Arcs 01 and 02 were both
+governance. This one takes queue item 36, the runner's unhonoured Rev C
+conformance elements, which is the spine DEC-0017 has been pointing at for two
+consecutive sessions. The build-first binding carried at item 46 and again at
+the arc-02 record is **discharged here** rather than carried a third time.
+
+**CLOSE and cost are open at the time of writing**, as they should be for an
+arc recorded at its open.
 
 No control mapping line is carried, for the reason
 `docs/governance/SESSION_COSTS.md` states: queue item 34 M11(d) requires
