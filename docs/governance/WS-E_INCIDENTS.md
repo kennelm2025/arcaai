@@ -1108,6 +1108,44 @@ regardless of surrounding prose).*
     the refusal strings were ruled invariant across that fix for the
     same reason. **NOT FIXED HERE.** Detail:
     `docs/governance/FOLD_IN_2026-08-18_prompts-125-126-and-guard-install.md`.
+75. **ASK-tier observability gap: no vantage point both triggers and
+    observes a live ask (2026-08-18).**
+
+    **The gap.** ASK-class guard actions fire inside the CC harness,
+    where the executor cannot see the surfaced prompt, and do not fire
+    at the operator's unhooked terminal, where a human could see it.
+    The two conditions are mutually exclusive by construction — the
+    vantage point that triggers the ask cannot observe it, and the
+    vantage point that could observe it does not trigger it. **No
+    vantage point does both.**
+
+    **Consequence.** The ASK tier has weaker verifiability than the
+    DENY tier, and the asymmetry is structural rather than a gap in
+    the probe set that a better probe would close. Guard-side emission
+    is provable by composition: classification and response class are
+    established from the module's own decision path. **Human surfacing
+    is not provable by any probe.** A deny returns its refusal text
+    into the transcript and so evidences itself; an ask returns
+    nothing the executor can read, and a bypassing permission mode
+    auto-approves it without surfacing it at all — which is the same
+    ground on which the never-silent set was upgraded from ask to deny
+    at item 69.
+
+    **Reach.** This bears on every future ASK-class rule, not only on
+    the rows that raised it. Any control whose enforcement is an ask
+    inherits the limit, so **an ask may never be cited as evidence
+    that a human was consulted** — only that the guard classified the
+    call as one a human should see.
+
+    **Disposition.** Routed to `CLAUDE.md` queue item 34 and its
+    M-family for systematic treatment. **NOT FIXED HERE**, and no fix
+    is implied: the gap is a property of where the two vantage points
+    sit, so it is closed by an arrangement that gives one of them the
+    other's view, not by a pattern change.
+
+    Raised 2026-08-18 (session clock), written 2026-08-19. Origin: the
+    item 42 re-probe, PROMPT 131 — rows 4 and 5, which closed by
+    composition rather than by live observation.
 
 ## Footnotes
 

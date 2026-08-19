@@ -666,7 +666,22 @@ this section is a working pointer, not the record.
     unlisted — and that SG-03..06 stay excluded pending the item 9
     scope decision. Detail:
     `docs/governance/PILOT_2026-08-12_corpus-lister-fan-out.md`.
-27. **Permission-tier review — HELD 2026-08-17. NOT DISCHARGED.**
+27. **Permission-tier review — UNBLOCKED-HELD 2026-08-19. NOT
+    DISCHARGED.** Item 42's guard repair discharged 2026-08-19, so
+    Part B's **technical** blocker is cleared and the state moves from
+    blocked-and-held to held. **Part B remains HELD on its own
+    merits**, on four grounds: (i) **its ruling was never made** — no
+    chair ruling has ever adopted the widening, so there is nothing
+    for a cleared blocker to release; (ii) **allow-pre-empts-guard
+    remains open** since the amendment pack, and it is the original
+    blocker rather than a consequence of WS-E 72; (iii) **the ask tier
+    is guard-proven only** — human surfacing is not provable by any
+    probe (**WS-E 75**), and a widening that leans on asks inherits
+    that limit; (iv) **WS-E 74** is an adjacent hole in the same file,
+    unfixed. **Applying Part B requires a fresh chair ruling, and the
+    discharge of item 42 does not license it** — reading it as licence
+    would be the blocker-cleared-therefore-proceed step that the
+    together-in-one-PR condition exists to prevent.
     **Status by component:** the rule-string restatement and the
     `.claude/agents/` narrowing discharged earlier at `678f46a`, the
     latter superseded entirely when all four `.claude/` paths became
@@ -680,8 +695,11 @@ this section is a working pointer, not the record.
     would remove the gate on main rather than widen it off main. The
     probe set then found worse: **WS-E 72**, the guard's git denies can
     fail to match at all. Widening the git write verbs against a deny
-    surface with a known bypass compounds two defects. **Part B unblocks
-    when item 42's guard repair and re-probe list pass**, not before.
+    surface with a known bypass compounds two defects. **That condition
+    is now met** — item 42's guard repair and re-probe list passed and
+    the item discharged 2026-08-19 — **but it was only ever the
+    technical condition, never the whole of the hold**; see the four
+    grounds at the head of this item.
     The item cannot be discharged while its principal component is held;
     saying otherwise would be the overclaim the together-in-one-PR
     condition existed to prevent. Detail:
@@ -1273,8 +1291,38 @@ this section is a working pointer, not the record.
     where M7's traceability matrix needs exactly this: an artefact an
     auditor can start from that lists what exists. Detail: the v0.3
     stop report of 2026-08-17 §5.
-42. **Guard repair for WS-E 72 and 73, plus the re-probe list — NEW
-    2026-08-17, OPEN. BLOCKS item 27 Part B.** Two pattern defects,
+42. **Guard repair for WS-E 72 and 73, plus the re-probe list —
+    DISCHARGED 2026-08-19. CLOSED.** Ruled at PROMPT 133 (2026-08-18
+    session clock); written this prompt, the ruled-versus-written lag
+    being deliberate and recorded rather than drift.
+    **Discharge basis:** the amended re-probe list ran **17 rows, 0
+    bypasses** (PROMPTs 130–132). The **DENY class is proven live
+    12 / 12**, including all four named global-option members —
+    `-c`, `--git-dir`, `--work-tree` and `--no-pager` — so F1 closes
+    the class rather than the single `-C` member the finding happened
+    to prove. **F2 is proven in both directions:** a read carrying a
+    descriptor duplication executes, and a genuine write to a
+    protected path still refuses.
+    **Three caveats ride this discharge and travel with any citation
+    of it.**
+    (a) **ASK rows 4 and 5 closed by COMPOSITION, guard-side only.**
+    Classification and emission are established from the module's own
+    decision path; **human surfacing is not provable by any probe**,
+    and no arrangement of these probes could establish it. Raised as
+    **WS-E 75**.
+    (b) **The 55-character history-rewrite refusal string was checked
+    against the live guard, not against an externalised baseline** —
+    those rows were checked against themselves, which is a weaker
+    method than the rows measured against the fold-in's strings.
+    Baselined this PR at
+    `docs/governance/FOLD_IN_2026-08-18_ADDENDUM_history-rewrite-baseline_2026-08-19.md`.
+    (c) **WS-E 74 remains live and unfixed in the same file** — the
+    long form `git branch --delete` draws no ask, though the
+    force-delete deny above it is sound. An adjacent hole,
+    deliberately outside the repair's locked scope.
+    **What this discharge does not license:** it clears item 27 Part
+    B's *technical* blocker and nothing else — see item 27. Original
+    text follows. Two pattern defects,
     both operator acts at the operator's terminal because the fix is a
     `.claude/hooks/` change carrying an absolute deny. **F1:** anchor
     the deny patterns on the subcommand **anywhere in the argument
