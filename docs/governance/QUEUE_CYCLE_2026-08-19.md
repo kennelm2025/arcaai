@@ -142,6 +142,53 @@ been spent rather than what is expected.
   staged body against its released form, so the chair's release attests to the
   text at release time and to nothing earlier.
 
+## 6. Protocol rulings, ratified by release of `ARCA-P-0148`
+
+Three rulings carried by that item and **ratified by the chair's release of
+it** — the PROMPT 143 pattern, where release is the ratifying act rather than a
+separate ruling document. Reproduced verbatim.
+
+**F-R1 — the PR number is the identifier of record.**
+
+> F-R1 ruled as CC stated it: the PR NUMBER is the identifier of record in
+> queue traffic; URLs are convenience, not record — transport mangles them.
+
+Raised at `ARCA-R-0147` entry 2 after Gmail rewrote the PR link into a
+`google.com/url?q=` wrapper — then rewrote it a second time inside the sentence
+describing the rewriting, producing a nested redirect. The finding
+self-demonstrated in the record that raised it.
+
+**F-R2 — subject state is not meaningful for the R-series.**
+
+> F-R2 ruled: subject state is NOT meaningful for the R-series; the body STATUS
+> line governs, as the two-entry pattern already provides. No terminal rename
+> owed on any R-draft.
+
+This resolves the gap raised at `ARCA-R-0147`: A4.1's vocabulary
+(STAGED | RELEASED | ANSWERED) fits the P/Q/D flow and left an R-item with
+nowhere to go after its PR merged. The answer is that it needs nowhere to go —
+**the body governs, not the subject** — so no state was invented and none is
+owed. An R-draft reading `[STAGED]` after merge is correct, not stale.
+
+**A4.5 — the return leg does not end at PR-open.**
+
+> A4.5 adopted as standing: every arc reaching merged-verified-cleaned-down
+> gets its close-out appended to the same R-draft as entry 2; entry 1 is never
+> overwritten.
+
+Entry 1 records what was true at PR-open; entry 2 what was true after the merge
+was verified from `main`. **Both are kept, because a return leg that overwrites
+its own earlier state cannot evidence the sequence it exists to evidence.**
+First applied at `ARCA-R-0147`, before it was ruled — the practice preceded the
+rule, which is the same shape DEC-0017 records approvingly of itself.
+
+**Ratification-by-release is worth naming as a mechanism.** The chair's rename
+to `[RELEASED]` carries the rulings in the item's own body into force. It is
+economical, and it has a cost a later reader should see: the ruling text and
+the instruction text arrive in one artefact, so a released item is both a
+ruling record and a work order. Where those need to be told apart, this section
+is where the ruling half is separated out and committed.
+
 No control mapping line is carried, for the reason
 `docs/governance/SESSION_COSTS.md` states: queue item 34 M11(d) requires
 per-class mapping content to be defined once in the control framework, and that
