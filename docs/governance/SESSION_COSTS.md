@@ -38,6 +38,7 @@ Cost-per-arc telemetry. Two downstream consumers:
 | 2026-08-15 | NOT SUPPLIED | $41.66 | 54m 57s | +4008/-223 | 3 — #127, #128, #129 (DERIVED) | CL-28 (DERIVED) | NOT SUPPLIED | NOT SUPPLIED | NOT SUPPLIED | cost figures: operator `/cost` readout carried in `docs/governance/SESSION_HANDOVER_2026-08-17.md` §10. PRs and registers: DERIVED, see notes |
 | 2026-08-16 | NOT SUPPLIED | $33.00 | 49m 27s | +2791/-41 | 5 — #130, #131, #132, #133, #134 (DERIVED) | CL-29, CL-30 (DERIVED) | NOT SUPPLIED | NOT SUPPLIED | NOT SUPPLIED | cost figures: operator `/cost` readout carried in `docs/governance/SESSION_HANDOVER_2026-08-17.md` §10. PRs and registers: DERIVED, see notes |
 | 2026-08-17 | NOT SUPPLIED | $88.05 | 1h 16m 41s | +4804/-56 | 5 — #135, #136, #137, #138, #139 (DERIVED) | WS-E 72, WS-E 73 (DERIVED) | claude-opus-5 | NOT SUPPLIED | ~$17.61/PR (DERIVED) | cost figures: DERIVED BY SUBTRACTION from the cumulative `/cost` readout carried at `docs/governance/SESSION_HANDOVER_2026-08-18.md` section 9 — method stated below. PRs and registers: DERIVED |
+| 2026-08-18 | NOT SUPPLIED | $52.14 | 1h 3m 12s | +1204/-31 | 2 — #140, #141 (DERIVED) | WS-E 74 (DERIVED) | NOT SUPPLIED | NOT SUPPLIED | ~$26.07/PR (DERIVED) | cost figures: operator `/cost` readout, basis **DIRECT** — single-session, reset proven by sign check against the 2026-08-17 cumulative anchor; method below. PRs and registers: DERIVED |
 
 ### Notes on the 2026-08-13 row
 
@@ -161,6 +162,77 @@ fixed skew** and should not be reconciled by subtracting a constant; the evidenc
 is recorded at
 `docs/governance/FOLD_IN_2026-08-18_prompts-125-126-and-guard-install.md`
 section 3(b).
+
+### Notes on the 2026-08-18 row
+
+**This row is DIRECT, and the point of the note is how that was established
+rather than asserted.** The 2026-08-17 row above is derived by subtraction
+because its readout was cumulative across two sessions. The obvious move for
+this row was to subtract again — and `docs/governance/SESSION_HANDOVER_2026-08-19.md`
+section 9 says exactly that, directing a subtraction from the 2026-08-17 row if
+the readout arrived later and the terminal had not been restarted. **That route
+is wrong here, and the register's own instrument is what shows it.**
+
+**The sign check.** The 2026-08-17 close readout was **$121.05 cumulative**. A
+cumulative counter cannot read lower than it previously read. This session's
+readout is **$52.14**, which is lower — by $68.91. The counter therefore
+**reset** between the two readouts, and the figure is already a single-session
+one. Had the subtraction of section 9 been performed as directed it would have
+returned **negative** ($52.14 − $88.05 = −$35.91), which is not a cost.
+
+**This is the same instrument the 2026-08-17 notes use, reaching the opposite
+conclusion**, and that is why it is trustworthy rather than convenient: that row
+argues the counter *cannot* also span 2026-08-15 because the subtraction would
+go negative. The identical test applied here says the counter *cannot* span
+2026-08-17. One method, two sessions, two answers, both falsifiable.
+
+**The reset boundary is the CC session, not the terminal — and this half rests
+on operator report, not on the sign check.** The operator reports the terminal
+was **not restarted**. The sign check establishes *that* a reset occurred; it
+cannot by itself establish *where*. Combining the two locates the boundary at
+the CC session. Stated separately because the two legs have different evidential
+weight, and a reader should be able to reject one without losing the other.
+
+**The residual limit, stated because it is real.** If a reset had occurred
+*partway through* the 2026-08-18 session, $52.14 would undercount it and the
+sign check would look identical. Nothing available distinguishes those cases.
+The figure is therefore a **lower bound that is probably exact**, and it is
+recorded as DIRECT rather than EXACT for that reason.
+
+**Method note, adopted from this row forward: a reset is proven by sign check
+against the previous cumulative anchor, never by recollection of whether a
+restart happened.** Restart recollection is precisely the input that produced
+the wrong route in section 9 — it was correct as far as it went (the terminal
+genuinely was not restarted) and still directed a subtraction that would have
+gone negative, because a terminal restart is not the only thing that resets the
+counter. The arithmetic is checkable; the recollection is not.
+
+**Two columns are DERIVED**, on the same footing as the rows above. **PRs
+merged**: #140 (`governance/fold-in-2026-08-18`, merged 14:11:40Z) and #141
+(`governance/session-handover-2026-08-19`, merged 14:52:48Z). The boundary
+against the 2026-08-17 session is evidenced from both sides: #139 merged at
+09:12:32Z, leaving a **4h 59m gap** before #140, and the two sessions report
+separate readouts. **Register numbers consumed**: WS-E 74, raised that session;
+CL was unchanged at highest 30, so five merged PRs across two sessions consumed
+no CL number — the register economy the 2026-08-13 and 2026-08-17 notes both
+record.
+
+**Dominant model is NOT SUPPLIED**, written explicitly rather than carried over
+from the row above. The 2026-08-17 row reads `claude-opus-5`; assuming the same
+here would be deriving a cell from an adjacent row, which this register does not
+do.
+
+**Date basis.** Labelled by *session*, as every row above it. Both PRs merged on
+clock day **2026-08-16**. Per
+`docs/governance/FOLD_IN_2026-08-18_prompts-125-126-and-guard-install.md`
+section 3(b) the label-versus-clock offset is **not a fixed skew** and must not
+be reconciled by subtracting a constant.
+
+**Correction of record.** This row corrects
+`docs/governance/SESSION_HANDOVER_2026-08-19.md` section 9, which recorded the
+cost as NOT SUPPLIED and proposed the subtraction route. The handover is
+hash-pinned and stays byte-frozen; the correction is at
+`docs/governance/CORRECTIONS_cost-basis_2026-08-19.md`.
 
 ## A convention this register cannot yet follow
 
