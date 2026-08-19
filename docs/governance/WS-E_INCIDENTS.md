@@ -1216,6 +1216,107 @@ regardless of surrounding prose).*
     remaining link is the one no probe can reach, which is the whole
     of this item's claim rather than a part of it.
 
+76. **Guard write-deny fires on a command that WRITES ABOUT a protected
+    path rather than TO one (2026-08-19).**
+
+    **What happened.** A shell command was refused with the harness
+    write-deny — the verbatim refusal naming the settings, hooks, skills
+    and agents paths under `.claude/`. **The command wrote to neither.**
+    Its two write targets were a scratchpad file outside the tree and
+    `CLAUDE.md`, and neither is a protected path. What the command did
+    contain was a heredoc body **quoting two protected path strings**,
+    because the text being written was a pair of standing rules *about*
+    those two files.
+
+    **The distinction the guard cannot presently draw: writing ABOUT a
+    protected path is not writing TO one.** The write-detection sees a
+    redirection construct and a protected path string in the same
+    command and refuses. It has no way to ask which of the strings is
+    the destination. Any rule whose subject is the permission system
+    must name the permission system, so this fires precisely when the
+    repository documents its own controls — the case it should be least
+    willing to obstruct.
+
+    **Family: the item 73 false-RED, in a NEW SHAPE.** Item 73 recorded
+    a read-only command refused with the write-deny, and its 2026-08-17
+    correction established the trigger as the **descriptor-duplication
+    construct** rather than the path string — a correction that
+    disconfirmed the original path-string diagnosis on evidence. **No
+    descriptor duplication was present here.** So this is not item 73
+    recurring and not item 73's corrected diagnosis returning; it is a
+    third trigger in the same false-RED family, and the polarity is the
+    same safer-but-obstructive direction.
+
+    **Resolution at the time, and what was deliberately NOT done.** The
+    edit was remade with the file-edit instrument, where the target path
+    is declared plainly and the guard evaluates it by path rather than
+    by scanning command text. That is the correct instrument for the
+    target and it succeeded. **The protected path strings were NOT
+    obfuscated, tokenised or substituted to avoid the match**, and the
+    refusal to do so is recorded as part of the incident rather than as
+    a footnote: hiding a token from a control so that the control passes
+    is defeating the control, not satisfying it. A workaround that
+    changes the instrument is legitimate; one that changes the evidence
+    the instrument reads is not.
+
+    **Status: OPEN.** Refining the guard's write-detection to
+    distinguish redirection targets from quoted content is the obvious
+    candidate fix and is **not attempted here and not in this act's
+    scope**. It is a change under `.claude/hooks/`, which carries an
+    absolute in-session deny, so it travels the operator-installs route
+    that items 42 and 74 used — drafted outside the tree, installed at
+    the operator's terminal, then branch, PR, merge, then re-probed.
+
+    **What this item does NOT establish.** It does not establish the
+    extent of the trigger. One command refused, one variable not
+    isolated — the run needed the edit made, not the guard characterised,
+    so no controlled pair was run to separate *quoted protected path*
+    from *redirection present* from *both*. Item 73's own history is the
+    warning: its first diagnosis survived on a compound command in which
+    the true variable was never isolated, and was wrong. **The
+    characterisation owed here is a controlled probe set**, and until it
+    runs the mechanism above is the best available reading rather than a
+    proven one.
+
+    **Incidental, and worth keeping because the register has few of
+    these:** the refusal is positive evidence the guard was **live and
+    loaded** in that session, returning its own text through the
+    harness. That is the deny-shaped half of the discrimination pairing
+    `CLAUDE.md` requires, and allow-shaped calls in the same run
+    succeeded. It was not run as a probe and is not offered as one.
+
+    **SECOND INSTANCE, OBSERVED WHILE REGISTERING THIS ITEM.** The
+    commit that first attempted to land this entry was itself refused by
+    the same deny. Its message file was being written to the scratchpad,
+    and its body quoted `.claude/` and `.claude/hooks/` — because a
+    commit message describing this incident must name the paths the
+    incident concerns. **The item self-demonstrated in the act of being
+    recorded**, which is the shape F-R1 has in the queue-cycle record,
+    where a finding about transport rewriting links was itself rewritten
+    in the sentence describing the rewriting.
+
+    It is worth more than the irony. It is a **second command shape**,
+    and it narrows the reading above: the first instance wrote an edit
+    script, this one a commit message, and the only property common to
+    both is *redirection construct plus quoted protected path*. Neither
+    involved a protected destination. That does not amount to the
+    controlled probe set still owed — no variable was isolated in either
+    — but two shapes agreeing is better than one shape asserted, and it
+    rules out an explanation peculiar to script-writing.
+
+    **Resolved the same way, and again without obfuscation:** the
+    message file was written with the file-write instrument and the
+    commit made with a message-file reference, which is the house
+    convention anyway. **The path strings in the message were not
+    altered to get past the guard** — a commit message that softened the
+    names of the files it concerns would be a worse record than no
+    commit at all.
+
+    Source of record: `ARCA-R-0149` entry 2, "NEW FINDING" block, and
+    the entry 3 correction. Observed during the run that produced PR
+    #150, merge commit `51c6454`; second instance observed under PROMPT
+    150 itself. Registered under PROMPT 150.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a
