@@ -39,6 +39,7 @@ Cost-per-arc telemetry. Two downstream consumers:
 | 2026-08-16 | NOT SUPPLIED | $33.00 | 49m 27s | +2791/-41 | 5 — #130, #131, #132, #133, #134 (DERIVED) | CL-29, CL-30 (DERIVED) | NOT SUPPLIED | NOT SUPPLIED | NOT SUPPLIED | cost figures: operator `/cost` readout carried in `docs/governance/SESSION_HANDOVER_2026-08-17.md` §10. PRs and registers: DERIVED, see notes |
 | 2026-08-17 | NOT SUPPLIED | $88.05 | 1h 16m 41s | +4804/-56 | 5 — #135, #136, #137, #138, #139 (DERIVED) | WS-E 72, WS-E 73 (DERIVED) | claude-opus-5 | NOT SUPPLIED | ~$17.61/PR (DERIVED) | cost figures: DERIVED BY SUBTRACTION from the cumulative `/cost` readout carried at `docs/governance/SESSION_HANDOVER_2026-08-18.md` section 9 — method stated below. PRs and registers: DERIVED |
 | 2026-08-18 | NOT SUPPLIED | $52.14 | 1h 3m 12s | +1204/-31 | 2 — #140, #141 (DERIVED) | WS-E 74 (DERIVED) | NOT SUPPLIED | NOT SUPPLIED | ~$26.07/PR (DERIVED) | cost figures: operator `/cost` readout, basis **DIRECT** — single-session, reset proven by sign check against the 2026-08-17 cumulative anchor; method below. PRs and registers: DERIVED |
+| 2026-08-19 | A-2026-08-19-01 "Guard integrity close-out" | $18.20 | 27m 50s | +1432/-15 | 3 — #142, #143, #144 (DERIVED) | WS-E 75 (DERIVED) | claude-opus-5 | wall 1h 6m 18s | ~$6.07/PR (DERIVED) | cost figures: operator `/cost` readout at the close stop, basis **DIRECT** — two sign checks, method below. PRs and registers: DERIVED |
 
 ### Notes on the 2026-08-13 row
 
@@ -233,6 +234,59 @@ be reconciled by subtracting a constant.
 cost as NOT SUPPLIED and proposed the subtraction route. The handover is
 hash-pinned and stays byte-frozen; the correction is at
 `docs/governance/CORRECTIONS_cost-basis_2026-08-19.md`.
+
+### Notes on the 2026-08-19 row
+
+**First row with TWO sign checks, and the pair is what makes it DIRECT rather
+than merely asserted.** The corrective adopted at the row above says a reset is
+proven by sign check against the previous cumulative anchor, never by
+recollection of a restart. This row exercises it twice, in opposite directions.
+
+**Check 1 — a reset occurred.** $18.20 is **below** the 2026-08-18 anchor of
+$52.14. A cumulative counter cannot read lower than it previously read, so the
+counter reset between the two readouts and the figure is single-session
+already. Subtraction is not merely unnecessary here; it would return
+**−$33.94**, which is not a cost.
+
+**Check 2 — it is the SAME counter, not a second reset mid-session.** $18.20 is
+**above** this session's own interim readout of **$6.69**. That closes the
+residual limit the 2026-08-18 note had to leave open, where a mid-session reset
+would have been indistinguishable and the figure was recorded as *"a lower
+bound that is probably exact"*. **Here it is not a lower bound.** A reset after
+the interim readout would have put the close figure below $6.69; it is above,
+so the counter ran continuously across the whole session. **Two readouts
+bracketing one session are strictly better evidence than one at its end**, and
+taking an interim readout is cheap — a practice worth keeping.
+
+**Reset boundary is the CC session, second consecutive observation.** The
+2026-08-18 row located the boundary at the CC session rather than the terminal
+by combining a sign check with operator report. This session repeats it.
+**Two observations are a pattern, not yet a rule** — recorded as such, and the
+boundary is still read from evidence each time rather than assumed.
+
+**Session column is FILLED for the first time in this register**, carrying the
+arc identifier `A-2026-08-19-01`. Every row above reads NOT SUPPLIED because no
+arc identifier existed to put in it. Note the identifier's own status: it has
+no register home, which is queue item 41 as widened 2026-08-19.
+
+**Wall time is IN THE CONTEXT COLUMN, not a new column.** 1h 6m 18s, supplied
+directly rather than derived. It sits in the context note for the reason the
+2026-08-15 row gives: adding a column would reshape rows above whose wall time
+is unknown, and reshaping an existing row is what an append-only register
+forbids. API duration 27m 50s is the load figure; wall time is context.
+
+**Two columns are DERIVED.** **PRs merged**: #142 (`f236e6f`), #143
+(`dc06118`), #144 (`3cfaea5`), all three verified post-merge from `main`.
+**Register numbers consumed**: WS-E 75 and nothing else — three merged PRs
+against one register number, the same economy the 2026-08-13 and 2026-08-17
+notes record. DEC, ADR and CL were all unchanged, at next 0018, 0011 and 31.
+
+**Cost per merged PR is the lowest this register has recorded** — ~$6.07
+against ~$10.53, ~$17.61 and ~$26.07 above it. Recorded as an observation and
+**not** as a trend or a target: three of the five rows compute it from a
+DERIVED PR count, the arcs differ in kind, and item 34's consolidation cost-cap
+discipline is *placeholder until measured*. A number here is an observation,
+never a bound.
 
 ## A convention this register cannot yet follow
 

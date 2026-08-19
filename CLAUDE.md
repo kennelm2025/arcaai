@@ -1140,6 +1140,22 @@ this section is a working pointer, not the record.
     the next sessions; **M6 is production-phase**, named early so the
     CL-24 precedent carries its explanation; the rest ride the
     control-framework deliverable.
+    **WS-E 75 ROUTED HERE 2026-08-19, and it is narrowed rather than
+    open-ended.** The ASK-tier observability gap — no vantage point
+    both triggers and observes a live ask — is routed to this item's
+    M-family for systematic treatment. **Narrowed at the WS-E 74
+    discharge to the final human-surfacing link ONLY:** guard-side
+    emission is now evidenced by stdin PreToolUse payload against
+    `main()`, and routing is evidenced by the live DENY rows, so
+    everything upstream of the human eye is established. What remains
+    is that a person sees a surfaced ask, which no probe can reach.
+    **Consequence binding on this item's deliverable: an ask may not
+    be cited as evidence a human was consulted**, so any control the
+    framework names whose enforcement is an ask must state that limit
+    rather than inherit it silently. M3, server-side enforcement, is
+    the natural home — a platform-level control does not depend on a
+    prompt reaching anyone. Detail:
+    `docs/governance/WS-E_INCIDENTS.md` items 74 and 75.
 35. **Scenario spec schema v0.3 — DISCHARGED at PR #136, 2026-08-17.
     CLOSED 2026-08-18.** The schema is in the tree at
     `arcaai/harness/schema/scenario_spec_v0.3.schema.json`, honouring all
@@ -1312,6 +1328,23 @@ this section is a working pointer, not the record.
     where M7's traceability matrix needs exactly this: an artefact an
     auditor can start from that lists what exists. Detail: the v0.3
     stop report of 2026-08-17 §5.
+    **WIDENED 2026-08-19 — the same gap arrives from a second
+    direction, which is what makes it structural rather than a
+    schema-series accident.** Arc identifiers have no register home
+    either. `A-2026-08-19-01` was issued at the 2026-08-19 close and a
+    repo-wide search for the `A-YYYY-MM-DD-NN` shape returns nothing:
+    **arcs have been named but never numbered**, and no arc register
+    exists. Arc namings live inside the session record of record —
+    `SESSION_HANDOVER_*.md` or `COMMISSIONING_SESSION_RECORD_*.md`,
+    under a "Rulings, verbatim" section — which is per-artefact
+    self-description exactly as the schema series is, and for the same
+    reason nothing enumerates the series from outside it. **Two
+    unrelated artefact classes reaching the same dead end is the
+    argument for ruling placement once rather than per class.**
+    Nothing allocates the next arc number today, so a second issuance
+    has no way to know what preceded it. Detail:
+    `docs/governance/ARC_RECORD_2026-08-19_guard-integrity-close-out.md`
+    section 0(b).
 42. **Guard repair for WS-E 72 and 73, plus the re-probe list —
     DISCHARGED 2026-08-19. CLOSED.** Ruled at PROMPT 133 (2026-08-18
     session clock); written this prompt, the ruled-versus-written lag
@@ -1418,6 +1451,47 @@ this section is a working pointer, not the record.
     `docs/governance/D1.1_PANEL_ROUND2_DISPOSITION_2026-08-15.md` R2-4,
     and `docs/governance/D1.1_TEST_PLAN_DRAFT_RevC_2026-08-15.md`
     §5.7(a).
+46. **DEC-0017 disposition for arc A-2026-08-19-01 — RAISED AND
+    RESOLVED SAME DAY, 2026-08-19. CLOSED AT BIRTH.** Recorded rather
+    than omitted, because an item that never appears cannot be audited
+    and the resolution is the substance. **Ruled: EXCEPTION RECORDED,
+    not satisfied.** Chair wording, verbatim: *"Session opened under a
+    pre-ruled first act (PROMPT 133) whose discharge lawfully
+    pre-empted build-first arc selection; the second act discharged the
+    first's own recorded residue. No build artefact was blocked or
+    advanced. The narrow directly-blocks exception is not claimed;
+    DEC-0017's meaning stays tight. Next session opens build-first
+    (item 36 named as the candidate spine)."*
+    **The load-bearing half is the refusal, not the exception.** The
+    narrow *directly-blocks* carve-out was available and was **not
+    claimed** — the guard defects blocked no build artefact, and
+    claiming it would have widened DEC-0017 by precedent for the
+    convenience of one close. An exception recorded against a tight
+    rule costs one queue entry; a rule loosened by a claimed exception
+    costs every session after it. **Binding forward: the next session
+    opens build-first**, item 36 named as the candidate spine. Detail:
+    `docs/governance/ARC_RECORD_2026-08-19_guard-integrity-close-out.md`
+    section 3, and `DECISIONS.md` DEC-0017.
+47. **`/session-open` step 5 conflates UNKNOWN with RED, and carries an
+    unstated precondition — NEW 2026-08-19, OPEN, check-method family
+    (item 8).** The ceremony says of the rehash sweep *"expectation is
+    0 pins requiring correction. Any non-zero result is a
+    stop-and-report."* **Stop-and-report is right for both outcomes and
+    is not what is wrong here.** What is wrong is that one sentence
+    covers two facts with opposite meanings: a sweep that RAN and found
+    dirty pins, and a sweep that COULD NOT RUN. On 2026-08-19 the sweep
+    exited 1 on `psycopg.errors.ConnectionTimeout` against
+    `localhost:5432` — **no pin was checked**, which is not "pins
+    requiring correction" and is not a red. Reporting it as red would
+    have been a false-RED against the corpus; reporting it as green
+    unthinkable. It is UNKNOWN, and the ceremony text has no word for
+    that. **The unstated precondition is the dev stack:** the sweep
+    needs Postgres, `/session-open` has no step that starts or checks
+    it, and `scripts\dev_up.cmd` is not in the boot sequence. Fix has
+    two parts, neither taken here: give step 5 three outcomes in its
+    own text, and either add a stack precheck to the boot or state the
+    precondition so the failure is diagnosable at first read rather
+    than from a traceback. Detail: the 2026-08-19 close record.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session

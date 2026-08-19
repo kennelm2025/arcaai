@@ -101,6 +101,29 @@ residue. **Whether that satisfies DEC-0017 or requires a recorded exception is
 the chair's call, and it is owed at close.** It is written this way so the
 question is put rather than quietly answered.
 
+### RULED AT CLOSE, 2026-08-19 (PROMPT 143) — EXCEPTION RECORDED, NOT SATISFIED
+
+The question above is answered here rather than left standing, and the answer
+is deliberately the less convenient of the two available.
+
+> "Session opened under a pre-ruled first act (PROMPT 133) whose discharge
+> lawfully pre-empted build-first arc selection; the second act discharged the
+> first's own recorded residue. No build artefact was blocked or advanced. The
+> narrow directly-blocks exception is not claimed; DEC-0017's meaning stays
+> tight. Next session opens build-first (item 36 named as the candidate spine)."
+
+**The refusal is the load-bearing half, not the exception.** The
+*directly-blocks* carve-out was available and was declined. Claiming it would
+have cost nothing today and would have widened DEC-0017 by precedent for every
+session after — the exception exists for items that block a merge, and the
+guard defects blocked none. **An exception recorded against a tight rule costs
+one queue entry; a rule loosened by a claimed exception costs the rule.**
+
+**Binding forward:** the next session opens **build-first**, with queue item 36
+named as the candidate spine. Recorded in the queue at item 46, closed at birth
+rather than omitted — an item that never appears cannot be audited, and the
+resolution is the substance worth keeping.
+
 ## 4. Evidence, and the tiers kept apart
 
 The re-probe returned **11 / 11** (PROMPT 141). The two halves of that table
@@ -118,8 +141,10 @@ ask-class claim in both PRs stops short of that line deliberately.
 
 ## 5. Prompt numbers consumed
 
-**134, 135, 136, 137, 138, 139, 140, 141, 142.** Per the interim practice
-adopted at
+**134, 135, 136, 137, 138, 139, 140, 141, 142, 143.** Extended to 143 at the
+close, which is the prompt carrying the three closing rulings — an incomplete
+list would defeat the very convention it is written to satisfy. Per the interim
+practice adopted at
 `docs/governance/FOLD_IN_2026-08-18_prompts-125-126-and-guard-install.md`
 section 5(a), pending queue item 34 M2.
 

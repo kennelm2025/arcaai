@@ -230,3 +230,36 @@ fixed here.*
 - **Standing pre-push step.** `scripts\lint.cmd` clean before every
   push. Adopted 28 Jul after three ruff-red CI rounds; zero CI red
   rounds since.
+- **SO-1 trigger form — AMENDED 2026-08-19 (chair ruling, PROMPT
+  143).** The **bare trigger** is **blessed for SO-1 merge
+  verification specifically**: "merged verify", "merged verify clear"
+  and equivalents are the convention, not a lapse from it, and are no
+  longer flagged as a gap in the output.
+  **The evidence is five for five.** SO-1 has been triggered
+  unnumbered on every consecutive use since it landed — the
+  2026-08-16 instance recorded at
+  `docs/governance/PERMISSION_CLASSES_2026-08-17_partA-applied-widening-held.md`
+  section 5, three more flagged across the 2026-08-18 and 2026-08-19
+  handovers, and again at this session's #143 and #144 verifications.
+  A convention that practice has never once followed is not being
+  enforced; it is being noted. **The battery is identical either
+  way** — the six fixed steps run the same, and no verification has
+  ever differed because of how the trigger was worded.
+  **The line, and it is a line rather than a relaxation: numbered
+  prompts stay MANDATORY for anything that INSTRUCTS. The bare form
+  is permitted only for what RELEASES** — a trigger that starts a
+  fixed, pre-ruled sequence whose every step is already specified.
+  SO-1 qualifies precisely because it decides nothing: the acts, their
+  order and their stop conditions are all fixed in advance, so the
+  trigger carries no content a number would be protecting. Anything
+  that selects, scopes, authorises or varies is an instruction and
+  takes a number.
+  **This supersedes the trigger-form paragraph** of
+  `docs/governance/PERMISSION_CLASSES_2026-08-17_partA-applied-widening-held.md`
+  section 5, which requires `PROMPT <n>: MERGED — VERIFY #<pr>` and
+  treats the unnumbered form as honoured-with-gap-flagged. **That
+  record is dated and is not edited** — corrections to a narrative
+  artefact are recorded beside it — so this entry is the current text
+  and a reader of the older one is directed here. **The six-step
+  sequence itself is unchanged and remains at that section**; only the
+  trigger form moves.
