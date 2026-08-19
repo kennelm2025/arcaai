@@ -685,8 +685,37 @@ this section is a working pointer, not the record.
     unlisted — and that SG-03..06 stay excluded pending the item 9
     scope decision. Detail:
     `docs/governance/PILOT_2026-08-12_corpus-lister-fan-out.md`.
-27. **Permission-tier review — UNBLOCKED-HELD 2026-08-19. NOT
-    DISCHARGED.** Item 42's guard repair discharged 2026-08-19, so
+27. **Permission-tier review — Part B RESOLVED BY DEC-0018, 2026-08-19.
+    CLOSED.** Resolved by **route abandonment, not by widening**, and
+    the distinction is the whole of the closure: no settings widening
+    occurred, and none will under this resolution. The mechanism Part B
+    was held over — a `.claude/settings.json` allow-list widening — is
+    **struck**, because a Tier 1 allow rule pre-empts the guard ask and
+    the guard is the only component positioned to log, so the widening
+    would have bought permission at the exact cost of the observation
+    that made it acceptable. What replaces it is guard-side: ask-tier
+    envelope resolution moves INTO `.claude/hooks/governance_guard.py`
+    as an F5-class amendment, layered with the hook and never
+    alternative to it. **The four grounds of the hold, answered in
+    order.** (i) *Its ruling was never made* — now made; the chair
+    ruled DEC-0018 on 2026-08-19. (ii) *Allow-pre-empts-guard remains
+    open* — it is not open and never was: it was proven 2026-08-11 and
+    sat recorded in that file's own standing-constraint note the whole
+    time. It is not a blocker to be cleared but the finding that kills
+    the mechanism, which is why the answer is abandonment rather than
+    a pass. (iii) *The ask tier is guard-proven only* — still true and
+    **not cured here**; WS-E 75 stands, an ask may not be cited as
+    evidence a human was consulted, and the corrected mechanism
+    responds by making the guard write the log row rather than by
+    leaning on an ask reaching anyone. (iv) *WS-E 74* — already spent
+    at PR #143. **Merge-to-main stays permanently outside every
+    allow-list**, backed by the item 34 M3 branch-protection work, and
+    `gh pr merge` is unchanged. Successor work is carried at item 48;
+    the standing risk this resolution inherits is at item 49. Detail:
+    `DECISIONS.md` DEC-0018 and
+    `docs/governance/DEC-0018_A6_CORRECTION_2026-08-19.md`.
+    **Prior status text follows, retained rather than deleted so the
+    hold and its reasoning stay auditable.** Item 42's guard repair discharged 2026-08-19, so
     Part B's **technical** blocker is cleared and the state moves from
     blocked-and-held to held. **Part B remains HELD on its own
     merits**, on four grounds: (i) **its ruling was never made** — no
@@ -1345,6 +1374,23 @@ this section is a working pointer, not the record.
     has no way to know what preceded it. Detail:
     `docs/governance/ARC_RECORD_2026-08-19_guard-integrity-close-out.md`
     section 0(b).
+    **ARC HALF CLOSED 2026-08-19 by DEC-0018 A5.**
+    `docs/governance/ARC_REGISTER.md` exists and carries
+    `A-2026-08-19-01` as its first row, with the allocation rule stated
+    in the file — next number is the highest for that date plus one,
+    read from the register, a new date restarting at `01`. That answers
+    the sharpest half of this item, which was that **nothing allocated
+    the next arc number**, so a second issuance had no way to know what
+    preceded it. **The item stays OPEN on its other half**, and the
+    split is deliberate rather than a partial tick: versioned
+    code-series artefacts — the scenario spec schemas — still have
+    nowhere to be registered, and that half remains owed under item 34
+    M7. The argument this item makes, that two unrelated classes
+    reaching one dead end is the case for ruling placement **once**
+    rather than per class, is now weakened by half a precedent: the arc
+    class got its own file rather than a general ruling, which is the
+    per-class answer. Recorded so whoever rules the remaining half sees
+    that the general question was not settled by this act.
 42. **Guard repair for WS-E 72 and 73, plus the re-probe list —
     DISCHARGED 2026-08-19. CLOSED.** Ruled at PROMPT 133 (2026-08-18
     session clock); written this prompt, the ruled-versus-written lag
@@ -1492,6 +1538,72 @@ this section is a working pointer, not the record.
     own text, and either add a stack precheck to the boot or state the
     precondition so the failure is diagnosable at first read rather
     than from a traceback. Detail: the 2026-08-19 close record.
+48. **F5 envelope-guard design brief — NEW 2026-08-19, OPEN, and
+    EXPLICITLY NOT STARTED by the DEC-0018 fold-in.** DEC-0018 strikes
+    the settings-side widening and replaces it with a guard-side
+    mechanism: ask-tier envelope resolution moves INTO
+    `.claude/hooks/governance_guard.py`, consulting an envelope
+    manifest — a frozen-format file naming the active envelope's
+    scope — and resolving an in-envelope ask-tier call to allow-and-log
+    **with the guard itself writing the log row**. Layered with the
+    hook, never alternative to it: the component that grants must be
+    the component that records, which is the property the struck
+    mechanism could not have. **The fold-in specifies it and builds
+    none of it**, deliberately, and this item is where the build is
+    owed. **Route is fixed by the deny, not by preference:** a
+    `.claude/hooks/` change cannot be written in-session under any
+    permission mode, so it is drafted OUTSIDE the tree, installed by
+    the operator at their own terminal, then branch, PR, merge — the
+    same F1-to-F4 route item 42 used. Sequence: design, then a
+    panel-reviewable brief, then a chair ruling, then install, then
+    probe. **Probe discipline is inherited and is not negotiable:** a
+    deny-shaped call returning the guard's own refusal text verbatim,
+    paired with an allow-shaped call that succeeds, and per item 8's
+    2026-08-19 instance the pass condition is stated **per tier**,
+    because an approved ask and a live deny have opposite observable
+    signatures. **Design questions open at brief time, named so they
+    are decided rather than discovered:** what freezes the envelope
+    manifest against edit-during-run; whether an unreadable or absent
+    manifest is UNKNOWN-and-refuse (it should be, on the three-outcome
+    discipline); where the log row goes and whether it is append-only
+    by mechanism; and how an envelope expires, since an envelope that
+    never closes is a permanent widening wearing a different name.
+    **First candidate scope is the MCP queue leg**, which carries zero
+    deny overlap because the PreToolUse matcher does not name MCP
+    tools — see item 49 before treating that as comfort. Detail:
+    `DECISIONS.md` DEC-0018 and
+    `docs/governance/DEC-0018_A6_CORRECTION_2026-08-19.md` section 3(c).
+49. **Render-route bypass carried as a NAMED STANDING RISK of the
+    unattended model, and the disambiguation probe is owed — NEW
+    2026-08-19, OPEN.** Recorded at
+    `docs/governance/GROUP1_FAILURE_route-a-bypass_2026-08-14.md`: a
+    skill render line executed a command carrying an absolute DENY —
+    the force-push discriminator, aimed at a nonexistent remote — and
+    returned git's own error rather than the guard's refusal, with no
+    prompt and no deny. **The guard was never invoked on that path.**
+    The Amendment 4 rollback removed 55 widened allow entries and
+    **did not close this**, for a reason worth restating because it is
+    counter-intuitive: allow rules only ever permit, never block, so
+    removing them cannot constrain a render that bypasses the guard
+    entirely. **Why DEC-0018 promotes it from a recorded failure to a
+    standing risk:** the envelope model's purpose is to run acts with
+    nobody at the prompt. Attended operation has a human as the
+    backstop for exactly the case where the guard is not invoked;
+    unattended operation removes that backstop and multiplies traffic
+    on the path that has already failed once. **The probe owed is a
+    disambiguation, not a re-demonstration** — the failure is
+    established, and what is unknown is whether the fix is harness-level
+    or a frontmatter rule. Until the route is proven governed, no
+    envelope may be scoped to a family reachable by a skill render
+    without stating this risk in the scoping act. **A second coverage
+    fact belongs beside it**, found in the same read: the PreToolUse
+    matcher names `Bash`, `PowerShell`, `Edit`, `Write`, `MultiEdit`
+    and `NotebookEdit`, so **MCP tools are ungated**. That is what
+    makes the queue leg safe to unattend without a widening, and
+    equally means no guard probe evidences anything about it — a
+    WS-E 64-shaped coverage gap, recorded before it is relied upon.
+    Detail: `docs/governance/DEC-0018_A6_CORRECTION_2026-08-19.md`
+    sections 3(d) and 3(e).
 <!-- QUEUE-END -->
 
 ## Orientation for a new session
