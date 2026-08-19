@@ -266,6 +266,28 @@ drift apart.
   guaranteed restore. A persisted working directory is ambient state that outlives the
   command that set it, and on 2026-08-12 a single `cd .claude` broke the governance
   hook's relative invocation path and deadlocked every tool fail-closed (WS-E 68).
+- **Battery and delivery commands are issued bare, in their granted forms.**
+  Activation is its own command — `conda activate arcaai` first, then the battery
+  command — never chained as `conda activate arcaai; if ($?) { ... }`. Chaining changes
+  the matched prefix: an allow entry matches by prefix, so a chained command presents
+  `conda` to the matcher and evades every enumerated grant in the settings file, turning
+  granted acts back into asks. Grant-evasion by habit reads exactly like a missing
+  grant, which is how it survived unnoticed. The converse is worse and is refused as
+  policy: **a grant written to match a chain is never added**, because, matching by
+  prefix, it would also match anything appended after the chain — and under the proven
+  allow-pre-empts-ask constraint that silently switches the guard off on whatever rides
+  the suffix. A compound grant is a wildcard in disguise and falls under the standing
+  never-granted wildcard rule by its mechanism if not by its spelling. Source: the
+  Amendment 5 addendum carried in the settings file, 2026-08-19.
+- **The local settings file is deliberately untracked, and is governed by observation
+  rather than by git.** Line 35 of `.gitignore` names it: that file is the tool's
+  designed home for machine-local grants, and the ignore rule is convention, not drift.
+  **Its allow list must read empty.** Reading it is a boot ceremony step, and any
+  non-empty read is a boot finding requiring migration-or-ruling before work proceeds.
+  Interactive always-allow grants had previously accumulated there untracked — a second
+  permission surface outside the evidence perimeter — and because tracking the file
+  would contradict its own ignore rule, observation is what closes that gap instead.
+  Ruled at ARCA-D-0149, 2026-08-19.
 - **A hook or permission change is verified by re-reading the loaded file AND a
   deny-shaped probe** — never by the editor's word, and never by a command that would
   have been allowed anyway. The probe must return the guard's own refusal text verbatim;
@@ -1317,6 +1339,29 @@ this section is a working pointer, not the record.
     bites the moment the item 12 inclusion decision lands. Detail:
     `arcaai/harness/schema/scenario_spec_v0.3.schema.json`, the
     `top_k_absolute_cap` description.
+    **REMAINING SCOPE, stated as four items so the residue is a list a
+    reader can work through rather than prose to be re-derived. Carried
+    from the arc A-2026-08-19-03 return leg (ARCA-R-0148 entry 2),
+    2026-08-19.**
+    (a) **Environment identity is honest but PARTIAL** — the vector-store
+    adapter does not expose the HNSW construction and search parameters,
+    so they read `UNKNOWN` on every run. Widening means exposing them on
+    the adapter, a change under `arcaai/platform/`.
+    **RECOMMENDED NEXT INCREMENT**, because it is the one item that
+    changes what the emitted artefact can claim about itself.
+    (b) **Only the runner halves landed** — the pre-flight ASSERT of the
+    environment hash (§8.1 criterion 7) and the gate-tooling FILTER on
+    `invalidation_status` (§9.8) are still owed, and the D2.5 ledger does
+    not exist. Emission is not assertion, and this item is not discharged
+    by the runner emitting what those instruments will later consume.
+    (c) **The material-parameter list has not been diffed** against the
+    spike's own list v0.1. **OPERATOR ACT** — the spike's list is held in
+    custody OUTSIDE the tree, so the executor cannot perform the
+    comparison. If the two differ, the spike's is the earlier statement
+    and the difference is a finding.
+    (d) **`invalidation_status` emits `none_recorded`** with an adjacent
+    note, pending D2.5's controlled vocabulary. Inventing a token would
+    be worse than naming the gap.
 37. **Rev C filename still says DRAFT — NEW 2026-08-17, OPEN,
     cosmetic but not nothing.** The accepted text lives at
     `docs/governance/D1.1_TEST_PLAN_DRAFT_RevC_2026-08-15.md`. D1.1

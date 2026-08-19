@@ -189,6 +189,37 @@ the instruction text arrive in one artefact, so a released item is both a
 ruling record and a work order. Where those need to be told apart, this section
 is where the ruling half is separated out and committed.
 
+## 7. F-R1 extended, ratified by release of `ARCA-P-0149`
+
+Carried by that item and **ratified by the chair's release of it**, the same
+mechanism section 6 names. Reproduced verbatim.
+
+> F-R1 EXTENDED per F-R3's evidence: transport rewrites any dotted token, not
+> only URLs — filenames included. Durable identifiers in queue traffic are PR
+> numbers and register IDs; file paths and URLs are convenience, and the
+> repository is the record. F-R3 does not stand separately; it is F-R1's second
+> observed instance.
+
+**F-R3 IS SUBSUMED and does not stand as its own finding.** It is recorded here
+rather than deleted, because a finding that is absorbed into a broader one still
+happened, and a reader meeting the identifier elsewhere needs somewhere to land.
+
+**What the extension changes in practice.** Section 6's F-R1 was scoped to URLs,
+on URL-shaped evidence — the `google.com/url?q=` wrapper. The evidence that
+widened it is that the same rewriting reaches any dotted token, so a filename
+written into a queue body is mangled exactly as a link is. The consequence is a
+drafting rule for queue traffic and nothing more: describe files by directory
+and register reference, and let PR numbers and register IDs carry identity.
+
+**The scope of this rule is queue transport, not the repository.** Commit
+messages, governance documents and code comments continue to cite exact paths,
+because they are not carried by a transport that rewrites them and because the
+house rule enforced by `scripts/check_docs.py` requires a cited path to exist. A
+reader who generalises this ruling into the tree would break that check.
+
+First applied in `ARCA-R-0149`, whose body describes every file by directory and
+register reference throughout.
+
 No control mapping line is carried, for the reason
 `docs/governance/SESSION_COSTS.md` states: queue item 34 M11(d) requires
 per-class mapping content to be defined once in the control framework, and that

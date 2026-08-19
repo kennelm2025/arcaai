@@ -36,8 +36,8 @@ clock.
 | Arc | Name | Lane | OPEN (UTC) | CLOSE (UTC) | PRs | Cost | Basis |
 |---|---|---|---|---|---|---|---|
 | A-2026-08-19-01 | Guard integrity close-out | governance | 2026-08-19T12:44:41Z | 2026-08-19T13:43:56Z | #142–#146 | $18.20 | **RECONSTRUCTED** — see notes |
-| A-2026-08-19-02 | DEC-0018 fold-in and queue commissioning | governance | 2026-08-19T16:19:15Z | 2026-08-19T16:57:12Z | #147, #148 | *(pending)* | OPEN **RECONSTRUCTED**, CLOSE **ACTUAL** — see notes |
-| A-2026-08-19-03 | Runner Rev C conformance | build | 2026-08-19T17:06:20Z | *(open)* | this PR | *(pending)* | OPEN **ACTUAL** — see notes |
+| A-2026-08-19-02 | DEC-0018 fold-in and queue commissioning | governance | 2026-08-19T16:19:15Z | 2026-08-19T16:57:12Z | #147, #148 | $30.75 **COMBINED 02+03** | OPEN **RECONSTRUCTED**, CLOSE **ACTUAL**; cost **COMBINED, NOT SPLIT** — see notes |
+| A-2026-08-19-03 | Runner Rev C conformance | build | 2026-08-19T17:06:20Z | *(open)* | this PR | $30.75 **COMBINED 02+03** | OPEN **ACTUAL**; cost **COMBINED, NOT SPLIT** — see notes |
 
 ### Notes on A-2026-08-19-01
 
@@ -159,6 +159,22 @@ and **no figure is invented here**. A pending cost on a closed arc is a
 recorded gap; a guessed one would be a false entry in a register whose whole
 value is that its numbers were measured.
 
+**COST SUPPLIED 2026-08-19: $30.75, COMBINED WITH ARC 03 AND NOT SPLIT.** The
+paragraph above stays as written, because it was true when written and it states
+the condition this supply had to meet. The figure covers the whole CC session
+spanning arcs 02 and 03, and **no split rule was invented** — the readout is one
+measurement of one counter, and dividing it by PR count, line delta or elapsed
+time would manufacture two precise-looking numbers from a measurement that
+cannot support them. Both this row and arc 03's cite the same figure and both
+say COMBINED, so a reader summing the column would double-count and the cells
+warn against it. **Basis is DIRECT by correspondence, NOT by sign check**, and
+the difference matters: the standing method proves a reset only when the new
+figure reads *lower* than the previous anchor, and $30.75 reads higher than
+$18.20, so the check cannot discriminate and is recorded INAPPLICABLE rather
+than stretched. What stands in its place is correspondence of wall time and line
+delta, corroborated against the tree at authoring. Full method, and its residual
+limit, at `docs/governance/SESSION_COSTS.md`.
+
 ### Notes on A-2026-08-19-03
 
 **OPEN is ACTUAL, and that is the point of this row.** `2026-08-19T17:06:20Z`
@@ -176,6 +192,25 @@ the arc-02 record is **discharged here** rather than carried a third time.
 
 **CLOSE and cost are open at the time of writing**, as they should be for an
 arc recorded at its open.
+
+**COST SUPPLIED 2026-08-19 WHILE THE ARC IS STILL OPEN: $30.75, COMBINED WITH
+ARC 02 AND NOT SPLIT.** This is the same single readout arc 02's row carries,
+for the same reason — one counter ran across both arcs and nothing in the
+readout separates them. **A cost on an open arc is unusual and is deliberate
+here:** the figure belongs to the CC session, and that session closed while this
+arc did not, so waiting for the arc's CLOSE would have left a measured number
+unrecorded for no gain. The CLOSE cell stays open because the arc is open; an
+empty CLOSE means *not yet closed*, never *not recorded*. **A later reader
+should expect this arc's eventual total to exceed $30.75**, since work has
+continued in it past the readout, and should not read this cell as the arc's
+final cost. Basis and residual limit at `docs/governance/SESSION_COSTS.md`.
+
+**The PRs cell still reads "this PR" and is deliberately UNCHANGED**, though
+`#149` has since merged and a second pull request now sits in this arc. The
+authorising item's writable scope named the arc register's **cost cells**, and
+the PRs cell is not a cost cell. Recorded as an observation for whoever closes
+this arc rather than fixed here, because widening scope by one convenient cell
+is how scope stops meaning anything.
 
 No control mapping line is carried, for the reason
 `docs/governance/SESSION_COSTS.md` states: queue item 34 M11(d) requires
