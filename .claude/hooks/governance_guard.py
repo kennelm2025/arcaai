@@ -278,13 +278,11 @@ GIT_WRITE_RE = re.compile(
     r"|apply|tag)\b"
 )
 ASK_COMMAND_RES = [
-    # KNOWN AND NOT COVERED, unchanged by F1 and deliberately not fixed here:
-    # `-[dD]` does not match the long form `git branch --delete <x>`, which
-    # therefore draws no ask. It is the same one-spelling trap the H-11 deny
-    # below was hardened against, surviving one pattern above it. Raising it
-    # is a separate governed act and it is NOT in scope for this fix - see
-    # the PROMPT 127 draft report.
-    (re.compile(r"\bgit\b" + GIT_GLOBAL_OPTS + r"\s+branch\s+-[dD]\b"),
+    # Long form `--delete` and flag-position variants covered as of the
+    # WS-E 74 fix (F3/F4, 2026-08-19). `--delete --force` and `-D` are
+    # matched here but never reached: the H-11 deny runs at stage 1 and
+    # short-circuits. That overlap is deliberate - do not narrow.
+    (re.compile(r"\bgit\b" + GIT_GLOBAL_OPTS + r"\s+branch\b(?:[^\n]*\s(?:-[dD]|--delete)\b)"),
      "Branch deletion is gated (Tier 2). Deleting the just-merged branch "
      "is routine, but this guard cannot tell which branch that is - "
      "confirm which branch is going and why."),
