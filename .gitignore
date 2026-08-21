@@ -33,3 +33,10 @@ provenance_manifest.json
 REPO_MANIFEST.md
 
 .claude/settings.local.json
+
+# Queue-driver OAuth secrets (PROMPT 129 requirement 7). The configured
+# defaults place both files OUTSIDE the repository, so these entries are a
+# second line of defence against a stray copy landing in the tree, not the
+# primary control.
+credentials.json
+token.json

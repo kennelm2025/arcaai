@@ -1,0 +1,24 @@
+{
+  "_note": "Driver config. Lane worktree paths are the DEC-0019 B1 assertion targets: the driver refuses to route to a lane that is not its own linked git worktree. T1 has no worktree at the time of writing (only the main tree and arcaai-t2 exist), so T1 routing correctly refuses until the operator creates it.",
+  "queue_root": "D:/arcaai-repo/_queue",
+  "poll_interval_seconds": 60,
+  "lanes": {
+    "T1": {
+      "worktree": "D:/ArcaAI-repo/arcaai-t1",
+      "enabled": true
+    },
+    "T2": {
+      "worktree": "D:/ArcaAI-repo/arcaai-t2",
+      "enabled": true
+    }
+  },
+  "_dispatch_order_note": "Empty by design. With no explicit map the driver binds a base prompt number to the lane it first routed to, derived from the append-only log rather than from a guess. Populate only on a chair ruling, as {\"129\": \"T2\"}.",
+  "dispatch_order": {},
+  "ntfy_server": "https://ntfy.sh",
+  "ntfy_topic": "",
+  "_secrets_note": "Both paths sit OUTSIDE the repository so the secrets cannot be committed at all, which is stronger than relying on .gitignore. The .gitignore entries exist as well, per requirement 7.",
+  "credentials_path": "D:/arcaai-repo/_queue/credentials.json",
+  "token_path": "D:/arcaai-repo/_queue/token.json",
+  "retries": 3,
+  "backoff_base": 2.0
+}
