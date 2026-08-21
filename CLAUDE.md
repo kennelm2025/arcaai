@@ -1762,6 +1762,44 @@ this section is a working pointer, not the record.
     reachable by the envelope mechanism, since an envelope resolves
     ask-tier guard calls and this is not one. Detail:
     `ARCA-R-0150` section 6 as ratified at PROMPT 153.
+    **A FOURTH COVERAGE SET, ADDED 2026-08-21 from the PROMPT 128R2 and
+    129 envelopes — appended and not patched, because one of the three
+    supersedes a word in the paragraph above and the superseded reading
+    must stay legible.** Three facts, each observed rather than
+    reasoned.
+    **(a) The classifier blocks WRITES as well as reads.** The
+    2026-08-19 fact above recorded a read-only command halted; on
+    2026-08-21 the blocked act was an **authorised push — the delivery
+    act of its own envelope**. The constraint is therefore not confined
+    to the reading side, and the failure it produces is not a stalled
+    inspection but an **undelivered act**: an envelope can complete
+    every task it was given and still fail to land, on a refusal no
+    ruling in this repository authorises and no artefact in it
+    configures.
+    **(b) It is NON-DETERMINISTIC, and that is PROVEN rather than
+    suspected.** An identical command, unchanged in every character,
+    was refused and then succeeded. The consequence is sharper than the
+    nuisance: a deterministic constraint can be answered by rewriting
+    the command, and a non-deterministic one cannot, so retry is the
+    only available response — and a retry that succeeds is
+    indistinguishable from a call that never needed one. It also puts
+    this surface permanently outside the deny-shaped-probe discipline
+    the guard is verified by, because a probe whose result varies
+    between identical runs evidences nothing either way.
+    **(c) It is now OBSERVABLE, so this item's "unobservable"
+    characterisation is SUPERSEDED.** Current Claude Code documentation
+    records a `PermissionDenied` hook event that fires when auto mode
+    denies a tool call. **What is superseded is narrow and the rest
+    stands:** the classifier's own denials are reachable by an observer;
+    the statement above that no probe of the **guard** evidences
+    anything about the classifier remains true and is untouched, the
+    two being different mechanisms. **Wiring an observer is its own act
+    and is NOT performed here** — nothing in this repository observes
+    the event today, and the fact recorded is that the route exists,
+    not that it is in use. Recording it without wiring it would
+    otherwise read, later, as though observation were in place. Detail:
+    `docs/governance/QUEUE_CYCLE_2026-08-21.md` section 1, and the
+    PROMPT 128R2 and 129 envelopes.
 <!-- QUEUE-END -->
 
 ## Orientation for a new session

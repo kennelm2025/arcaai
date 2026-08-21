@@ -1429,6 +1429,78 @@ regardless of surrounding prose).*
     candidate fix remains a hooks-directory change travelling the
     operator-installs route.
 
+77. **The harness operating-mode instruction contradicts the ruled
+    instrument boundary, and instructs on every turn the breach that
+    boundary forbids (2026-08-21).**
+
+    **What happens.** The session harness injects an operating-mode
+    instruction on **every turn** directing that file changes be made
+    with `sed`, heredocs or short scripts rather than with the dedicated
+    Read, Edit and Write tools, and that the shell be preferred wherever
+    it can accomplish the job. That is the **direct opposite** of
+    DEC-0018/AMD-A4, the standing tool-discipline clause, which requires
+    all file writes via the Write and Edit tools and forbids
+    shell-redirection writes per item 76. The two are not in tension at
+    the edges; they contradict at the centre, and each is stated
+    unconditionally.
+
+    **Not a hypothetical conflict — it produced a reach and a breach on
+    the day it was raised.** The **heredoc reach** was attempted and
+    **failed on size**, so nothing landed by it; the attempt is recorded
+    because a reach that fails for an unrelated reason is still the
+    instruction being followed. The **one realised breach** that day was
+    a shell-redirection append to the ignore file, corrected at chair
+    ruling **instrument-only**: the content was correct and was left
+    standing, and only the instrument was remade. **That correction
+    shape is load-bearing.** Had the content been rewritten as well, the
+    record would no longer show that the boundary governs *how* a write
+    is made and not *what* it says — and a later reader would have no
+    way to tell a discipline breach from a content error.
+
+    **Why it cannot be resolved in this repository.** Nothing in the
+    tree configures the operating mode. It is absent from the settings
+    file, from the hooks, and from every skill and agent definition.
+    This is therefore **not** drift between a rule and its
+    implementation, which an in-tree act could close; it is a rule of
+    the tree contradicted by an instruction originating outside it, and
+    no act available here withdraws that instruction. The register
+    records it precisely because the usual remedy does not apply.
+
+    **The ruling, carried in the PROMPT 132 envelope: the ruled boundary
+    WINS.** DEC-0018/AMD-A4 is controlling in every session, the harness
+    instruction notwithstanding, and every session must treat it as
+    controlling. **The instruction is to be recognised and disregarded,
+    not obeyed and then repaired** — a per-turn instruction that is
+    followed and corrected afterwards produces a breach per turn, and
+    that arithmetic is what makes this a register item rather than a
+    footnote.
+
+    **Family note, and it is a NEW family rather than item 8's.** The
+    check-method family is checks whose green does not mean what it
+    appears to. Nothing is mis-measured here. The executor is correctly
+    instructed to do the wrong thing by one authority and the right
+    thing by another, so the failure mode is **authority conflict**, and
+    its characteristic damage is that compliance with the nearer,
+    louder and more frequently repeated instruction reads as diligence.
+    Recorded as its own shape so it is not filed under a family whose
+    diagnostics do not fit it.
+
+    **Candidate mitigations, for later ruling and NOT adopted here.**
+    (a) **Session-memory pinning of the boundary** — done ad hoc on
+    2026-08-21, and effective in the narrow sense that the pin is
+    present at every turn beside the contradicting instruction. Its
+    limit is that it is memory and not mechanism: it depends on having
+    been written, on being recalled, and on being read as outranking the
+    harness. (b) **Guard-side enforcement under queue item 48** — the
+    envelope guard amendment could refuse the shell-write instrument
+    outright, converting the boundary from a rule the executor must hold
+    against per-turn pressure into a control that does not depend on
+    holding. That is the stronger answer and the slower one.
+
+    Raised under chair authorisation carried in the PROMPT 132 envelope;
+    registered under PROMPT 132. Related: item 76, item 73,
+    DEC-0018/AMD-A4, queue item 48.
+
 ## Footnotes
 
 - To 14/25: git log decoration reflects LOCAL refs; a prune racing a
