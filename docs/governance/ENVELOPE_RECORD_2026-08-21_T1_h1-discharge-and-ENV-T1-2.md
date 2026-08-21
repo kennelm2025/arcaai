@@ -109,9 +109,13 @@ document. The docs check enforces that a backticked repo-relative path exists,
 and these do not; backticking them would fail the check that protects against
 dead citations.)*
 
-**This is compliance with a ruling, not residue and not an incident.** The
-terminus was reached and the instruments went. No WS-E number is owed for their
-absence and none is claimed.
+**This is compliance with a ruling, not residue and not an incident.** Both
+instruments were **retired by operator act on 2026-08-16, ahead of their outer
+bound**, discharging the tolerance early rather than letting it lapse: section 6
+of `docs/governance/SESSION_HANDOVER_2026-08-17.md` records them as retired
+unfired and deleted at the operator's terminal, with the tolerance and its
+terminus "DISCHARGED by retirement, ahead of the outer bound". No WS-E number is
+owed for their absence and none is claimed.
 
 ### 3b. Verify is unavailable, and it is not a permission-mode question
 
@@ -201,9 +205,10 @@ design but not a substitute for running it.
 1. **Re-install both instruments as an operator act**, by the route every other
    change to those directories takes: drafted outside the tree, installed at the
    operator's own terminal, then branch, PR, merge — with a fresh terminus
-   stated at installation, since the last one expired and that is why they are
-   gone. Terminal 1 then runs them under a follow-on envelope. This is the only
-   option that closes the question.
+   stated at installation, the previous instruments having been retired by
+   operator act ahead of their bound rather than having expired. Terminal 1 then
+   runs them under a follow-on envelope. This is the only option that closes the
+   question.
 2. **Split the disposition.** Re-install A2 only, and rule route B struck on the
    narrower ground that its original premise was superseded, recording that its
    unattended-model stake passes to the envelope-guard work at queue item 48.
@@ -320,3 +325,42 @@ The quotation above is left exactly as ruled, since editing a ruling to satisfy
 a citation convention would be the worse error. This note is the alternative:
 whoever runs the next manifest should expect that divergence and read its
 explanation here rather than chase it.
+
+---
+
+## Correction — 2026-08-21: retirement was an act, not an expiry (PROMPT 127R3)
+
+Recorded rather than applied silently. A correction to a landed record is itself
+a governed act, and a record that has quietly changed is not the record it was.
+
+**Ruled by the chair at PROMPT 127R3**, on a flag this terminal raised against
+its own text. Two sentences in this record described the probe instruments'
+removal as an expiry. They were not: section 6 of
+`docs/governance/SESSION_HANDOVER_2026-08-17.md` records both as **retired
+unfired on 2026-08-16, deleted at the operator's terminal**, with the tolerance
+and its terminus "DISCHARGED by retirement, ahead of the outer bound".
+
+**What changed.** Section 3a previously read "The terminus was reached and the
+instruments went". Section 5, option 1, previously read "since the last one
+expired and that is why they are gone". Both now state the operator act and its
+earliness, and cite the handover.
+
+**Why it was worth correcting.** As the chair put it, agency attribution is the
+point: *expired* and *retired early by the chair* are not the same fact. The
+first describes a deadline passing with nobody acting; the second describes a
+deliberate act taken ahead of that deadline. A governance record that reports an
+act as a lapse understates who decided, and when — and this repository's whole
+argument for its own auditability is that those two things are recoverable.
+
+**What did NOT change, and was required not to.** The compliance conclusion. The
+removal was compliant under the operator ruling on either reading, **no WS-E
+number is owed for it, and none is claimed** — that finding stands exactly as
+first recorded.
+
+**Scope note, stated because the second edit went beyond the sentence the
+ruling named.** The chair's ruling named the section 3a wording. The section 5
+sentence carried the identical error, in the very word the ruling singles out,
+so it was corrected in the same act: correcting one and leaving the other would
+have produced a record contradicting itself between two of its own sections. The
+extension is flagged in the outcome file so the chair can reverse that half if
+the wider reading was not intended.
