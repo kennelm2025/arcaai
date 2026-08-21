@@ -379,6 +379,23 @@ principle mapping for the B8/B9 artefact set.
   `docs/governance/D1.1_PANEL_ROUND1_DISPOSITION_2026-08-14.md`.)*
 - Q-A6 root-cause fix lands here: trail docs update in the same commit as the work
   they record (see trail-integrity note above).
+- [x] **CL-31** *(new, 21 Aug; CLOSED 2026-08-21)* **Harness uplift disposition
+  (Chair ruling 21 Aug 2026).** **Item 1** (root `CLAUDE.md`) executed
+  **append-only**, scoped to the seven gaps in the PROMPT 136 audit list (b); the
+  brief skeleton is **discarded as superseded by the live file**. **Item 2**
+  (settings-side `permissions.deny`) is **PARKED into the F5 design brief, not
+  struck**: there is **no DEC-0018 conflict**, the struck mechanism having been the
+  *allow* half, but it is blocked on (i) deny-versus-hook firing order being
+  unprovable from inside the harness and (ii) **observability polarity** — a deny
+  firing before `PreToolUse` may widen the WS-E 75 gap. Revisit in F5 with an
+  externally designed probe. **Closed as a disposition, not as completed work:**
+  the parked half is carried at `CLAUDE.md` queue item 48, and no
+  `.claude/settings.json` change was made under this item or is authorised by it.
+  *(Source: chair ruling 2026-08-21, R-a and R-b; the PROMPT 136 read-only gap
+  audit; `DECISIONS.md` DEC-0018 for the struck mechanism, with the operative
+  sentences at `docs/governance/DEC-0018_A6_CORRECTION_2026-08-19.md` section 3(a);
+  `DECISIONS.md` DEC-0019 and `docs/governance/WS-E_INCIDENTS.md` item 77 for the
+  transcribed sources of the seven appends.)*
 
 ## Workstream F — Regulatory / bank-reviewer lens
 *(applied throughout; synthesised at end)*
