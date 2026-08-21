@@ -75,6 +75,120 @@ DEC-0013 (2026-07-25) — Platform package path is `arcaai/platform/`, not top-l
 * **DEC-0018 (2026-08-19) — Delegation-by-class and envelope execution: the unattended operation model (closed, August 2026).** Ruled by the chair in one sitting, 2026-08-19; the ruling of record is reproduced in full at `docs/governance/DEC-0018_A6_CORRECTION_2026-08-19.md`. **Q-R1 — number assignment.** The delegation/envelope model takes DEC-0018; the observability-dashboard candidate, which also claimed this number, is reassigned to the next free number at the moment it is formally advanced — currently next 0019, cited as "next" and never bare, per the PR #85 convention. Rationale as ruled: *"number follows the work — the envelope mechanism is the live collision, has consumed the round-trip test (PROMPT 144/145), and is the prerequisite for unattended operation."* **Q-R2 — full form adopted:** the 17 August candidate plus Rider R1 and Rider R2. **The candidate's footnote F1 reductions are NOT applied** — note this F1 is the candidate's own footnote and is unrelated to the guard fixes F1–F4 discharged under queue item 42, which collide only in label. A3 adopted as written: the `ARCA-*` namespace lock is mandatory, meaning no send and nothing outside the series. A4 adopted as written: subject grammar, the ID/TS/RE body header, and the Q-to-D ruling-by-queue flow, now standing. A5 adopted as written: arc identifier grammar, OPEN/CLOSE timestamps, and an arc register authorised, with `A-2026-08-19-01` recognised as first use and its timestamps reconstructed at next touch — discharged in this same act at `docs/governance/ARC_REGISTER.md`. A6 adopted, **but recorded AS CORRECTED rather than as drafted**. **Entry conditions, and they resolve differently.** E1 is **satisfied**, 2026-08-19: the guard fixes landed and WS-E 72, 73 and 74 are discharged across PRs #142 to #144. E2 is **SUPERSEDED, not satisfied** — the two-row probe was cancelled unrun. The distinction is load-bearing rather than pedantic, because A6 as drafted resolved queue item 27 Part B's grounds *contingent on E2 green*, a condition that never occurred and now never will; reading a superseded condition as a met one is precisely the blocker-cleared-therefore-proceed step that item 27's together-in-one-PR condition exists to prevent. **What supersedes it:** a read of `.claude/settings.json` found the probe's premise already answered in the tree. Allow-pre-empts-ask was proven 2026-08-11 and is recorded in that file's own standing-constraint note, so a settings widening **cannot** implement A2's allow-and-log and is **struck as the mechanism**; the deny-overlap prohibition, amended 2026-08-14, stands; and the cancelled probe's candidate allow entry is recorded as prohibited-and-never-applied, corroborated by the tree, where `.claude/settings.json` shows no modification against HEAD. **The corrected mechanism is guard-side, not settings-side:** ask-tier envelope resolution moves into `.claude/hooks/governance_guard.py` as an F5-class amendment consulting an envelope manifest that names the active envelope's scope, with the guard itself writing the log row, layered with the hook and never an alternative to it. **That amendment is owed as its own governed act and is not started by this entry.** **Q-R3 as amended:** the E2 probe was ruled the next session's first act with no other work permitted to precede it; with the probe cancelled, the chair amended Q-R3 so that this fold-in replaces it as that first act. **Item 27 Part B is resolved by route abandonment, not by widening** — no settings widening occurred and none will under this resolution, and merge-to-main remains permanently outside every allow-list, backed by the branch-protection work at queue item 34 M3. **The Gmail and MCP leg of A3 survives unchanged:** the PreToolUse matcher in `.claude/settings.json` names `Bash`, `PowerShell`, `Edit`, `Write`, `MultiEdit` and `NotebookEdit` and does not reach MCP tools, so unattending the prompt queue carries zero deny overlap — read from the file this session, not assumed. **Standing risk carried, not closed:** the render-route hole at `docs/governance/GROUP1_FAILURE_route-a-bypass_2026-08-14.md`, where a skill render line executed a command carrying an absolute deny and returned git's own error with the guard never invoked, is a **named standing risk of the unattended model** until that route is proven governed — unattended operation multiplies exactly the path that failed, and allow rules only ever permit, so no rollback constrains it. **Limitation stated rather than hidden:** the 17 August candidate, Rider R1 and Rider R2 exist only in coordinator chat and Gmail transport and are **not in this repository**, so the components named A1 through A6 are recorded from the ruling text preserved at transport rather than from a reviewable in-tree document. That is a live instance of the queue item 34 M2 gap — the deliberative trail sitting outside the evidence perimeter — and committing the candidate is owed. Related: DEC-0014, DEC-0017, WS-E 72, WS-E 73, WS-E 74, WS-E 75, ADR-0010.
 
 
+## Standards register (STD series)
+
+**Authority.** Chair ruling of 2026-08-21, Option C, delivered at PROMPT 128R
+and resolving the ID-scheme question escalated at PROMPT 128. M13 standards
+take their own dedicated `STD-NNNN` series, hosted as ledger lines inside this
+file and **not** as numbered files under `decisions/`. Option B — recording
+standards as a class within the existing DEC/ADR numbering — was rejected
+because standards are external, continuing obligations whose state changes on
+external events, which an append-only decision log holds poorly; Option A, a
+dedicated series as numbered files, was rejected on the scanner ground stated
+next.
+
+**Relationship to `scripts/repo_manifest.py`, stated BEFORE the first number is
+consumed.** That scanner treats the `decisions/` filesystem as the ADR register
+and reads the leading four digits of each filename there, and it parses the DEC
+ledger from this file alone. The STD series is hosted here as ledger lines and
+creates **no** numbered file under `decisions/`, so it consumes no ADR number —
+including the 0011 reserved for Agentic Topology — and requires no change to
+the scanner. This is the same mechanical reasoning DEC-0015 and DEC-0017 each
+recorded when rejecting a numbered file for themselves. **The limit that
+follows is stated rather than left to be discovered:** the scanner does not
+parse the STD series either, so it will not report an STD numbering divergence
+the way it reports DEC, ADR, CL and WS-E ones. Whether it is extended to read
+this series is a separate act and is not performed here.
+
+**Sequence-hold (WS-E 58) applies unchanged:** the next number is the highest
+plus one, only. Ten numbers are consumed by this act; the next free number is
+**next 0011**, cited as "next" and never bare, per the PR #85 convention.
+
+**Numbering order, stated so it is reproducible.** Numbers are assigned in the
+order of the closed framework vocabulary at `CLAUDE.md` queue item 34 M11 —
+SS1/23, ISO42001, ISO27001, SOC2, NIST-AI-RMF, EU-AI-Act — and, within a
+framework, by the instrument's own reference order. **Ordering by evidence
+strength was considered and rejected:** evidence status changes as the build
+advances while a number is permanent, so an evidence-ordered series would
+encode a judgement that expires inside an identifier that does not.
+
+**The claim this register makes, and the one it must never make.** Each entry
+records which ArcaAI artefact **provides evidence supporting** an external
+obligation. An artefact never **satisfies** one. The wording is inherited from
+`docs/governance/SS1-23_PRINCIPLE_MAPPING.md` §3, ratified 2026-07-25:
+obligations attach to firms, and evidence is what a platform can supply. Per
+queue item 34 M11(a) the words *compliant*, *certified* and *conformant* may
+not appear in an entry absent an actual certificate; that rule is not yet
+mechanically enforced, which is itself the gap M11(a) names.
+
+**Two state axes, deliberately not one.** `mapping_state` ∈ proposed /
+ratified / deprecated / superseded / withdrawn records the standing of the
+mapping; `evidence_status` ∈ EVIDENCED / PARTIAL / OWED / NONE / UNKNOWN
+records whether the evidence exists. A single axis would let a ratified mapping
+read as existing evidence — the failure shape at `CLAUDE.md` queue item 8. A
+`PARTIAL` entry must enumerate both sides, and `UNKNOWN` never collapses into
+green. **State changes are recorded as dated transitions with a reason, never
+overwritten**, on the DEC-0014 corpus-eligibility and DEC-0012 model-inventory
+discipline.
+
+**STATUS OF EVERY ENTRY BELOW: `proposed`. NOTHING HERE IS RATIFIED.**
+Ratification is a Chair act which the 2026-08-21 ruling expressly did not
+perform, so this register may not yet be cited as a declared control baseline.
+The working document that produced these entries, and which carries the full
+column definitions, the derivation rules and the findings, is
+`docs/governance/M13_STANDARDS_REGISTER_DRAFT_2026-08-21.md`; this section is
+authoritative where the two differ.
+
+* **STD-0001 — SS1/23 Principle 1, model identification and model risk classification (proposed).** *Obligation:* a clear model definition, a comprehensive inventory, and risk-based tiering by materiality, complexity and purpose. *Applicability:* UK-incorporated banks, building societies and PRA-designated investment firms holding internal model permissions (IRB, IMA or IMM); inside an in-scope firm the model scope is wide and the Bank of England has confirmed it reaches fraud; outside those permissions the principles are voluntary. *Ownership:* shared — the platform supplies a generated table, the bank owns the register. *Evidence:* execution metadata under `arcaai/platform/governance/` (ADR-0010) records which model actually ran, which is the thing an inventory claims and rarely proves; the CL-12 provenance manifest supplies per-artefact identity; the RAT-07 tiering record supplies the tier; the generated model inventory adopted at DEC-0012 Gap 1 carries model_id, version, artefact_sha256, tier, lifecycle_state, last_validated and dependencies. *evidence_status:* **OWED** — the inventory is a B8-exit artefact, record-only and not gate-blocking, and the build is at B7. *Basis:* RATIFIED-DIRECT, `docs/governance/SS1-23_PRINCIPLE_MAPPING.md` §4 P1 and DEC-0012 Gap 1. *Limits:* the provenance manifest is per-artefact and generated at build and is **not** an inventory; the adopted artefact is explicitly not a maintained register with owners or approval workflow, which is bank-side.
+
+* **STD-0002 — SS1/23 Principle 2, governance (proposed).** *Obligation:* comprehensive governance and oversight, board and senior management accountability, responsibility allocated to an SMF holder. *Applicability:* as STD-0001. *Ownership:* shared — SMF allocation, board reporting and audit-committee reporting on model-risk-management effectiveness are bank-side and the platform cannot hold them. *Evidence:* the gate apparatus — entry-written gate documents under `docs/build/`, of which `docs/build/B7_GATE.md` is the current one; the Gate Acceptance Record with mandatory producer and approver statements; the ADR and DEC registers in this file; the CL ledger at `docs/governance/GOVERNANCE_REVIEW_CHANGELOG.md`; CF-1 conformance nominations. *evidence_status:* **PARTIAL** — exists: gate documents B1 through B7, the DEC and ADR registers, the CL ledger; owed: the B8 and B9 gate documents, neither yet created. *Basis:* RATIFIED-DIRECT, SS1/23 mapping §4 P2. *Limits:* the producer/approver split anticipates a separation of duties a solo build cannot provide — honest as written, both statements mandatory and same-person explicitly permitted, and meaningful unchanged the moment there are two people. The single-operator segregation-of-duties limit is a finding `CLAUDE.md` queue item 34 requires the control framework to state rather than hide.
+
+* **STD-0003 — SS1/23 Principle 3, model development, implementation and use (proposed).** *Obligation:* documented design, theory and logic; data sources, methodology, performance testing and limitations; detailed enough that an independent third party can understand the model and replicate its results. *Applicability:* as STD-0001. *Ownership:* platform-supplies. *Evidence:* the B3 anti-leakage suite (shuffle test, planted-leak control, source audit, future-blindness); B4 walk-forward validation across six folds with per-fold calibration, the December flag narrated rather than suppressed; Platt calibration with MAE recorded; the CL-13 promotion gate blocking on parity, contract, calibration and provenance; the CL-09 model card; the B9 replay exhibit. *evidence_status:* **PARTIAL** — exists: B3, B4 and the calibration record, all at passed gates; owed: the B9 replay exhibit and the B9 nondeterminism register. *Basis:* RATIFIED-DIRECT, SS1/23 mapping §4 P3. *Limits:* **the replication expectation is the sharp one and the honest answer is bounded.** For the tabular model it is met — DVC-pinned artefacts, seeded training, content-hash provenance. **For the LLM path it is not met and cannot be.** The B9 nondeterminism register is the Principle 3 replication answer and carries a ratified labelling obligation: it must be labelled as such in the B9 gate document, so a reviewer without the internal history can see what it is for. Bounded reproducibility claimed accurately is a stronger position than reproducibility claimed loosely.
+
+* **STD-0004 — SS1/23 Principle 4, independent model validation (proposed).** *Obligation:* validation independent of development, with authority to escalate. *Applicability:* as STD-0001. *Ownership:* bank-owns, **structurally rather than incidentally**. *Evidence:* **none, and none is possible.** What the platform supplies is material that makes independent validation cheap once the bank supplies the independence — reproducible pipelines, pinned artefacts, the validation suite as executable tests rather than a written report, the promotion gate as a mechanical check a validator can run themselves, and the replay exhibit. *evidence_status:* **NONE.** *Basis:* RATIFIED-DIRECT, SS1/23 mapping §3 and §4 P4. *Limits:* **claim discipline, permanent and ratified — the platform must never be described as satisfying Principle 4.** Independence is an organisational property, not a documentary one, and no artefact changes that. G10 external domain reviewers are the nearest approximation available before a client engagement and are the only pre-client evidence against this principle; they remain an open item with no date. This entry is intentionally different from the other four and the difference is deliberate rather than an omission. *Candidate, recorded as such and NOT as evidence:* queue item 34 M10(b) proposes naming lane one's spec-blind test-author as the SS1/23 independent-validation function in the control framework — an owed act, not a ratified mapping.
+
+* **STD-0005 — SS1/23 Principle 5, model risk mitigants (proposed).** *Obligation:* post-model adjustments, overrides, monitoring and controls where model risk cannot be eliminated, with adjustments justified and recorded. *Applicability:* as STD-0001. *Ownership:* shared — the platform records the adjustment, the bank determines who may make one. *Evidence:* the B7 confidence threshold and insufficient-evidence fallback; B8 guardrails (Presidio, OPA, grounding, injection detection) with block and redaction reasons in the audit trail; the B9 `outcome_event` table, non-deferrable under DEC-0010 on SS1/23 monitoring grounds; the `adjustment_event` contract and append-only table, non-deferrable at B9 exit under DEC-0012 Gap 2, carrying correlation_id, original_decision, adjusted_decision, actor_id, actor_role, justification and timestamp; B11 drift detection and the kill-switch drill. *evidence_status:* **PARTIAL** — exists: the append-only audit store under `arcaai/platform/governance/`, INSERT/SELECT only by database grant, on which the two B9 tables are to be built; owed: every artefact named above, the B7 threshold being in flight and the B8, B9 and B11 items unbuilt. *Basis:* RATIFIED-DIRECT, SS1/23 mapping §4 P5 and DEC-0012 Gap 2. *Limits:* without `adjustment_event` the platform can show what the system decided but not that a person disagreed and why. actor_role is a controlled vocabulary — system, reviewer, approver, override_authority — and not a free field, because a record that cannot tell a reviewer from an approver cannot evidence the separation the bank is claiming. Human-override UI and workflow remain deferred.
+
+* **STD-0006 — ISO/IEC 42001, clause structure, declared primary map (proposed).** *Obligation:* AI management system clause structure, unmapped at clause level. *Applicability:* voluntary; a certification target, not a present obligation. *Ownership:* platform-supplies, once a mapping exists. *Evidence:* **none.** No clause-level mapping exists in any ratified artefact. *evidence_status:* **NONE.** *Basis:* RATIFIED-DERIVED, and the derivation is thin — `CLAUDE.md` queue item 34's 2026-08-13 amendment declares that the control framework and traceability matrix map primarily to SS1/23 principles and the ISO/IEC 42001 clause structure. *Limits:* **external attestation is a STAGED target, never a present claim** — ISO 42001 when revenue justifies it. This entry exists to be **visibly empty**: omitting it would let a reader infer the register had been drawn against six frameworks when it has been drawn against two.
+
+* **STD-0007 — ISO/IEC 27001, declared secondary map (proposed).** *Obligation:* information security management system controls, unmapped at control level. *Applicability:* voluntary; a certification target, not a present obligation. *Ownership:* shared, and unallocated — no ratified artefact splits it. *Evidence:* **none.** *evidence_status:* **NONE.** *Basis:* RATIFIED-DERIVED, queue item 34's 2026-08-13 amendment naming ISO 27001 as a secondary map. *Limits:* as STD-0006 — visibly empty by design.
+
+* **STD-0008 — SOC 2 trust criteria, declared secondary map (proposed).** *Obligation:* trust services criteria, unmapped at criterion level. *Applicability:* voluntary; an attestation target. *Ownership:* shared, and unallocated. *Evidence:* **none.** *evidence_status:* **NONE.** *Basis:* RATIFIED-DERIVED, queue item 34's 2026-08-13 amendment. *Limits:* **SOC 2 Type II is targeted at the first serious prospect and its observation period means the clock starts early, so the decision to begin is itself time-sensitive.** Any interim external review is by a specialist independent firm, non-channel, per the external-party boundary ruled 2026-08-13. Visibly empty by design.
+
+* **STD-0009 — NIST AI RMF (proposed).** *Obligation:* **none recorded.** *Applicability:* undetermined. *Ownership:* unallocated. *Evidence:* **none.** *evidence_status:* **NONE.** *Basis:* RATIFIED-DERIVED, and weaker than the three above it: the token sits in the closed framework vocabulary at queue item 34 M11 and **no ratified artefact references the framework at all.** *Limits:* recorded as an **empty token** rather than dropped, because a vocabulary member with no referent is a finding about the vocabulary rather than an absence in the register. Whether it earns a mapping or leaves the vocabulary is owed.
+
+* **STD-0010 — EU AI Act, high-risk credit-decision obligations (proposed).** *Obligation:* high-risk AI system requirements as they attach to credit-decision use. *Applicability:* restated to the deferred schedule — **December 2027, with the remainder in 2028**, per the Commission's digital omnibus, caveated in the ratified source as "subject to final adoption; verified June 2026". *Ownership:* shared, and unsettled — no ratified artefact allocates this obligation between platform and deploying firm. *Evidence:* **none.** No artefact in the tree maps platform controls to EU AI Act articles. *evidence_status:* **NONE.** *Basis:* RATIFIED-DIRECT, ruling R11 in this file, approved June 2026. *Limits:* **this entry carries a standing currency obligation and it is the only one that does.** The ratified text requires re-verification at first client use, and the verification is dated June 2026 — **fourteen months old at the date of this entry.** The age is stated rather than the date alone, because a dated verification presented without its age is the shape of a stale check. Re-verification is owed and is not discharged here.
+
+**Three obligations are derivable from closed, ratified decisions and have NO
+token available in the closed framework vocabulary, so they take no STD number
+and are carried as UNPLACEABLE:** UK GDPR Article 22C, named explicitly in
+DEC-0012 Gap 2 and evidenced by the same `adjustment_event` artefact, with
+`docs/governance/CL-21_data-protection.md` as related reading and not as
+authority since it sits open in the CL ledger; SM&CR, the stated reasoning
+behind DEC-0012's actor_role vocabulary; and the FCA Handbook and JMLSG
+licensing prohibition at DEC-0011, which is the **only fully evidenced control
+in this register**, `verticals/fraud/corpus/MANIFEST.yaml` carrying a licence
+column whose vocabulary is two values only and DEC-0014 item 5 enforcing
+manifest change mechanically at load. **Widening the vocabulary is a ruling and
+was expressly not taken at PROMPT 128R.** Three independent arrivals at one
+dead end in a single drafting pass is the argument for treating this as a
+vocabulary defect rather than three special cases.
+
+**DORA is not derivable from any ratified artefact** and takes no number. It
+appears in the tree only at `docs/specs/05-security-and-compliance/README.md`,
+which is RETIRED under DEC-0007 and carries its own "Version 0.0 (placeholder)
+/ Status: Not started" line. Its absence is a real coverage gap rather than a
+drafting oversight, and closing it needs a ratified decision. Recorded because
+that retired document is the most inviting one in the tree for anyone
+populating a standards register, and read as a requirements list it would put
+unratified obligations into a control baseline.
+
+**No control-mapping line is carried on this section.** Queue item 34 M11(d)
+requires per-class mapping content to be defined once in the control framework,
+and that framework does not exist yet; `docs/governance/ARC_REGISTER.md` omits
+its line for the same reason. That the standards register cannot yet carry a
+standards-mapping line is an ordering consequence, not an oversight.
+
 ## Locked suite (June 2026)
 
 |Document|Locked version|
