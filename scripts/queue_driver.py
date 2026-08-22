@@ -113,6 +113,14 @@ from typing import Any, Callable
 
 LABEL_RELEASED = "ARCAAI/RELEASED"
 LABEL_CONSUMED = "ARCAAI/CONSUMED"
+# QD-F2 mechanism (a), ruling 1 of the 22 Aug post-156 sheet. The terminal label
+# for a REFUSED draft. It exists so the refusal path has the terminal state the
+# success path already had: list_released_drafts queries label:RELEASED, so
+# moving a refused draft off that label is what stops the next poll selecting it,
+# re-refusing it and paging again. This adds no new CLASS of act -- relabel is
+# the same act the consumed path performs, and DEC-0019's deletes-nothing
+# property is untouched because a relabel removes no bytes.
+LABEL_REFUSED = "ARCAAI/REFUSED"
 
 SUBJECT_RE = re.compile(r"^ARCAAI-PROMPT-(\d{1,4})(R\d*)?$")
 BODY_PROMPT_RE = re.compile(r"^\s*PROMPT\s+(\d{1,4})(R\d*)?\b")
@@ -146,6 +154,16 @@ ACT_OUTCOMES_DRAFT = "OUTCOMES-DRAFT"
 ACT_PAGED = "PAGED"
 ACT_PAGE_FAILED = "PAGE-FAILED"
 ACT_RETRY = "RETRY"
+# QD-F2. Two new terminal-state actions, kept distinct in the vocabulary because
+# the two mechanisms are separate and ruling 7 requires them separately
+# evidenced: a log that collapsed them would make that evidence uncountable.
+ACT_DEAD_LETTERED = "DEAD-LETTERED"
+ACT_ARCHIVED = "ARCHIVED"
+
+# QD-F2 sidecar schema id. Versioned because the sidecar is an evidence artefact
+# a later reader must be able to parse without guessing which fields existed.
+SIDECAR_SCHEMA = "arcaai.queue.dead-letter/v1"
+ARCHIVE_SCHEMA = "arcaai.queue.archive/v1"
 
 
 class QueueDriverError(RuntimeError):
@@ -351,6 +369,24 @@ class Config:
 
     def outbox(self, lane_id: str) -> Path:
         return self.queue_root / lane_id / "outbox"
+
+    def dead(self, lane_id: str | None) -> Path:
+        """Terminal location for a refused envelope (QD-F2 (a); rulings 3, 6).
+
+        ``lane_id`` is optional because a refusal can occur BEFORE the lane is
+        known -- a malformed subject or an unparseable TARGET is refused with no
+        lane to attribute it to. Filing such an item under a lane would be a
+        fabrication, so it goes to a queue-root-level ``dead`` instead. Both
+        forms sit inside the queue root and are therefore bounded by
+        ``_assert_within_queue`` without that guard changing.
+        """
+        if lane_id is None:
+            return self.queue_root / "dead"
+        return self.queue_root / lane_id / "dead"
+
+    def done(self, lane_id: str) -> Path:
+        """Terminal location for a swept outcome file (QD-F2 (b); rulings 4, 5, 6)."""
+        return self.queue_root / lane_id / "done"
 
 
 def load_config(path: Path) -> Config:
@@ -671,6 +707,16 @@ class Transport:
     def relabel_consumed(self, record: DraftRecord) -> None:
         raise NotImplementedError
 
+    def relabel_refused(self, record: DraftRecord) -> None:
+        """Terminal state for a refused draft (QD-F2 (a), ruling 1).
+
+        Deliberately a separate operation from ``relabel_consumed`` rather than a
+        parameter on it: a refused envelope and a consumed one are different
+        outcomes, and a reader of the mailbox must be able to tell them apart
+        without consulting the driver log.
+        """
+        raise NotImplementedError
+
     def upsert_outcomes_draft(
         self, subject: str, body: str, draft_id: str | None, thread_id: str | None
     ) -> str:
@@ -772,8 +818,21 @@ class GmailTransport(Transport):
         return records
 
     def relabel_consumed(self, record: DraftRecord) -> None:
+        self._relabel(record, LABEL_CONSUMED)
+
+    def relabel_refused(self, record: DraftRecord) -> None:
+        self._relabel(record, LABEL_REFUSED)
+
+    def _relabel(self, record: DraftRecord, terminal_label: str) -> None:
+        """Move a draft from RELEASED to a terminal label.
+
+        Factored out when QD-F2 added the refusal terminal state, so that both
+        outcomes travel the identical code path. Two near-copies would have been
+        two places for the RELEASED removal to drift apart, and it is the removal
+        -- not the addition -- that stops the next poll selecting the item.
+        """
         body = {
-            "addLabelIds": [self._label_id(LABEL_CONSUMED)],
+            "addLabelIds": [self._label_id(terminal_label)],
             "removeLabelIds": [self._label_id(LABEL_RELEASED)],
         }
         try:
@@ -823,6 +882,7 @@ class FakeTransport(Transport):
     def __init__(self, drafts: list[DraftRecord] | None = None) -> None:
         self.drafts = list(drafts or [])
         self.consumed: list[str] = []
+        self.refused: list[str] = []
         self.outcome_drafts: dict[str, str] = {}
         self.fail_list_times = 0
         self._list_calls = 0
@@ -832,10 +892,18 @@ class FakeTransport(Transport):
         self._list_calls += 1
         if self._list_calls <= self.fail_list_times:
             raise TransientError(f"synthetic transient failure #{self._list_calls}")
-        return [d for d in self.drafts if d.draft_id not in self.consumed]
+        # A refused draft is excluded exactly as a consumed one is. The real
+        # transport achieves this by querying label:RELEASED, which a relabelled
+        # draft no longer carries; the fake must model that or a test would show
+        # the re-paging stopping when in production it would not.
+        terminal = set(self.consumed) | set(self.refused)
+        return [d for d in self.drafts if d.draft_id not in terminal]
 
     def relabel_consumed(self, record: DraftRecord) -> None:
         self.consumed.append(record.draft_id)
+
+    def relabel_refused(self, record: DraftRecord) -> None:
+        self.refused.append(record.draft_id)
 
     def upsert_outcomes_draft(
         self, subject: str, body: str, draft_id: str | None, thread_id: str | None
@@ -1084,23 +1152,238 @@ class QueueDriver:
             except TransientError as exc:
                 self.refuse(record, f"transient failure exhausted retries: {exc}", report)
 
+    def _dead_letter(self, record: DraftRecord, reason: str) -> dict[str, Any]:
+        """Write the refused envelope and its sidecar into the lane's ``dead`` dir.
+
+        QD-F2 mechanism (a), rulings 2, 3, 6 and 12. Two files, deliberately:
+
+        * the envelope, carrying the received body bytes and NOTHING else, so it
+          stays independently hashable without parsing anything; and
+        * a ``.sidecar.json`` carrying the hash, the origin, the refusal class
+          and the timestamps.
+
+        Ruling 2 chose this over a single file with a header block precisely
+        because a header would have to be stripped before the preserved bytes
+        could be hashed, and a hash that depends on a parser is a hash with a
+        parser-shaped hole in it.
+
+        Ruling 6's conditions are met in substance: the content hash is computed
+        and recorded, and the origin is recorded. Note the origin here is a Gmail
+        draft rather than a filesystem path -- at refusal time the envelope has
+        not been written to any inbox, so there is nothing to rename. The
+        envelope's summary calls this a "move"; for mechanism (a) it is a write
+        of received bytes, which is what the design note's section 2.1 actually
+        specifies. Recorded rather than silently reconciled.
+        """
+        lane_id: str | None = None
+        prompt_id = ""
+        try:
+            prompt_id, _base, _rev = parse_subject(record.subject)
+        except QueueDriverError:
+            prompt_id = ""
+        try:
+            body_text = extract_plain_body(record.raw).decode("utf-8", "replace")
+            candidate = parse_target(body_text)
+            if candidate in self.config.lanes:
+                lane_id = candidate
+        except QueueDriverError:
+            lane_id = None
+
+        # The envelope bytes are the RAW received body: no BOM strip, no Gmail
+        # unwrap. A dead-letter is evidence of what arrived, and normalising it
+        # would destroy the very thing an investigator needs to see.
+        try:
+            envelope = extract_plain_body(record.raw)
+        except QueueDriverError:
+            envelope = record.raw
+        content_hash = sha256_hex(envelope)
+        stamp = utc_now_iso().replace(":", "").replace("-", "")
+        slug = f"PROMPT-{prompt_id}" if prompt_id else f"UNPARSED-{record.draft_id}"
+        base_name = f"{slug}.REFUSED-{stamp}"
+
+        directory = self._assert_within_queue(self.config.dead(lane_id))
+        directory.mkdir(parents=True, exist_ok=True)
+        envelope_path = self._assert_within_queue(directory / f"{base_name}.md")
+        sidecar_path = self._assert_within_queue(directory / f"{base_name}.sidecar.json")
+
+        # Collision discipline, per the design note's "A collision case the design
+        # must answer": the driver refuses on doubt rather than overwriting. The
+        # timestamp makes a same-second second refusal the only way to collide,
+        # and that case refuses rather than clobbering evidence.
+        if envelope_path.exists() or sidecar_path.exists():
+            raise QueueDriverError(
+                f"refusing to overwrite an existing dead-letter record at {envelope_path}: "
+                "the driver never deletes or overwrites"
+            )
+
+        self._write_bytes(envelope_path, envelope)
+        landed = sha256_hex(envelope_path.read_bytes())
+        if landed != content_hash:
+            raise QueueDriverError(
+                f"dead-letter content-hash verification FAILED for {envelope_path}: "
+                f"expected {content_hash}, file on disk hashes {landed}"
+            )
+
+        sidecar = {
+            "schema": SIDECAR_SCHEMA,
+            "prompt_id": prompt_id or None,
+            "subject": record.subject,
+            "lane": lane_id,
+            "refusal_reason": reason,
+            "refused_at_utc": utc_now_iso(),
+            "envelope_filename": envelope_path.name,
+            "content_sha256": content_hash,
+            "raw_message_sha256": sha256_hex(record.raw),
+            "origin": {
+                "kind": "gmail-draft",
+                "draft_id": record.draft_id,
+                "message_id": record.message_id,
+                "thread_id": record.thread_id,
+                "intended_path": (
+                    str(self.config.inbox(lane_id) / f"PROMPT-{prompt_id}.md")
+                    if lane_id and prompt_id
+                    else None
+                ),
+            },
+            "report": "ERROR page + driver.log row + this record (ruling 12)",
+        }
+        sidecar_bytes = json.dumps(sidecar, indent=2, sort_keys=True).encode("utf-8")
+        self._write_bytes(sidecar_path, sidecar_bytes)
+
+        return {
+            "envelope_path": str(envelope_path),
+            "sidecar_path": str(sidecar_path),
+            "content_hash": content_hash,
+            "lane": lane_id,
+            "prompt_id": prompt_id,
+        }
+
     def refuse(self, record: DraftRecord, reason: str, report: CycleReport) -> None:
-        """Refuse a draft: log, page ERROR, never route. Never retried."""
+        """Refuse a draft: dead-letter it, relabel it terminal, log, page. Never routed.
+
+        QD-F2 changed the ORDER of business here, and the order is load-bearing.
+        The dead-letter record is written FIRST, so that if the relabel fails the
+        evidence already exists on disk; the item would then be re-refused on the
+        next poll, which is the pre-QD-F2 behaviour and no worse. Relabelling
+        first and failing the write would lose the evidence while silencing the
+        alert -- the one ordering that trades a noisy defect for a quiet one.
+
+        The refusal itself is still never retried, because none of the five
+        refusal conditions is transient.
+        """
+        record_detail: dict[str, Any] = {}
+        dead_letter_note = ""
+        try:
+            record_detail = self._dead_letter(record, reason)
+            self.log.append(
+                action=ACT_DEAD_LETTERED,
+                prompt_no=record_detail.get("prompt_id") or (record.subject or "").strip(),
+                target=record_detail.get("lane"),
+                draft_id=record.draft_id,
+                content_hash=record_detail.get("content_hash"),
+                path=record_detail.get("envelope_path"),
+                sidecar_path=record_detail.get("sidecar_path"),
+            )
+        except QueueDriverError as exc:
+            # A dead-letter that cannot be written is itself reportable, and it
+            # must not swallow the original refusal: the chair needs both the
+            # reason the envelope was refused and the reason the evidence is
+            # missing. Neither is allowed to mask the other.
+            dead_letter_note = f" [dead-letter FAILED: {exc}]"
+            self.log.append(
+                action=ACT_DEAD_LETTERED,
+                prompt_no=(record.subject or "").strip(),
+                draft_id=record.draft_id,
+                detail=f"dead-letter failed: {exc}",
+                verified=False,
+            )
+
         self.log.append(
             action=ACT_REFUSED,
             prompt_no=(record.subject or "").strip(),
             draft_id=record.draft_id,
             detail=reason,
+            path=record_detail.get("envelope_path"),
         )
-        report.refused.append(f"{record.subject}: {reason}")
+        report.refused.append(f"{record.subject}: {reason}{dead_letter_note}")
+
+        # Ruling 1: the terminal relabel. This is the act that stops the next
+        # poll selecting the draft, and therefore the act that closes the defect.
+        relabel_note = ""
+        try:
+            self.transport.relabel_refused(record)
+        except (QueueDriverError, TransientError) as exc:
+            relabel_note = (
+                f"\n\nWARNING: terminal relabel FAILED ({exc}). This item will be "
+                "refused again on the next poll."
+            )
+
         self.emit_page(
             ERROR,
             "ARCAAI queue driver: REFUSED",
-            f"{record.subject or '(no subject)'}\n\n{reason}",
+            f"{record.subject or '(no subject)'}\n\n{reason}{dead_letter_note}{relabel_note}",
             report,
         )
 
     # -- outbound -------------------------------------------------------
+
+    def _archive_outcome(self, path: Path, lane_id: str, content_hash: str) -> dict[str, Any]:
+        """Move a swept outcome file into the lane's ``done`` dir.
+
+        QD-F2 mechanism (b), rulings 4, 5 and 6. This is a genuine rename, which
+        ruling 6 permits on two conditions, both met here: the content hash is
+        computed before the move and re-verified from disk after it, and the
+        origin path is recorded in the sidecar and in the log row.
+
+        Why the archive rather than the log's existing ``swept_outcomes`` dedup:
+        the log guard is state ABOUT the file, and it fails the moment the log is
+        lost, rotated or replaced. The archive is state OF the file -- once the
+        outcome is not in the outbox, no sweep can find it to re-alert on,
+        whatever the log says. Ruling 4 chose the archive over a high-water mark;
+        the log dedup survives underneath as a second line, not as the mechanism.
+        """
+        directory = self._assert_within_queue(self.config.done(lane_id))
+        directory.mkdir(parents=True, exist_ok=True)
+
+        destination = self._assert_within_queue(directory / path.name)
+        if destination.exists():
+            # Never clobber. A regenerated outcome of the same name is archived
+            # beside its predecessor under a stamped name rather than replacing
+            # it, because both are evidence and the driver deletes nothing.
+            stamp = utc_now_iso().replace(":", "").replace("-", "")
+            destination = self._assert_within_queue(
+                directory / f"{path.stem}.{stamp}{path.suffix}"
+            )
+            if destination.exists():
+                raise QueueDriverError(
+                    f"refusing to overwrite an existing archived outcome at {destination}"
+                )
+
+        sidecar_path = self._assert_within_queue(
+            destination.with_name(destination.name + ".sidecar.json")
+        )
+        origin = str(path)
+        os.replace(str(path), str(destination))
+
+        landed = sha256_hex(destination.read_bytes())
+        if landed != content_hash:
+            raise QueueDriverError(
+                f"archive content-hash verification FAILED for {destination}: "
+                f"expected {content_hash}, file on disk hashes {landed}"
+            )
+
+        sidecar = {
+            "schema": ARCHIVE_SCHEMA,
+            "lane": lane_id,
+            "archived_at_utc": utc_now_iso(),
+            "origin_path": origin,
+            "archived_path": str(destination),
+            "content_sha256": content_hash,
+        }
+        self._write_bytes(
+            sidecar_path, json.dumps(sidecar, indent=2, sort_keys=True).encode("utf-8")
+        )
+        return {"archived_path": str(destination), "origin_path": origin}
 
     def sweep_outboxes(self, report: CycleReport) -> None:
         seen = self.log.swept_outcomes()
@@ -1117,16 +1400,42 @@ class QueueDriver:
                     continue
                 data = path.read_bytes()
                 status, notes = parse_outcome_status(data)
+                content_hash = sha256_hex(data)
                 self.log.append(
                     action=ACT_SWEPT,
                     prompt_no=path.name.replace(".outcome.md", ""),
                     target=lane_id,
-                    content_hash=sha256_hex(data),
+                    content_hash=content_hash,
                     outcome_path=key,
                     status=status,
                     session_day=day,
                     notes=notes,
                 )
+                # QD-F2 (b): archive AFTER the swept row is durable. If the
+                # archive fails, the sweep is still recorded and the outcome is
+                # still in the outbox -- recoverable. The reverse order could
+                # move the file and then fail to record where it went.
+                try:
+                    archived = self._archive_outcome(path, lane_id, content_hash)
+                    self.log.append(
+                        action=ACT_ARCHIVED,
+                        prompt_no=path.name.replace(".outcome.md", ""),
+                        target=lane_id,
+                        content_hash=content_hash,
+                        outcome_path=key,
+                        path=archived["archived_path"],
+                        session_day=day,
+                    )
+                except (QueueDriverError, OSError) as exc:
+                    self.log.append(
+                        action=ACT_ARCHIVED,
+                        prompt_no=path.name.replace(".outcome.md", ""),
+                        target=lane_id,
+                        outcome_path=key,
+                        detail=f"archive failed: {exc}",
+                        verified=False,
+                    )
+                    report.refused.append(f"{lane_id}/{path.name}: archive failed: {exc}")
                 fresh += 1
                 report.swept.append(f"{lane_id}/{path.name} [{status}]")
                 if status in PAGING_STATUSES:
