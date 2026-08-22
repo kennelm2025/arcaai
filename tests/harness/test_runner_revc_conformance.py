@@ -152,6 +152,47 @@ def test_exposed_parameters_are_read_rather_than_assumed():
     assert values["hnsw_ef_search"] == "40"
 
 
+def test_real_adapter_leaves_no_material_parameter_UNKNOWN():
+    """End-to-end, against the REAL adapter rather than a stub — queue item
+    36(a), the increment that closed the partial identity.
+
+    The two tests above prove the runner's reader behaves correctly when a
+    store exposes nothing and when it exposes something. Neither could tell
+    whether the store this repository actually uses exposes anything, and
+    until 36(a) it did not: `ChromaStore` carried no `collection_metadata`, so
+    four of the five material parameters read UNKNOWN on every real run while
+    both stub tests passed. That is the gap this test closes, and it is why it
+    constructs the real adapter instead of a third stub.
+
+    A deterministic embedding function is injected, per the inc2 convention, so
+    no model download occurs.
+    """
+    import hashlib
+    import math
+
+    from arcaai.platform.retrieval.chroma_store import EMBEDDING_MODEL, ChromaStore
+
+    class HashEmbedding:
+        def __call__(self, texts: list[str]) -> list[list[float]]:
+            out = []
+            for text in texts:
+                digest = hashlib.sha256(text.encode("utf-8")).digest()
+                vec = [b / 255.0 for b in digest[:16]]
+                norm = math.sqrt(sum(v * v for v in vec)) or 1.0
+                out.append([v / norm for v in vec])
+            return out
+
+    store = ChromaStore(
+        collection_name="test_revc_env_identity",
+        embedding_function=HashEmbedding(),
+    )
+    values = R.read_material_parameters(store, EMBEDDING_MODEL)
+
+    unknown = sorted(n for n, v in values.items() if v == R.UNKNOWN)
+    assert unknown == [], f"material parameters still UNKNOWN: {unknown}"
+    assert set(values) == set(R.MATERIAL_PARAMETERS)
+
+
 # ------------------------------------------- C4 — §12.3, confound single_chunk
 
 

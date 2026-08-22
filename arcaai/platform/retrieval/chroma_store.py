@@ -44,6 +44,39 @@ EMBEDDING_MODEL = "all-MiniLM-L6-v2;onnx;chromadb==1.5.9"
 
 _PINNED_MODEL_NAME = "all-MiniLM-L6-v2"
 
+# Index parameters SET explicitly at collection construction, then READ BACK
+# from the live collection and reported from the read-back (queue item 36(a),
+# design fork (iii) as ruled 2026-08-22). Setting without reading back would
+# report a declaration as though it were a measurement, which the runner's own
+# rule forbids; reading back without setting would leave the environment at
+# whatever default the installed chromadb happens to carry, so a version bump
+# would move the environment identity silently.
+#
+# THE VALUES ARE THE CURRENT EFFECTIVE DEFAULTS, DELIBERATELY. Read from a live
+# chromadb 1.5.5 collection created with no index parameters: space l2,
+# ef_construction 100, max_neighbors 16, ef_search 100. Pinning them changes no
+# retrieval result today — that is the point. Choosing a different space here
+# would silently change every score and every ranking in the corpus, which is a
+# retrieval decision and not this increment's to take.
+_INDEX_PARAMETERS: dict[str, str | int] = {
+    "hnsw:space": "l2",
+    "hnsw:construction_ef": 100,
+    "hnsw:M": 16,
+    "hnsw:search_ef": 100,
+}
+
+# Effective-configuration key -> material-parameter name. The left side is
+# chromadb's resolved `configuration_json["hnsw"]` vocabulary, which differs
+# from the `hnsw:`-prefixed vocabulary used to SET the values above; the right
+# side is the runner's MATERIAL_PARAMETERS naming. Mapping them here keeps
+# chromadb's vocabulary inside this module, per the CF-1/B7-a boundary.
+_EFFECTIVE_TO_MATERIAL = {
+    "space": "distance_space",
+    "ef_construction": "hnsw_construction_ef",
+    "max_neighbors": "hnsw_m",
+    "ef_search": "hnsw_ef_search",
+}
+
 
 def supplied_model_name() -> str | None:
     """The model name chromadb's MiniLM class currently ships — exposed
@@ -131,11 +164,59 @@ class ChromaStore(RetrievalStore):
         self._collection = self._client.get_or_create_collection(
             name=collection_name,
             embedding_function=self._embedding,
-            metadata={"embedding_model": EMBEDDING_MODEL},
+            metadata={"embedding_model": EMBEDDING_MODEL, **_INDEX_PARAMETERS},
         )
         # Warm-up: force any first-use model download to happen here,
         # at construction, not inside the first query (R7 path).
         self._embedding(["warm-up"])
+
+    # -------------------------------------------------- environment identity
+
+    @property
+    def collection_metadata(self) -> dict[str, str]:
+        """The material index parameters, READ BACK from the live collection.
+
+        Consumed by ``arcaai.harness.runner.read_material_parameters`` through
+        its duck-typed ``collection_metadata`` surface, which keys on the
+        runner's MATERIAL_PARAMETERS names. Widening this surface is queue item
+        36(a); before it existed, four of the five material parameters read
+        UNKNOWN on every run and the environment identity was honest but
+        partial.
+
+        **Read back, not echoed.** The values come from chromadb's resolved
+        ``configuration_json["hnsw"]``, never from ``collection.metadata``.
+        The distinction is the whole of design fork (iii) and is not
+        cosmetic: ``collection.metadata`` returns what this adapter PASSED IN,
+        so reporting from it would report a declaration as though it had been
+        measured — and for a collection that already existed with different
+        parameters it would report values the index is not actually using.
+        ``configuration_json`` reports what the index resolved to. Verified on
+        chromadb 1.5.5: re-opening an existing collection with different
+        metadata leaves both the stored metadata and the effective
+        configuration unchanged, so only the read-back tells the truth.
+
+        **Three outcomes, and the third is silence.** A parameter that cannot
+        be read is OMITTED from the returned dict rather than defaulted. The
+        runner initialises every parameter to UNKNOWN and only overwrites what
+        this dict supplies, so an omission surfaces as UNKNOWN and is named in
+        the result's ``unknown_parameters``. A documented default substituted
+        here would make two genuinely different environments hash identically,
+        which is the single failure the environment identity exists to
+        prevent.
+        """
+        values: dict[str, str] = {"embedding_model": EMBEDDING_MODEL}
+        try:
+            configuration = self._collection.configuration_json
+            hnsw = configuration["hnsw"]
+        except Exception:  # noqa: BLE001 - unreadable config means UNKNOWN
+            return values
+        if not isinstance(hnsw, dict):
+            return values
+        for effective_key, material_name in _EFFECTIVE_TO_MATERIAL.items():
+            value = hnsw.get(effective_key)
+            if value is not None:
+                values[material_name] = str(value)
+        return values
 
     # ------------------------------------------------------------ contract
 
@@ -169,6 +250,11 @@ class ChromaStore(RetrievalStore):
             query_texts=[text],
             n_results=min(top_k, self.count()),
         )
+        # Read once per query rather than per chunk. UNKNOWN when the space
+        # cannot be read: the same three-outcome rule the identity surface
+        # follows, because a space asserted here and not actually in force is
+        # exactly the defect retiring the literal was meant to close.
+        distance_space = self.collection_metadata.get("distance_space", "UNKNOWN")
         out: list[RetrievedChunk] = []
         for chunk_id, document, metadata, distance in zip(
             result["ids"][0],
@@ -189,7 +275,17 @@ class ChromaStore(RetrievalStore):
                 RetrievedChunk(
                     chunk=chunk,
                     score=float(distance),
-                    metadata={"distance_space": "l2", "store": "chromadb"},
+                    metadata={
+                        # Was the literal "l2" until queue item 36(a). A literal
+                        # here is an assertion about the index rather than a
+                        # reading of it: it happened to be correct while the
+                        # collection used chromadb's default space, and would
+                        # have gone on reporting "l2" unchanged if the space
+                        # ever moved. Sourced from the read-back surface so the
+                        # score's stated space is the space that produced it.
+                        "distance_space": distance_space,
+                        "store": "chromadb",
+                    },
                 )
             )
         return out
@@ -202,5 +298,5 @@ class ChromaStore(RetrievalStore):
         self._collection = self._client.get_or_create_collection(
             name=self._collection_name,
             embedding_function=self._embedding,
-            metadata={"embedding_model": EMBEDDING_MODEL},
+            metadata={"embedding_model": EMBEDDING_MODEL, **_INDEX_PARAMETERS},
         )
