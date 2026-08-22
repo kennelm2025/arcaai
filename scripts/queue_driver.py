@@ -159,6 +159,19 @@ ACT_RETRY = "RETRY"
 # evidenced: a log that collapsed them would make that evidence uncountable.
 ACT_DEAD_LETTERED = "DEAD-LETTERED"
 ACT_ARCHIVED = "ARCHIVED"
+# The two observability actions scheduled by DEC-0020 as the first post-lift act.
+# Each closes one of the two shortfalls that ruling accepted as known limitations
+# of the logging surface rather than as preconditions of the lift.
+ACT_AUTH = "AUTH"          # closes: acquisitions were uncountable (159 criterion c)
+ACT_HEARTBEAT = "HEARTBEAT"  # closes: a healthy quiet loop looked like a dead one
+
+# Which side of the 158 lazy-auth boundary acted. Kept as distinct tokens rather
+# than a boolean because "consent happened" and "a refresh happened" are the two
+# facts the boundary exists to separate, and a reader counting them must never
+# have to infer which one a row means.
+AUTH_CONSENT = "consent"        # the interactive flow ran — the human-gated side
+AUTH_REFRESH = "refresh"        # non-interactive token refresh — the automatable side
+AUTH_TOKEN_LOADED = "token-loaded"  # a valid token was already on disk; neither of the above
 
 # QD-F2 sidecar schema id. Versioned because the sidecar is an evidence artefact
 # a later reader must be able to parse without guessing which fields existed.
@@ -715,6 +728,16 @@ class Transport:
 
         Implementations that need no credential may leave this a no-op; it is
         not optional for those that do.
+
+        RETURNS which side of the boundary acted -- one of ``AUTH_CONSENT``,
+        ``AUTH_REFRESH``, ``AUTH_TOKEN_LOADED`` -- or ``None`` when the held
+        credential was reused and nothing was acquired. The driver logs that
+        answer, which is what makes acquisitions countable from the log.
+
+        The value is RETURNED rather than logged here on purpose: the transport
+        has no business holding a reference to the routing log, and giving it one
+        to satisfy an observability requirement would put a logging dependency
+        inside the component whose whole job is talking to Gmail.
         """
         return None
 
@@ -749,14 +772,20 @@ class GmailTransport(Transport):
         self._service: Any = None
         self._labels: dict[str, str] = {}
 
-    def ensure_authorised(self) -> None:
+    def ensure_authorised(self) -> str | None:
         """The ONE place interactive consent may happen. Called outside every retry.
 
         Idempotent: once the service is built it is reused for the life of the
-        transport, so calling this again is free and acquires nothing.
+        transport, so calling this again is free, acquires nothing, and returns
+        ``None`` — which is itself the signal the driver logs as "no acquisition
+        this poll", and the reason a long-running loop shows exactly one
+        acquisition rather than one per poll.
         """
-        if self._service is None:
-            self._service = self._authorise(allow_interactive=True)
+        if self._service is not None:
+            return None
+        self._last_auth_mode: str | None = None
+        self._service = self._authorise(allow_interactive=True)
+        return self._last_auth_mode
 
     def _authorise(self, allow_interactive: bool = False) -> Any:
         """Build the Gmail service, consenting only where consent is permitted.
@@ -794,8 +823,10 @@ class GmailTransport(Transport):
         from googleapiclient.discovery import build
 
         creds = None
+        self._last_auth_mode = None
         if self.token_path.exists():
             creds = Credentials.from_authorized_user_file(str(self.token_path), GMAIL_SCOPES)
+            self._last_auth_mode = AUTH_TOKEN_LOADED
         if creds is None or not creds.valid:
             if creds is not None and creds.expired and creds.refresh_token:
                 # Non-interactive side of the boundary. A refresh that fails for
@@ -805,6 +836,7 @@ class GmailTransport(Transport):
                 # revoked credential into a prompt in an unattended run.
                 try:
                     creds.refresh(Request())
+                    self._last_auth_mode = AUTH_REFRESH
                 except Exception as exc:
                     raise QueueDriverError(
                         f"token refresh failed for {self.token_path}: {exc}. Authorisation is "
@@ -828,6 +860,7 @@ class GmailTransport(Transport):
                     str(self.credentials_path), GMAIL_SCOPES
                 )
                 creds = flow.run_local_server(port=0)
+                self._last_auth_mode = AUTH_CONSENT
             self.token_path.write_text(creds.to_json(), encoding="utf-8")
         return build("gmail", "v1", credentials=creds, cache_discovery=False)
 
@@ -972,11 +1005,33 @@ class FakeTransport(Transport):
         # "no second acquisition", and only a count can show that.
         self.auth_acquisitions = 0
         self.auth_fails_with: Exception | None = None
+        self._authorised = False
+        self.auth_mode: str = AUTH_TOKEN_LOADED
 
-    def ensure_authorised(self) -> None:
+    def ensure_authorised(self) -> str | None:
         if self.auth_fails_with is not None:
             raise self.auth_fails_with
+        # Two counters with deliberately different meanings, because the existing
+        # lazy-auth suite asserts on the first and the new AUTH row depends on the
+        # second.
+        #
+        # ``auth_acquisitions`` counts CALLS, which is what it has always counted
+        # and what test_repeated_cycles_do_not_re_acquire... asserts against; that
+        # test's own docstring records the limitation.
+        #
+        # The RETURN VALUE models the real transport's contract instead: a mode on
+        # first acquisition, ``None`` thereafter. That distinction is what keeps
+        # the AUTH row honest — a fake returning a mode every call would log one
+        # acquisition per poll where production logs one per run, which is exactly
+        # the fake-diverges-from-production failure the 157 label gap taught.
+        #
+        # Renaming the counter to match its meaning, and updating that assertion,
+        # is owed but is OUTSIDE this envelope's existing-file bound.
         self.auth_acquisitions += 1
+        if self._authorised:
+            return None
+        self._authorised = True
+        return self.auth_mode
 
     def list_released_drafts(self) -> list[DraftRecord]:
         self._list_calls += 1
@@ -1054,6 +1109,11 @@ class QueueDriver:
         self.log = log or RoutingLog(config.log_path)
         self._lane_state: dict[str, LaneAssertion] = {}
         self._lane_asserted_day: str | None = None
+        # Poll ordinal WITHIN THIS RUN, not since the beginning of the log. A
+        # restart resets it to zero on purpose: the heartbeat answers "is this
+        # process alive and how far has it got", and a number carried across
+        # restarts would silently blur two different runs into one trail.
+        self._poll_ordinal = 0
 
     # -- guards ---------------------------------------------------------
 
@@ -1627,6 +1687,7 @@ class QueueDriver:
 
     def run_once(self) -> CycleReport:
         report = CycleReport()
+        self._poll_ordinal += 1
         self.ensure_lanes_asserted()
 
         # The lazy-auth boundary, and the reason it is HERE: authorisation is
@@ -1637,7 +1698,16 @@ class QueueDriver:
         # being retried into a prompt, which is the failure mode that would make
         # an unattended run stop and silently wait for a human.
         try:
-            self.transport.ensure_authorised()
+            auth_mode = self.transport.ensure_authorised()
+            if auth_mode is not None:
+                # DEC-0020 observability, §2.1. Written only when something was
+                # actually acquired, so counting these rows counts acquisitions.
+                # A poll that reused the held credential writes nothing here, and
+                # that silence is the evidence the boundary held.
+                # ``_poll_ordinal`` is already incremented at the top of the
+                # cycle, so it is used as-is: the row names the poll during which
+                # the acquisition happened, not the one after it.
+                self.log.append(action=ACT_AUTH, mode=auth_mode, poll=self._poll_ordinal)
         except (QueueDriverError, TransientError) as exc:
             self.log.append(action=ACT_REFUSED, detail=f"authorisation failed: {exc}")
             report.errors.append(f"authorisation failed: {exc}")
@@ -1659,7 +1729,34 @@ class QueueDriver:
         except OSError as exc:
             report.errors.append(f"outbox sweep failed: {exc}")
             self.emit_page(ERROR, "ARCAAI queue driver: ERROR", str(exc), report)
+
+        self._write_heartbeat(report)
         return report
+
+    def _write_heartbeat(self, report: CycleReport) -> None:
+        """One row per COMPLETED poll — DEC-0020 observability, §2.2.
+
+        Written at the END of the cycle, and that placement is the whole point.
+        A heartbeat written on entry would prove only that a poll started; written
+        on exit, the trail's last row is the last poll that FINISHED, so a process
+        killed mid-poll leaves a trail ending one short. That is what makes a
+        healthy quiet loop distinguishable from a dead one — the 159 finding, and
+        the shortfall DEC-0020 accepted as a known limitation of the logging
+        surface rather than as a precondition of the lift.
+
+        Deliberately COUNTS, not lists. This is a liveness signal, not telemetry:
+        the lists are already recorded by the ROUTED, REFUSED, SWEPT and ARCHIVED
+        rows, and duplicating them here would grow the log without adding a fact.
+        """
+        self.log.append(
+            action=ACT_HEARTBEAT,
+            poll=self._poll_ordinal,
+            routed=len(report.routed),
+            refused=len(report.refused),
+            swept=len(report.swept),
+            paged=len(report.paged),
+            errors=len(report.errors),
+        )
 
     def run_forever(self) -> None:
         while True:
