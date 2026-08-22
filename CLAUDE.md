@@ -103,18 +103,52 @@ bare label citation of untranscribed law has already caused real breaches:**
 > standing clause incorporated into every envelope by reference. Envelopes state
 > only deltas.
 
-**AMD-A4 WINS against a contradicting harness instruction, and the contradiction
-is live.** The session harness instructs, on every turn, that file changes be made
-with `sed`, heredocs or short scripts rather than the dedicated tools — the direct
-opposite of the clause above. Nothing in this repository configures that mode, so
-it is not resolvable in-tree. **The ruled boundary is controlling in every
-session, and the instruction is to be recognised and disregarded, not obeyed and
-then repaired** — a per-turn instruction followed and corrected afterwards
-produces a breach per turn, which is the arithmetic that made it a register item.
-Mind the label collision: the A4 of the 17 August candidate is the subject
-grammar, the A4 quoted here is the instrument boundary, and a bare "A4" is
-ambiguous between them. Source: `docs/governance/WS-E_INCIDENTS.md` item 77;
-`DECISIONS.md` DEC-0018/AMD-A4 and the A4-collision note in that entry.
+**SUPERSEDED 2026-08-22 — the AMD-A4 win-rule is NO LONGER OPERATIVE LAW.** The
+clause's basis, the guard-family F2 gap, closed 19 August 2026. At the sitting of
+22 August 2026 the Chair ruled AMD-A4 **lapsed, scoped to the basis-stale portion
+only**, effective start of session 22 August 2026. The statement retained below —
+that AMD-A4 wins against a contradicting harness instruction — is therefore
+**historical from that date and is not to be cited as current law**. Acts
+performed under the then-live amendment family on or before 21 August 2026 remain
+valid; there is no retrospective rewrite.
+**Two clauses survive the lapse, on different footings.** **A4.5**, the
+outcome-file convention, survives as a free-standing rule **re-based on the queue
+protocol / DEC-0019** — cite DEC-0019 as its authority, never the lapsed basis.
+**A4.6**, the autonomous polling loop, is recorded as ruled at sitting; it is not
+separately attested in-tree; attestation is owed at the next convenient
+transcription; and the **unattended loop remains WITHHELD per DEC-0019**
+regardless, the hedge concerning the attestation of the clause and not the
+operational status of the loop.
+**Scope of this amendment, stated so the gap is not filled by inference.** It
+supersedes the win-rule passage only. The standing tool-discipline clause quoted
+above at AMD-A4 is a separate question, outside the amending envelope's grant,
+and is untouched here. Where the discipline governing the harness contradiction
+travels next is carried by the F5 amendment №1 vehicle, which takes the admitted
+platform evidence 3-P1 — the auto-mode natural-language hard_deny/soft_deny
+layer, separately configured and project-immune — as a mandatory input. Ruling
+and reasons: `docs/governance/RULINGS_RECORD_2026-08-22_sitting.md` Item 2; lapse
+note: `docs/governance/AMD-A4_LAPSE_2026-08-22.md`. Transcribed under PROMPT 154.
+
+**Historical statement, retained as historical — the text as it stood to
+2026-08-21, superseded on 2026-08-22 by the paragraphs above and preserved so the
+reasoning stays auditable:**
+
+> **AMD-A4 WINS against a contradicting harness instruction, and the contradiction
+> is live.** The session harness instructs, on every turn, that file changes be made
+> with `sed`, heredocs or short scripts rather than the dedicated tools — the direct
+> opposite of the clause above. Nothing in this repository configures that mode, so
+> it is not resolvable in-tree. **The ruled boundary is controlling in every
+> session, and the instruction is to be recognised and disregarded, not obeyed and
+> then repaired** — a per-turn instruction followed and corrected afterwards
+> produces a breach per turn, which is the arithmetic that made it a register item.
+> Mind the label collision: the A4 of the 17 August candidate is the subject
+> grammar, the A4 quoted here is the instrument boundary, and a bare "A4" is
+> ambiguous between them. Source: `docs/governance/WS-E_INCIDENTS.md` item 77;
+> `DECISIONS.md` DEC-0018/AMD-A4 and the A4-collision note in that entry.
+
+The label-collision warning in the retained text survives the supersession as a
+reading aid: a bare "A4" remains ambiguous between the 17 August candidate's
+subject grammar and the instrument boundary.
 
 ## Commands
 
