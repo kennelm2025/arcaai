@@ -387,6 +387,48 @@ reading. **RB-3 is therefore downstream of RB-1.**
 12. Is a verification read-back (3-D) made mandatory for large artefact writes,
     independently of the pattern chosen?
 
+### 6. CORRECTION — ruled 22 August 2026
+
+**Appended under PROMPT 154, lane T1.** The chapter above is retained unaltered;
+this section is additive and supersedes it where they conflict. Ruling and
+reasons: `docs/governance/RULINGS_RECORD_2026-08-22_sitting.md` Item 4.
+
+> CORRECTION (ruled 22 Aug 2026): the premise event did not occur. Fact ruled verbatim: instrument = Write, single call, 690 lines / 40,076 bytes, succeeded; no size failure on 21 Aug 2026. RB-3's original failure question is discharged as misconceived. This section supersedes the RB-3 statement above; original text retained unaltered for the record.
+
+> SUCCESSOR ITEM (reserved, unnumbered by ruling): 'What is the demonstrated ceiling for single-Write artefacts, and does the house need an explicit one?' Register number to be consumed at a deliberately chosen later transcription, not by this envelope. Deferred probe attached to this item.
+
+**Consequences for the chapter above, stated so a reader does not have to
+derive them.**
+
+- **2(e), the premise conflict, is RESOLVED** — and resolved in favour of the
+  incident register. The question attributed the 21 August size failure to
+  Write; the ruled fact is that the Write succeeded. Item 77's attribution of
+  the size failure to the heredoc therefore stands, and the register did not
+  understate what happened.
+- **2(d)'s demonstrated floor moves from 426 lines to 690 lines / 40,076
+  bytes.** The table above remains accurate as to the three artefacts it lists;
+  it is simply no longer the largest single Write on record. The ceiling is
+  **still not located** — a floor is not a ceiling, which is precisely the gap
+  the successor item is reserved against.
+- **Decision asks 9 to 12 are spent as posed.** Ask 9 is answered by the ruled
+  fact. Asks 10 and 11 were conditional on a Write ceiling being established to
+  exist, and none is; they do not arise. Ask 12, the read-back question, is not
+  ruled here and is **not** carried by the successor item — it survives as an
+  open question of practice, noting that read-back was in fact used to verify
+  every artefact written under this envelope.
+- **2(b) and 2(c) remain OPEN and are re-homed.** The Write size ceiling and the
+  failure mode of a failed Write are the substance of the reserved successor
+  item, together with its deferred probe. They are no longer RB-3 residue.
+
+**On the reserved number.** The successor item is deliberately unnumbered. Per
+the standing convention, it is cited as "next" and never as a bare number until
+the register number is consumed at a later transcription — a bare number reads
+as a claim that the item already exists.
+
+**Standing flexibility principle applies** to this correction as to every ruling
+of the 22 August sitting: binding for current direction, not irreversible
+architecture.
+
 ---
 
 ## Interaction map — how the three sit together
