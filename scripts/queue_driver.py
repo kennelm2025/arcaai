@@ -701,6 +701,23 @@ class DraftRecord:
 class Transport:
     """The Gmail surface the driver depends on, narrowed to three operations."""
 
+    def ensure_authorised(self) -> None:
+        """Acquire authorisation ONCE, outside every retried call path.
+
+        The lazy-auth boundary. Authorisation is the one operation that can
+        require a human, so it must happen where a human is expected to be:
+        at start-up, once, before any retry loop begins. Everything after this
+        point reuses the credential already held, and a transient network
+        failure inside a retried call therefore cannot re-open a consent
+        prompt. Source: the QD-F2 spec's defect register --
+        "authorisation must move outside the retried call or any network flap
+        re-prompts human consent."
+
+        Implementations that need no credential may leave this a no-op; it is
+        not optional for those that do.
+        """
+        return None
+
     def list_released_drafts(self) -> list[DraftRecord]:
         raise NotImplementedError
 
@@ -732,7 +749,45 @@ class GmailTransport(Transport):
         self._service: Any = None
         self._labels: dict[str, str] = {}
 
-    def _authorise(self) -> Any:
+    def ensure_authorised(self) -> None:
+        """The ONE place interactive consent may happen. Called outside every retry.
+
+        Idempotent: once the service is built it is reused for the life of the
+        transport, so calling this again is free and acquires nothing.
+        """
+        if self._service is None:
+            self._service = self._authorise(allow_interactive=True)
+
+    def _authorise(self, allow_interactive: bool = False) -> Any:
+        """Build the Gmail service, consenting only where consent is permitted.
+
+        The ``allow_interactive`` default is FALSE, deliberately. The default is
+        the safe side of the lazy-auth boundary: any caller that has not thought
+        about it gets the non-interactive path and a loud refusal, rather than a
+        consent prompt opened from somewhere a human may not be watching. Only
+        :meth:`ensure_authorised` passes True, and it is called once at start-up.
+
+        Refresh and consent sit on opposite sides of the line. A token refresh is
+        non-interactive and may be retried; consent requires a human and may not.
+
+        The boundary refusal below is deliberately raised BEFORE the Google
+        imports. With no token on disk there is nothing to load or refresh, so
+        consent is the only path left, and when consent is not permitted the
+        answer is already known without importing anything. Keeping it ahead of
+        the imports means the boundary holds in an environment where the OAuth
+        libraries are absent -- which is not hypothetical: they are not yet
+        declared in ``pyproject.toml`` (a known sibling defect), so CI runs
+        without them, and a boundary that could only refuse where the libraries
+        happened to be installed would be untestable exactly where it matters.
+        """
+        if not allow_interactive and not self.token_path.exists():
+            raise QueueDriverError(
+                "refusing to open an interactive OAuth consent flow outside start-up "
+                "authorisation: no token is held, so consent would be the only path, and "
+                "consent must be acquired by ensure_authorised(), once, before any retried "
+                "call. Reaching this point means the lazy-auth boundary was crossed."
+            )
+
         from google.auth.transport.requests import Request
         from google.oauth2.credentials import Credentials
         from google_auth_oauthlib.flow import InstalledAppFlow
@@ -743,8 +798,26 @@ class GmailTransport(Transport):
             creds = Credentials.from_authorized_user_file(str(self.token_path), GMAIL_SCOPES)
         if creds is None or not creds.valid:
             if creds is not None and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
+                # Non-interactive side of the boundary. A refresh that fails for
+                # network reasons is transient and retryable; one that fails
+                # because the grant is gone is not, and must not fall through to
+                # the consent flow below -- that fall-through would turn a
+                # revoked credential into a prompt in an unattended run.
+                try:
+                    creds.refresh(Request())
+                except Exception as exc:
+                    raise QueueDriverError(
+                        f"token refresh failed for {self.token_path}: {exc}. Authorisation is "
+                        "not re-attempted interactively from here; re-authorise deliberately."
+                    ) from exc
             else:
+                if not allow_interactive:
+                    raise QueueDriverError(
+                        "refusing to open an interactive OAuth consent flow outside start-up "
+                        "authorisation: consent must be acquired by ensure_authorised(), once, "
+                        "before any retried call. Reaching this point means the lazy-auth "
+                        "boundary was crossed."
+                    )
                 if not self.credentials_path.exists():
                     raise QueueDriverError(
                         f"OAuth client secret not found at {self.credentials_path}. This is a "
@@ -760,8 +833,16 @@ class GmailTransport(Transport):
 
     @property
     def service(self) -> Any:
+        """Reuse the held service. NEVER a consent point.
+
+        This property is reached from inside retried calls, which is exactly why
+        it must not authorise interactively: before the QD lazy-auth fix, a
+        network flap on the first call re-entered here and could re-open the
+        consent flow on every retry. It now takes the non-interactive path, so
+        crossing the boundary produces a loud refusal instead of a prompt.
+        """
         if self._service is None:
-            self._service = self._authorise()
+            self._service = self._authorise(allow_interactive=False)
         return self._service
 
     def _label_id(self, name: str) -> str:
@@ -887,6 +968,15 @@ class FakeTransport(Transport):
         self.fail_list_times = 0
         self._list_calls = 0
         self._counter = 0
+        # Counted rather than inferred: the lazy-auth evidence at §2.2(a) is
+        # "no second acquisition", and only a count can show that.
+        self.auth_acquisitions = 0
+        self.auth_fails_with: Exception | None = None
+
+    def ensure_authorised(self) -> None:
+        if self.auth_fails_with is not None:
+            raise self.auth_fails_with
+        self.auth_acquisitions += 1
 
     def list_released_drafts(self) -> list[DraftRecord]:
         self._list_calls += 1
@@ -1538,6 +1628,27 @@ class QueueDriver:
     def run_once(self) -> CycleReport:
         report = CycleReport()
         self.ensure_lanes_asserted()
+
+        # The lazy-auth boundary, and the reason it is HERE: authorisation is
+        # acquired once, before any retry loop, so that a transient failure
+        # inside a retried call reuses the held credential instead of re-opening
+        # a consent prompt. A hard auth failure fails the cycle LOUDLY through
+        # the ruled channels -- ERROR page and log row, run halted -- rather than
+        # being retried into a prompt, which is the failure mode that would make
+        # an unattended run stop and silently wait for a human.
+        try:
+            self.transport.ensure_authorised()
+        except (QueueDriverError, TransientError) as exc:
+            self.log.append(action=ACT_REFUSED, detail=f"authorisation failed: {exc}")
+            report.errors.append(f"authorisation failed: {exc}")
+            self.emit_page(
+                ERROR,
+                "ARCAAI queue driver: ERROR",
+                f"Authorisation failed; the cycle is halted before any queue work.\n\n{exc}",
+                report,
+            )
+            return report
+
         try:
             self.poll_inbound(report)
         except TransientError as exc:
