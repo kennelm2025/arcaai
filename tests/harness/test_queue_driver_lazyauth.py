@@ -184,6 +184,45 @@ def test_authorise_defaults_to_non_interactive():
         transport._authorise()
 
 
+def test_boundary_holds_where_the_oauth_libraries_are_absent(monkeypatch, tmp_path):
+    """The boundary must refuse WITHOUT importing the Google libraries.
+
+    Found by CI, not by review, and worth keeping as a test rather than a fixed
+    comment. The first version of the two tests above passed locally and FAILED
+    on CI with ModuleNotFoundError, because the OAuth libraries are installed in
+    the development environment and are not yet declared in ``pyproject.toml`` --
+    a known sibling defect outside this envelope's grant to fix.
+
+    That made those tests pass for an ENVIRONMENTAL reason, which is the
+    check-method family the repository tracks. The fix was to raise the boundary
+    refusal ahead of the imports; this test reproduces the absent-library
+    condition so the ordering cannot silently regress once the deps are declared
+    and the original failure becomes unreproducible.
+    """
+    blocked = (
+        "google_auth_oauthlib",
+        "google.auth.transport.requests",
+        "google.oauth2.credentials",
+        "googleapiclient.discovery",
+    )
+
+    class Blocker:
+        def find_spec(self, name, path=None, target=None):
+            if name in blocked or name.startswith("google_auth_oauthlib"):
+                raise ModuleNotFoundError(f"No module named '{name}' (simulated)")
+            return None
+
+    # Blocked at CALL time, not at module-load time. The imports under test live
+    # inside ``_authorise``, so this is the moment that matters; re-executing the
+    # whole module under a blocked meta_path breaks unrelated machinery and would
+    # test the harness rather than the boundary.
+    monkeypatch.setattr(sys, "meta_path", [Blocker(), *sys.meta_path])
+
+    transport = qd.GmailTransport(tmp_path / "no-creds.json", tmp_path / "no-token.json")
+    with pytest.raises(qd.QueueDriverError, match="refusing to open an interactive OAuth"):
+        _ = transport.service
+
+
 # --------------------------------------------------------------------------
 # Negative space, in the 157 style — the defect must be reproducible on demand
 # --------------------------------------------------------------------------

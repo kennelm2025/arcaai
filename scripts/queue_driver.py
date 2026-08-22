@@ -769,7 +769,25 @@ class GmailTransport(Transport):
 
         Refresh and consent sit on opposite sides of the line. A token refresh is
         non-interactive and may be retried; consent requires a human and may not.
+
+        The boundary refusal below is deliberately raised BEFORE the Google
+        imports. With no token on disk there is nothing to load or refresh, so
+        consent is the only path left, and when consent is not permitted the
+        answer is already known without importing anything. Keeping it ahead of
+        the imports means the boundary holds in an environment where the OAuth
+        libraries are absent -- which is not hypothetical: they are not yet
+        declared in ``pyproject.toml`` (a known sibling defect), so CI runs
+        without them, and a boundary that could only refuse where the libraries
+        happened to be installed would be untestable exactly where it matters.
         """
+        if not allow_interactive and not self.token_path.exists():
+            raise QueueDriverError(
+                "refusing to open an interactive OAuth consent flow outside start-up "
+                "authorisation: no token is held, so consent would be the only path, and "
+                "consent must be acquired by ensure_authorised(), once, before any retried "
+                "call. Reaching this point means the lazy-auth boundary was crossed."
+            )
+
         from google.auth.transport.requests import Request
         from google.oauth2.credentials import Credentials
         from google_auth_oauthlib.flow import InstalledAppFlow
